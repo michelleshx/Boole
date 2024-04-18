@@ -2,8 +2,12 @@ import React from "react";
 import styles from "./AppBar.module.css";
 import Button from "../components/Button";
 import Toggle from "../components/Toggle";
+import useVerification from "../hooks/useVerification";
 
-const AppBar = ({ onDownload }) => {
+const AppBar = ({ value, onDownload, onVerify }) => {
+  const { verifying, verifiedValue, valid, magicUsed, verify } =
+    useVerification(value, onVerify);
+
   return (
     <header className={styles.appBar}>
       {/* Logo svg*/}
@@ -19,8 +23,17 @@ const AppBar = ({ onDownload }) => {
       </svg>
       <div className={styles.alignRight}>
         <div className={styles.buttonGroup}>
-          <Button text="Ask George" variant="primary" />
-          <Button text="Upload File" variant="secondary" />
+          <Button
+            text="Ask George"
+            variant="primary"
+            disabled={verifying || verifiedValue === value}
+            onClick={() => verify(value)}
+          >
+            {verifying && "loading..."}
+            {verifiedValue === value &&
+              (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
+          </Button>
+          <Button text="Upload file" variant="secondary" />
           <Button text="Download" variant="secondary" onClick={onDownload} />
         </div>
         <Toggle />

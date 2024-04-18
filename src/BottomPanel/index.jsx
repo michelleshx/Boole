@@ -10,8 +10,7 @@ import {
 import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
 
-const BottomPanel = ({ feedback }) => {
-  const [feedbackExpanded, setFeedbackExpanded] = useState(false);
+const BottomPanel = ({ feedback, feedbackExpanded, setFeedbackExpanded }) => {
   const [expressionExpanded, setExpressionExpanded] = useState(false);
 
   return (

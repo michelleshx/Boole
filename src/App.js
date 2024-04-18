@@ -35,7 +35,11 @@ function App() {
 
   return (
     <div className="App">
-      <AppBar onVerify={onVerify} onDownload={onDownload} />
+      <AppBar
+        value={value}
+        onDownload={onDownload}
+        onVerify={(feedback) => onVerify(feedback)}
+      />
       <SplitPane
         split="vertical"
         minSize={464}
@@ -45,7 +49,11 @@ function App() {
         <SidePanel />
         <CodeEditor value={value} setValue={setValue} />
       </SplitPane>
-      <BottomPanel feedback={feedback} />
+      <BottomPanel
+        feedback={feedback}
+        feedbackExpanded={feedbackExpanded}
+        setFeedbackExpanded={setFeedbackExpanded}
+      />{" "}
     </div>
   );
 }
