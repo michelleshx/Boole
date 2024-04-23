@@ -1,0 +1,130 @@
+:root {
+  /* DARK MODE */
+  --dark-1: #1f1c31;
+  --dark-2: #232037;
+  --dark-3: #292541;
+  --dark-4: #342e5a;
+  --dark-5: #675b90;
+  --dark-6: #918cb0;
+  --text-dark-mode-secondary: #918cb0;
+  --text-dark-mode: #c3c7e8; /*b2add6 */
+  --text-highlighted-dark-mode: #7581f4;
+  --text-dark-mode-tertiary: #d9d9d9;
+  --border-dark: #323232;
+  --logo-dark: #fff;
+  --dark-grey: #333041;
+
+  /* TODO LIGHT MODE */
+  --light-1: #e2def7;
+  --light-2: #edecf9;
+  --light-3: #f2f1f8;
+  --light-4: #f2f1f8;
+  --border-light: #000;
+  --text-light-mode: #000;
+  --text-light-mode-tertiary: #10006d;
+  --text-highlighted-light-mode: #7581f4;
+  --logo-light: #000;
+  --grey: #d4d3dd;
+
+  /* OTHER COLOURS! */
+  --teal: #4b9eb6;
+  --teal-2: #5dc9a7;
+  --red: #ff3939;
+}
+
+body {
+  --background-1: var(--light-1);
+  --background-2: var(--light-2);
+  --background-3: var(--light-3);
+  --background-4: var(--grey);
+  --background-5: var(--light-4);
+  --text-color: var(--text-light-mode);
+  --text-color-secondary: var(--text-light-mode);
+  --text-color-tertiary: var(--text-light-mode-tertiary);
+  --text-color-highlighted: var(--text-light-mode-tertiary);
+  --border: var(--border-light);
+  /* --background-2: var(--light-2);
+  --background-3: var(--light-3); */
+  --logo: var(--logo-light);
+}
+
+body.dark {
+  --background-1: var(--dark-1);
+  --background-2: var(--dark-2);
+  --background-3: var(--dark-3);
+  --background-4: var(--dark-grey);
+  --background-5: var(--dark-4);
+  --text-color: var(--text-dark-mode);
+  --text-color-secondary: var(--text-dark-mode-secondary);
+  --text-color-tertiary: var(--text-dark-mode-tertiary);
+  --text-color-highlighted: var(--text-highlighted-dark-mode);
+  --border: var(--border-dark);
+  --logo: var(--logo-dark);
+}
+
+body {
+  margin: 0;
+  font-family: "Open Sans", sans-serif, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--background-3);
+  color: var(--text-color);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+code {
+  font-family: "Space Mono", "Courier New", monospace;
+}
+
+button {
+  border: none;
+  font-family: "Open Sans", sans-serif;
+  cursor: pointer;
+}
+
+h2 {
+  color: var(--text-color-secondary);
+  font-size: 14px;
+}
+
+input {
+  background-color: transparent;
+  border: none;
+  color: var(--text-color);
+  font-family: "Open Sans", sans-serif;
+}
+
+input:focus {
+  outline: none;
+  background-color: var(--background-5);
+}
+
+div {
+  cursor: default;
+}
+
+/* Split Screen Styles */
+.Resizer {
+  z-index: 1;
+}
+
+/* TODO check here */
+.Resizer.horizontal {
+  height: 11px;
+  margin: -4px 0;
+  cursor: row-resize;
+  width: 100%;
+}
+
+.Resizer.vertical {
+  width: 12px;
+  margin: 0 -5px;
+  cursor: col-resize;
+}

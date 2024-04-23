@@ -1,0 +1,26 @@
+.appBar {
+  border-bottom: 1px solid var(--border);
+  background: var(--background-1);
+  height: 80px;
+  width: 100%;
+  display: flex;
+  padding: 4px 24px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  fill: var(--logo);
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.alignRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}

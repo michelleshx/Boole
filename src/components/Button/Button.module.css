@@ -1,0 +1,49 @@
+.button {
+  border-radius: 5px;
+  color: white;
+}
+
+.button--primary {
+  background-color: #247c9a;
+}
+
+.button--primary:hover {
+  background-color: #3eaacf;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.button--primary:focus {
+  background-color: #206d88;
+}
+
+.button--secondary {
+  background-color: #675b90;
+}
+
+.button--secondary:hover {
+  background-color: #8d7ec1;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.button--large {
+  height: 38px;
+  font-size: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.button--small {
+  height: 20px;
+  font-size: 12px;
+  padding: 2px 8px;
+}
+
+/* TODO fix this styling */
+.icon {
+  display: inline;
+  margin-left: 4px;
+  width: 50px;
+  height: 50px;
+}

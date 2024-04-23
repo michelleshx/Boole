@@ -1,0 +1,31 @@
+.sidePanel {
+  min-width: 464px;
+  height: 100%;
+  background: var(--background-2);
+  border-right: 1px solid var(--border);
+}
+
+.tabHeaders {
+  display: flex;
+  gap: 40px;
+  padding: 16px;
+  border-bottom: 0.5px solid var(--border);
+  text-transform: uppercase;
+  font: 600 14px / 1 "Open Sans";
+}
+
+.tab {
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+}
+
+.tab--active {
+  padding-bottom: 2px;
+  color: var(--text-color-highlighted);
+  border-bottom: 0.5px solid var(--text-color-highlighted);
+}
+
+.tabContent {
+  padding-top: 16px;
+}
