@@ -9,6 +9,7 @@ module.exports = function (app) {
       target: "https://student.cs.uwaterloo.ca/~se212/",
       changeOrigin: true,
       pathRewrite: {
+        "^/files/": "/",
         "^/verify$": "/george/ask-george/cgi-bin/george.cgi/check",
       },
       // on: {
@@ -28,70 +29,3 @@ module.exports = function (app) {
     })
   );
 };
-
-// module.exports = function (app) {
-//   app.use(
-//     ["^/files/", "^/verify$"],
-//     createProxyMiddleware({
-//       target: "https://student.cs.uwaterloo.ca/~se212",
-//       changeOrigin: true,
-//       pathRewrite: {
-//         "^/files/": "/",
-//         "^/verify$": "/george/ask-george/cgi-bin/george.cgi/check",
-//       },
-//     })
-//   );
-// };
-
-// // app.use(
-// //   "^/files/",
-// //   createProxyMiddleware({
-// //     target: "https://student.cs.uwaterloo.ca/~se212/",
-// //     changeOrigin: true,
-// //     pathRewrite: { "^/files/": "/" },
-// //   })
-// // );
-
-// // app.use(
-// //   "^/verify$",
-// //   createProxyMiddleware({
-// //     target: "https://catfact.ninja/",
-// //     changeOrigin: true,
-// //     pathRewrite: {
-// //       "^/verify$": "/fact",
-// //     },
-// //   })
-// // );
-
-// // app.use(
-// //   ["^/files/", "^/verify$"],
-// //   createProxyMiddleware({
-// //     target: "https://student.cs.uwaterloo.ca/~se212",
-// //     changeOrigin: true,
-// //     pathRewrite: {
-// //       "^/files/": "/",
-// //       "^/verify$": "/george/ask-george/cgi-bin/george.cgi/check",
-// //     },
-// //   })
-// // );
-
-// const express = require("express");
-// const { createProxyMiddleware } = require("http-proxy-middleware");
-
-// const app = express();
-
-// // Set up proxy middleware
-// app.use(
-//   "^/verify$",
-//   createProxyMiddleware({
-//     target: "https://student.cs.uwaterloo.ca/~se212",
-//     changeOrigin: true,
-//     pathRewrite: { "^/verify$": "/george/ask-george/cgi-bin/george.cgi/check" },
-//   })
-// );
-
-// // Start the server
-// const port = process.env.PORT || 3000;
-// app.listen(port, () => {
-//   console.log(`Proxy server is listening on port ${port}`);
-// });
