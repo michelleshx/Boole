@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./AppBar.module.css";
 import Button from "../components/Button";
+import Loading from "../components/Loading";
 import Toggle from "../components/Toggle";
 import useVerification from "../hooks/useVerification";
 
@@ -29,7 +30,7 @@ const AppBar = ({ value, onDownload, onVerify }) => {
             disabled={verifying || verifiedValue === value}
             onClick={() => verify(value)}
           >
-            {verifying && "loading..."}
+            {verifying && <Loading />}
             {verifiedValue === value &&
               (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
           </Button>

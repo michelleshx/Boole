@@ -20,8 +20,6 @@ const useVerification = (initialValue, onVerify) => {
       })
       .then((response) => {
         const feedback = response.data;
-
-        console.log(feedback);
         const isValid =
           feedback.indexOf("\n- Failed\n") === -1 &&
           feedback.indexOf("BAD STRUCTURE:") === -1;
