@@ -3,7 +3,7 @@ import styles from "./AppBar.module.css";
 import Button from "../components/Button";
 import Toggle from "../components/Toggle";
 
-const AppBar = () => {
+const AppBar = ({ onDownload }) => {
   return (
     <header className={styles.appBar}>
       {/* Logo svg*/}
@@ -21,7 +21,7 @@ const AppBar = () => {
         <div className={styles.buttonGroup}>
           <Button text="Ask George" variant="primary" />
           <Button text="Upload File" variant="secondary" />
-          <Button text="Download" variant="secondary" />
+          <Button text="Download" variant="secondary" onClick={onDownload} />
         </div>
         <Toggle />
       </div>
