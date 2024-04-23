@@ -8,8 +8,8 @@ import "./ace-auto-complete-george";
 
 function CodeEditor({ value, setValue }) {
   const onChange = (newValue) => {
-    console.log("change", newValue);
     setValue(newValue);
+    console.log("change", newValue);
   };
 
   return (
@@ -19,6 +19,7 @@ function CodeEditor({ value, setValue }) {
         theme="monokai"
         width="100%"
         onChange={onChange}
+        value={value}
         setOptions={{
           fontSize: 15,
           highlightActiveLine: false,
@@ -36,7 +37,6 @@ function CodeEditor({ value, setValue }) {
         }}
         name="UNIQUE_ID_OF_DIV"
         editorProps={{ $blockScrolling: true }}
-        value={value}
       />
     </div>
   );
