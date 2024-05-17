@@ -10,6 +10,8 @@ import AppBar from "./AppBar";
 import BottomPanel from "./BottomPanel";
 import SidePanel from "./SidePanel";
 import CodeEditor from "./CodeEditor/CodeEditor";
+import FileExplorer from "./FileExplorer";
+import SideBar from "./SideBar";
 
 function App() {
   const [value, setValue] = useState(
@@ -20,6 +22,7 @@ function App() {
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
   const [feedbackExpanded, setFeedbackExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState("files");
 
   const onDownload = () => {
     gtag("event", "download", {
@@ -28,9 +31,25 @@ function App() {
     download(openFile.name, value);
   };
 
+  // onValueChange = (value) => {
+  //   this.setState({ value });
+  //   if (this.state.openFile !== null) this.state.openFile.set(value);
+  // };
+
   const onVerify = (feedback) => {
     setFeedback(feedback);
     setFeedbackExpanded(true);
+  };
+
+  const onFileOpen = async (file) => {
+    try {
+      setValue(await file.get());
+      setOpenFile(file);
+    } catch {
+      alert("Failed to open file!"); // TODO debug this
+    }
+
+    // TODO reset editor
   };
 
   return (
@@ -40,20 +59,27 @@ function App() {
         onDownload={onDownload}
         onVerify={(feedback) => onVerify(feedback)}
       />
-      <SplitPane
-        split="vertical"
-        minSize={464}
-        maxSize={800}
-        style={{ position: "relative" }}
-      >
-        <SidePanel />
-        <CodeEditor value={value} setValue={setValue} />
-      </SplitPane>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <SplitPane
+          split="vertical"
+          minSize={464}
+          maxSize={800}
+          style={{ position: "relative" }}
+        >
+          {activeTab == "files" ? (
+            <FileExplorer openFile={openFile} onFileOpen={onFileOpen} />
+          ) : (
+            <SidePanel />
+          )}
+          <CodeEditor value={value} setValue={setValue} />
+        </SplitPane>
+      </div>
       <BottomPanel
         feedback={feedback}
         feedbackExpanded={feedbackExpanded}
         setFeedbackExpanded={setFeedbackExpanded}
-      />{" "}
+      />
     </div>
   );
 }
