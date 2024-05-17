@@ -15,7 +15,7 @@ const useVerification = (initialValue, onVerify) => {
     gtag("event", "verify");
 
     axios
-      .post("/verify", valueToValidate, {
+      .post("/george/ask-george/cgi-bin/george.cgi/check", valueToValidate, {
         headers: { "Content-type": "text/plain" },
       })
       .then((response) => {
