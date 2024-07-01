@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useState } from 'react';
 import styles from "./AppBar.module.css";
 import Button from "../components/Button";
 import Loading from "../components/Loading";
 import Toggle from "../components/Toggle";
 import useVerification from "../hooks/useVerification";
 
+import FileUploadModal from "../components/Modals/FileUploadModal";
+
 const AppBar = ({ value, onDownload, onVerify }) => {
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <header className={styles.appBar}>
@@ -34,7 +46,8 @@ const AppBar = ({ value, onDownload, onVerify }) => {
             {verifiedValue === value &&
               (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
           </Button>
-          <Button text="Upload file" variant="secondary" />
+          <Button text="Upload file" variant="secondary" onClick={openModal} />
+          <FileUploadModal isOpen={isModalOpen} onClose={closeModal} />
           <Button text="Download" variant="secondary" onClick={onDownload} />
         </div>
         <Toggle />

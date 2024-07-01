@@ -45,5 +45,8 @@
     "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "react-split-pane": "^0.1.92"
+  },
+  "dependencies": {
+    "react-modal": "^3.16.1"
   }
 }
