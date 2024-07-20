@@ -34,7 +34,6 @@ const FileUploadModal = ({ isOpen, onClose }) => {
       left: "50%",
       right: "auto",
       bottom: "auto",
-      marginRight: "-50%",
       transform: "translate(-50%, -50%)",
       zIndex: 1000, // Ensure the modal is on top
       width: "30%", // Adjust the width of the modal
@@ -55,13 +54,13 @@ const FileUploadModal = ({ isOpen, onClose }) => {
       contentLabel="File Upload Modal"
       style={customStyles}
     >
-      <h2>Upload File</h2>
+      <h2 style={{ fontSize: "24px", marginBottom:"10px" }}>Upload File</h2>
       <input type="file" onChange={handleFileChange} />
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
-          marginTop: "20px",
+          marginTop: "15px",
         }}
       >
         <Button text="Upload" variant="secondary" onClick={handleUpload} />
