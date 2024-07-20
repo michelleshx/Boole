@@ -64,7 +64,7 @@ const FileUploadModal = ({ isOpen, onClose }) => {
         }}
       >
         <Button text="Upload" variant="secondary" onClick={handleUpload} />
-        <Button text="Close" variant="secondary" onClick={handleUpload} />
+        <Button text="Close" variant="secondary" onClick={onClose} />
       </div>
     </Modal>
   );
