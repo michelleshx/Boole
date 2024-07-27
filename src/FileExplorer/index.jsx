@@ -10,16 +10,20 @@ import ExpandableListItem from "../components/ExpandableListItem";
 
 const FileExplorer = ({ openFile, onFileOpen }) => {
   const [directories, setDirectories] = useState(null);
+  const [defaultFileSet, setDefaultFileSet] = useState(false);
 
   useEffect(() => {
     const fetchDirectories = async () => {
       let directories = await Directories.get();
-      onFileOpen(directories[0].files[0]);
       setDirectories(directories);
+      if (!defaultFileSet && directories.length > 0 && directories[0].files.length > 0) {
+        onFileOpen(directories[0].files[0]);
+        setDefaultFileSet(true);
+      }
     };
 
     fetchDirectories();
-  }, [onFileOpen]);
+  }, [onFileOpen, defaultFileSet]);
 
   const toggleDirectoryExpanded = (directoryIndex) => {
     const updatedDirectories = [...directories];
@@ -79,7 +83,7 @@ const FileExplorer = ({ openFile, onFileOpen }) => {
               }
             >
               {directory.files.map((file, fileIndex) => (
-                <li key={file.name}>
+                <li key={file.name} className={styles.directoryFileList}>
                   <div
                     className={
                       "file-explorer-label" +
@@ -90,7 +94,7 @@ const FileExplorer = ({ openFile, onFileOpen }) => {
                     <span className="file-explorer-name">{file.name}</span>
                     {file === openFile ? (
                       <span
-                        className="file-explorer-reset-button"
+                        className={styles.fileExplorerResetutton}
                         role="img"
                         title="Reset"
                         aria-label="Reset"
