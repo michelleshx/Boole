@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
-
 import Button from "../../Button";
+import styles from "./FileUploadModal.module.css";
 
 Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 
@@ -28,7 +28,7 @@ const FileUploadModal = ({ isOpen, onClose }) => {
     }
   };
 
-  const customStyles = {
+  const modalStyles = {
     content: {
       top: "50%",
       left: "50%",
@@ -37,7 +37,8 @@ const FileUploadModal = ({ isOpen, onClose }) => {
       transform: "translate(-50%, -50%)",
       zIndex: 1000, // Ensure the modal is on top
       width: "30%", // Adjust the width of the modal
-      height: "15%", // Adjust the height of the modal
+      height: "20%", // Adjust the height of the modal
+      background: "#1F1C31",
       // maxWidth: "500px", // set a maximum width
       // maxHeight: "300px", // set a maximum height
     },
@@ -52,19 +53,16 @@ const FileUploadModal = ({ isOpen, onClose }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="File Upload Modal"
-      style={customStyles}
+      style={modalStyles}
     >
-      <h2 style={{ fontSize: "24px", marginBottom:"10px" }}>Upload File</h2>
-      <input type="file" onChange={handleFileChange} />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginTop: "15px",
-        }}
-      >
-        <Button text="Upload" variant="secondary" onClick={handleUpload} />
-        <Button text="Close" variant="secondary" onClick={onClose} />
+      <h2 className={styles.modalHeader}>Upload File</h2>
+      <h2 className={styles.modalDescription}>
+        The uploaded file will replace your current working file!
+      </h2>
+      <input type="file" accept=".txt,.grg" onChange={handleFileChange} />
+      <div className={styles.buttonContainer}>
+        <Button text="Upload" variant="primary" onClick={handleUpload} />
+        <Button text="Close" variant="exit" onClick={onClose} />
       </div>
     </Modal>
   );

@@ -27,6 +27,11 @@
   transition: 0.4s;
 }
 
+.button--exit {
+  color: black;
+  background-color: #D9D9D9;
+}
+
 .button--large {
   height: 38px;
   font-size: 16px;
