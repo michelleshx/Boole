@@ -20,7 +20,6 @@ function App() {
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
   const [feedbackExpanded, setFeedbackExpanded] = useState(false);
-
   const onDownload = () => {
     gtag("event", "download", {
       event_label: openFile.name,
