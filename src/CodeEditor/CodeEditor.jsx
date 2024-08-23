@@ -6,9 +6,10 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "./ace-mode-george";
 import "./ace-auto-complete-george";
 
-function CodeEditor({ value, setValue }) {
+function CodeEditor({ value, setValue, openFile }) {
   const onChange = (newValue) => {
     setValue(newValue);
+    if (openFile !== null) openFile.set(newValue);
     console.log("change", newValue);
   };
 

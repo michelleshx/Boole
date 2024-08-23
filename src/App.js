@@ -15,7 +15,6 @@ import SideBar from "./SideBar";
 
 function App() {
   const [value, setValue] = useState(
-    "#u j34ko\n#a p03\n\n#q 02\n\n#check Z\n\n//Types\n[People, Teams, Time]\n\n//Errors\n\nErrors ::= TeamAlreadyRegistered | PersonAlreadyRegistered\n\n//Constants\nschema Constants begin\n    MaxRunnersPerTeam: nat\n    MaxTeams: nat\n    Faster: Time prod Time --> bool //Faster(t1, t2) means that t1 is faster than t2\n    Sum: pow(nat) --> nat //returns the sum of all numbers in the set\n    Min: nat prod nat --> nat //Min(x, y) returns the smaller of x and y\npred\nend\n\n"
   );
   const [openFile, setOpenFile] = useState({ name: "test-file.grg" }); // TODO update when files implemented
   const [feedback, setFeedback] = useState(
@@ -72,7 +71,7 @@ function App() {
           ) : (
             <SidePanel />
           )}
-          <CodeEditor value={value} setValue={setValue} />
+          <CodeEditor value={value} setValue={setValue} openFile={openFile}/>
         </SplitPane>
       </div>
       <BottomPanel
