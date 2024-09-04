@@ -11,6 +11,7 @@ module.exports = function (app) {
         "/george/ask-george/cgi-bin/george.cgi/check",
         "/files",
       ],
+      pathRewrite: { "^/files/": "/" },
     })
   );
 };
