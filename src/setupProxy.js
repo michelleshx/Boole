@@ -9,7 +9,9 @@ module.exports = function (app) {
       pathFilter: [
         "/files.json", // TODO check this URL
         "/george/ask-george/cgi-bin/george.cgi/check",
+        "/files",
       ],
+      pathRewrite: { "^/files/": "/" },
     })
   );
 };
