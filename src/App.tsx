@@ -8,7 +8,7 @@ import { download } from "./common/download";
 import './App.css';
 import AppBar from "./AppBar";
 import BottomPanel from "./BottomPanel";
-// import SidePanel from "./SidePanel";
+import SidePanel from "./SidePanel";
 import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
@@ -59,6 +59,8 @@ function App() {
       />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
+        {/* @ts-ignore TS2322 */}
         {/*<SplitPane*/}
         {/*  split="vertical"*/}
         {/*  minSize={464}*/}

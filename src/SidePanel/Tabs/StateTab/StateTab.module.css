@@ -1,0 +1,37 @@
+.stateTab {
+    padding: 0px 16px 0px 16px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    /* TODO overflow scroll bar*/
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 16px;
+    min-height: 112px;
+    border-bottom: 1px solid var(--text-color-secondary);
+}
+
+.section:last-child {
+    border: none;
+}
+
+.row {
+    font-size: 12px;
+    padding: 0px 16px 0px 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.col {
+    width: 33%;
+    word-wrap: break-word;
+}
+
+.col:last-child {
+    text-align: right;
+}
