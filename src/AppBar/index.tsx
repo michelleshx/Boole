@@ -1,13 +1,21 @@
 import React, { useState } from 'react';
 import styles from "./AppBar.module.css";
-import Button from "../components/Button";
-import Loading from "../components/Loading";
-import Toggle from "../components/Toggle";
+import { Button, Loading, Toggle } from "../components";
 import useVerification from "../hooks/useVerification";
 
+<<<<<<< HEAD:src/AppBar/index.jsx
 import FileUploadModal from "../components/Modals/FileUploadModal";
 
 const AppBar = ({ value, onDownload, onVerify }) => {
+=======
+interface AppBarProps {
+  value: string;
+  onDownload: () => void;
+  onVerify: (feedback: string) => void;
+}
+
+const AppBar = ({ value, onDownload, onVerify}: AppBarProps) => {
+>>>>>>> f2a7fba (finish conversion of appbar):src/AppBar/index.tsx
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
 
@@ -54,6 +62,6 @@ const AppBar = ({ value, onDownload, onVerify }) => {
       </div>
     </header>
   );
-};
+}
 
 export default AppBar;

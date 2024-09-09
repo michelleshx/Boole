@@ -1,21 +1,21 @@
 /* global gtag */
 
-import { useState } from "react";
 import SplitPane from "react-split-pane";
+import { useState } from "react";
 
 import { download } from "./common/download";
 
-import "./App.css";
+import './App.css';
 import AppBar from "./AppBar";
-import BottomPanel from "./BottomPanel";
-import SidePanel from "./SidePanel";
-import CodeEditor from "./CodeEditor/CodeEditor";
+
+// import BottomPanel from "./BottomPanel";
+// import SidePanel from "./SidePanel";
+import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
 
 function App() {
-  const [value, setValue] = useState(
-  );
+  const [value, setValue] = useState("");
   const [openFile, setOpenFile] = useState({ name: "test-file.grg" }); // TODO update when files implemented
   const [feedback, setFeedback] = useState(
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
@@ -35,21 +35,21 @@ function App() {
   //   if (this.state.openFile !== null) this.state.openFile.set(value);
   // };
 
-  const onVerify = (feedback) => {
+  const onVerify = (feedback: string) => {
     setFeedback(feedback);
     setFeedbackExpanded(true);
   };
 
-  const onFileOpen = async (file) => {
-    try {
-      setValue(await file.get());
-      setOpenFile(file);
-    } catch {
-      alert("Failed to open file!"); // TODO debug this
-    }
-
-    // TODO reset editor
-  };
+  // const onFileOpen = async (file) => {
+  //   try {
+  //     setValue(await file.get());
+  //     setOpenFile(file);
+  //   } catch {
+  //     alert("Failed to open file!"); // TODO debug this
+  //   }
+  //
+  //   // TODO reset editor
+  // };
 
   return (
     <div className="App">

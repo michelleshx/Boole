@@ -45,4 +45,3 @@ A full-featured front end for George with various qualify-of-life features and w
 [MIT](LICENSE)
 
 Copyright (c) 2018 Shazz Amin, Derek Yin
-

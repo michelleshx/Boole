@@ -1,76 +1,76 @@
 /* The switch - the box around the slider */
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 72px;
-  height: 36px;
-  flex-shrink: 0;
+    position: relative;
+    display: inline-block;
+    width: 72px;
+    height: 36px;
+    flex-shrink: 0;
 }
 
 /* Hide default HTML checkbox */
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 /* The slider */
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #edecf9;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-  border-radius: 36px;
-  z-index: 99;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #edecf9;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 36px;
+    z-index: 99;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 30px;
-  width: 30px;
-  left: 4px;
-  bottom: 2px;
-  background-color: #b2add6;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-  border-radius: 50%;
-  flex-shrink: 0;
+    position: absolute;
+    content: "";
+    height: 30px;
+    width: 30px;
+    left: 4px;
+    bottom: 2px;
+    background-color: #b2add6;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    border-radius: 50%;
+    flex-shrink: 0;
 }
 
 input:checked + .slider {
-  background-color: #332b5d;
+    background-color: #332b5d;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(32px);
-  -ms-transform: translateX(32px);
-  transform: translateX(32px);
-  background-color: #675b90;
+    -webkit-transform: translateX(32px);
+    -ms-transform: translateX(32px);
+    transform: translateX(32px);
+    background-color: #675b90;
 }
 
 .icon {
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  bottom: 8px;
-  z-index: 100;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    bottom: 8px;
+    z-index: 100;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 .sun {
-  left: 8px;
-  color: #edecf9;
+    left: 8px;
+    color: #edecf9;
 }
 
 .moon {
-  left: 42px;
-  color: #332b5d;
+    left: 42px;
+    color: #332b5d;
 }
