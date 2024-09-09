@@ -1,0 +1,62 @@
+.bottomPanel {
+    background: var(--background-1);
+    border-top: 1px solid var(--border);
+    height: 288px;
+    width: 100%;
+    z-index: 100;
+    display: flex;
+    flex-direction: row;
+}
+
+.panel {
+    border-right: 1px solid #d9d9d947;
+    height: 100%;
+}
+
+.panel--horizontal {
+    width: 100%;
+}
+
+.panel--vertical:last-child,
+.panel--horizontal:last-child {
+    border: none;
+}
+
+.button {
+    display: flex;
+    padding: 5px 7px;
+    gap: 8px;
+    background: var(--background-4);
+    color: var(--text-color-tertiary);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    align-items: flex-start;
+}
+
+.button--vertical {
+    height: 100%;
+    flex-direction: column;
+}
+
+.button--horizontal {
+    flex-direction: row;
+    height: 24px;
+    width: 100%;
+}
+
+.output {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 8px 24px;
+    outline: 0;
+    border: 0;
+    resize: none;
+    background: transparent;
+    font-family: "Space Mono", "Courier New", monospace;
+    color: var(--text-color);
+
+    scrollbar-color: var(--text-color-secondary) var(--background-1);
+    scrollbar-width: thin;
+}

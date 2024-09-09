@@ -3,11 +3,9 @@ import styles from "./AppBar.module.css";
 import { Button, Loading, Toggle } from "../components";
 import useVerification from "../hooks/useVerification";
 
-<<<<<<< HEAD:src/AppBar/index.jsx
 import FileUploadModal from "../components/Modals/FileUploadModal";
 
-const AppBar = ({ value, onDownload, onVerify }) => {
-=======
+
 interface AppBarProps {
   value: string;
   onDownload: () => void;
@@ -15,7 +13,6 @@ interface AppBarProps {
 }
 
 const AppBar = ({ value, onDownload, onVerify}: AppBarProps) => {
->>>>>>> f2a7fba (finish conversion of appbar):src/AppBar/index.tsx
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
 

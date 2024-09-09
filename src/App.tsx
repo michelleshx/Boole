@@ -7,8 +7,7 @@ import { download } from "./common/download";
 
 import './App.css';
 import AppBar from "./AppBar";
-
-// import BottomPanel from "./BottomPanel";
+import BottomPanel from "./BottomPanel";
 // import SidePanel from "./SidePanel";
 import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
@@ -60,19 +59,19 @@ function App() {
       />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
-        <SplitPane
-          split="vertical"
-          minSize={464}
-          maxSize={800}
-          style={{ position: "relative" }}
-        >
-          {activeTab == "files" ? (
-            <FileExplorer openFile={openFile} onFileOpen={onFileOpen} />
-          ) : (
-            <SidePanel />
-          )}
-          <CodeEditor value={value} setValue={setValue} openFile={openFile}/>
-        </SplitPane>
+        {/*<SplitPane*/}
+        {/*  split="vertical"*/}
+        {/*  minSize={464}*/}
+        {/*  maxSize={800}*/}
+        {/*  style={{ position: "relative" }}*/}
+        {/*>*/}
+        {/*  {activeTab == "files" ? (*/}
+        {/*    <FileExplorer openFile={openFile} onFileOpen={onFileOpen} />*/}
+        {/*  ) : (*/}
+        {/*    <SidePanel />*/}
+        {/*  )}*/}
+        {/*  <CodeEditor value={value} setValue={setValue} openFile={openFile}/>*/}
+        {/*</SplitPane>*/}
       </div>
       <BottomPanel
         feedback={feedback}
