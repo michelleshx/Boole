@@ -5,7 +5,13 @@ import StateTab from "./Tabs/StateTab";
 import OperationsTab from "./Tabs/OperationsTab";
 import TraceTab from "./Tabs/TraceTab";
 
-const tabs = { state: "state", operations: "operations", trace: "trace" };
+type Tabs = {
+  state: string;
+  operations: string;
+  trace: string;
+};
+
+const tabs: Tabs = { state: "state", operations: "operations", trace: "trace" };
 
 const SidePanel = () => {
   const [activeTab, setActiveTab] = useState(tabs.state);
@@ -17,9 +23,9 @@ const SidePanel = () => {
           <div
             key={tabKey}
             className={styles.tab}
-            onClick={() => setActiveTab(tabs[tabKey])}
+            onClick={() => setActiveTab(tabs[tabKey as keyof Tabs])}
           >
-            <a className={activeTab === tabs[tabKey] && styles["tab--active"]}>
+            <a className={activeTab === tabs[tabKey as keyof Tabs] ? styles["tab--active"] : undefined}>
               {tabKey}
             </a>
           </div>

@@ -1,27 +1,27 @@
 .container {
-  width: 100%;
+    width: 100%;
 }
 
 .listItem {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  color: var(--text-color-secondary);
-  fill: var(--text-color-secondary);
-  font-size: 14px;
-  background-color: transparent;
-  padding-left: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    color: var(--text-color-secondary);
+    fill: var(--text-color-secondary);
+    font-size: 14px;
+    background-color: transparent;
+    padding-left: 16px;
 }
 
 .listItem:hover,
 .listItem:active {
-  background-color: rgba(82, 69, 165, 0.35);
-  -webkit-transition: 0.2s;
-  transition: 0.2s;
+    background-color: rgba(82, 69, 165, 0.35);
+    -webkit-transition: 0.2s;
+    transition: 0.2s;
 }
 
 .content {
-  border-left: 1px solid var(--text-color-secondary);
-  margin: 8px 8px 8px 24px;
+    border-left: 1px solid var(--text-color-secondary);
+    margin: 8px 8px 8px 24px;
 }

@@ -1,9 +1,18 @@
-import ExpandableListItem from "../../../components/ExpandableListItem";
+import { ExpandableListItem } from "../../../components";
 import styles from "./TraceTab.module.css";
 
 // TODO replace with actual data
 import data from "../../../data/test-data.json";
 const traceData = data.dataForTraceTab;
+
+// interface TraceData {
+//   name: string;
+//   parameters: {
+//     state: string;
+//     type: string;
+//     value: string;
+//   }[];
+// }
 
 const TraceTab = () => {
   return (

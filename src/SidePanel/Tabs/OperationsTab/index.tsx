@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import ExpandableListItem from "../../../components/ExpandableListItem";
+import { ExpandableListItem } from "../../../components";
 import Button from "../../../components/Button";
 import styles from "./OperationsTab.module.css";
 
@@ -8,8 +8,17 @@ import styles from "./OperationsTab.module.css";
 import data from "../../../data/test-data.json";
 const operationTestData = data.dataForOperationsTab;
 
+interface OperationsData {
+  name: string;
+  parameters: {
+    name: string;
+    type: string;
+    value: string;
+  }[];
+}
+
 const OperationsTab = () => {
-  const [operationData, setOperationData] = useState([]);
+  const [operationData, setOperationData] = useState<OperationsData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +33,7 @@ const OperationsTab = () => {
     fetchData();
   }, []);
 
-  const handleInputChange = (event, operationIndex, parameterIndex) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, operationIndex: number, parameterIndex: number) => {
     const { value } = event.target;
     const updatedData = [...operationData];
     updatedData[operationIndex].parameters[parameterIndex].value = value;

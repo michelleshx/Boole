@@ -1,15 +1,15 @@
 .loading {
-  display: inline-flex;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid var(--text-color);
-  border-color: var(--text-color) transparent var(--text-color) transparent;
-  animation: spin 1s linear infinite;
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--text-color);
+    border-color: var(--text-color) transparent var(--text-color) transparent;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg);
+    }
 }

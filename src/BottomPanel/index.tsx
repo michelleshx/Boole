@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SplitPane from "react-split-pane";
+// import SplitPane from "react-split-pane";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronRight,
@@ -10,7 +10,13 @@ import {
 import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
 
-const BottomPanel = ({ feedback, feedbackExpanded, setFeedbackExpanded }) => {
+interface BottomPanelProps {
+  feedback: string;
+  feedbackExpanded: boolean;
+  setFeedbackExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const BottomPanel = ({ feedback, feedbackExpanded, setFeedbackExpanded }: BottomPanelProps) => {
   const [expressionExpanded, setExpressionExpanded] = useState(false);
 
   return (

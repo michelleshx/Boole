@@ -1,10 +1,11 @@
 /* global ace */
+// @ts-nocheck
 import "brace/ext/language_tools";
 
 const words = [
   // checks
   "check ND",
-  "check TP", 
+  "check TP",
   "check ST",
   "check PROP",
   "check Z",
@@ -16,7 +17,7 @@ const words = [
   "true",
 
   // transformational
-  "comm_assoc",	
+  "comm_assoc",
   "contr",
   "lem",
   "impl",
@@ -44,7 +45,7 @@ const words = [
   "not_e",
   "not_not_i",
   "not_not_e",
-  "iff_i",	
+  "iff_i",
   "iff_e",
   "trans",
   "iff_mp",
@@ -72,7 +73,7 @@ const words = [
   "imp_br",
   "not_imp_nb",
   "not_not_nb",
-  "iff_br",	
+  "iff_br",
   "not_iff_br",
   "forall_nb",
   "not_forall_nb",

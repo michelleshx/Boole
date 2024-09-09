@@ -1,22 +1,22 @@
 /* global gtag */
 
-import { useState } from "react";
 import SplitPane from "react-split-pane";
+import { useState } from "react";
 
 import { download } from "./common/download";
+import { File } from "./common/files";
 
-import "./App.css";
+import './App.css';
 import AppBar from "./AppBar";
 import BottomPanel from "./BottomPanel";
 import SidePanel from "./SidePanel";
-import CodeEditor from "./CodeEditor/CodeEditor";
+import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
 
 function App() {
-  const [value, setValue] = useState(
-  );
-  const [openFile, setOpenFile] = useState({ name: "test-file.grg" }); // TODO update when files implemented
+  const [value, setValue] = useState("");
+  const [openFile, setOpenFile] = useState<File>(new File("test-file.grg")); // TODO update when files implemented
   const [feedback, setFeedback] = useState(
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
@@ -35,14 +35,15 @@ function App() {
   //   if (this.state.openFile !== null) this.state.openFile.set(value);
   // };
 
-  const onVerify = (feedback) => {
+  const onVerify = (feedback: string) => {
     setFeedback(feedback);
     setFeedbackExpanded(true);
   };
 
-  const onFileOpen = async (file) => {
+  const onFileOpen = async (file: File) => {
     try {
-      setValue(await file.get());
+      // to do handle null values
+      setValue(await file.get() ?? "");
       setOpenFile(file);
     } catch {
       alert("Failed to open file!"); // TODO debug this
@@ -60,6 +61,8 @@ function App() {
       />
       <div style={{ display: "flex", flexDirection: "row" }}>
         <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+        {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
+        {/* @ts-ignore TS2322 */}
         <SplitPane
           split="vertical"
           minSize={464}
@@ -71,7 +74,11 @@ function App() {
           ) : (
             <SidePanel />
           )}
-          <CodeEditor value={value} setValue={setValue} openFile={openFile}/>
+          <CodeEditor
+            value={value}
+            setValue={setValue}
+            // openFile={openFile} not used?
+          />
         </SplitPane>
       </div>
       <BottomPanel

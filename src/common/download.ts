@@ -1,4 +1,4 @@
-export const download = (fileName, value) => {
+export const download = (fileName: string, value: string) => {
   const element = document.createElement("a");
   element.target = "_blank";
   element.download = fileName;

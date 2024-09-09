@@ -1,7 +1,16 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import styles from "./Button.module.css";
 
-const Button = ({
+interface IButtonProps {
+  text: string;
+  variant: string;
+  size?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+  children?: ReactNode;
+}
+
+const Button: React.FC<IButtonProps> = ({
   text,
   variant = "primary",
   size = "large",

@@ -5,8 +5,25 @@ import styles from "./StateTab.module.css";
 import data from "../../../data/test-data.json";
 const stateTestData = data.dataForStateTab;
 
+interface StateData {
+  currentStateSpace: {
+    state: string;
+    type: string;
+    value: string;
+  }[];
+  types: {
+    type: string;
+    value: string;
+  }[];
+  constants: {
+    state: string;
+    type: string;
+    value: string;
+  }[];
+}
+
 const StateTab = () => {
-  const [stateData, setStateData] = useState({
+  const [stateData, setStateData] = useState<StateData>({
     currentStateSpace: [],
     types: [],
     constants: [],
@@ -25,13 +42,13 @@ const StateTab = () => {
     fetchData();
   }, []);
 
-  const handleInputChange = (event, index, type) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, index: number, type: 'currentStateSpace' | 'types' | 'constants') => {
     const { value } = event.target;
     const updatedValues = [...stateData[type]];
     updatedValues[index].value = value;
     setStateData({
       ...stateData,
-      type: updatedValues,
+      [type]: updatedValues, // unsure about this update
     });
   };
 

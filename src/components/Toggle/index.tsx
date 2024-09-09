@@ -23,7 +23,7 @@ const Toggle = () => {
 
   return (
     <label className={styles.switch}>
-      <input type="checkbox" onClick={handleClick} checked={isDarkMode} />
+      <input type="checkbox" onClick={handleClick} checked={isDarkMode} onChange={() => {}} />
       <span className={styles.slider}>
         <FontAwesomeIcon
           icon={isDarkMode ? faMoon : faSun}

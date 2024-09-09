@@ -1,29 +1,29 @@
 .operationsTab {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
 }
 
 .row {
-  font-size: 12px;
-  padding: 0px 16px 0px 16px;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
+    font-size: 12px;
+    padding: 0px 16px 0px 16px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 .col {
-  width: 33%;
-  word-wrap: break-word;
+    width: 33%;
+    word-wrap: break-word;
 }
 
 .col:last-child {
-  text-align: right;
-  border-bottom: 1px solid var(--text-color-secondary);
+    text-align: right;
+    border-bottom: 1px solid var(--text-color-secondary);
 }
 
 .rightAlign {
-  margin-top: 8px;
-  text-align: right;
+    margin-top: 8px;
+    text-align: right;
 }
