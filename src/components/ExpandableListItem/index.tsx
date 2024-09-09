@@ -9,15 +9,23 @@ import styles from "./ExpandableListItem.module.css";
 interface ExpandableListItemProps {
   title: string;
   children: React.ReactNode;
+  onClick?: () => void;
 }
 
-const ExpandableListItem = ({ title, children }: ExpandableListItemProps) => {
+const ExpandableListItem = ({ title, children, onClick }: ExpandableListItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const handleClick = () => {
+    setIsExpanded((!isExpanded));
+    if (onClick) {
+      onClick();
+    }
+  }
 
   return (
     <li className={styles.container}>
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={handleClick}
         className={styles.listItem}
       >
         <FontAwesomeIcon icon={isExpanded ? faChevronDown : faChevronRight} />

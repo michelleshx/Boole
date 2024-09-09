@@ -1,7 +1,13 @@
 import axios from "axios";
 
 import { DefaultFile, RemoteFile } from "./files";
-import miscFiles from "./misc-files.js";
+import miscFiles from "./misc-files";
+
+export interface Directory {
+  name: string;
+  expanded: boolean;
+  files: RemoteFile[];
+}
 
 const miscellaneousDirectory = {
   name: "Miscellaneous",
@@ -13,7 +19,7 @@ export default class Directories {
   static get = () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const directories = (
+        const directories: Directory[] = (
           await axios({
             method: "get",
             url: "/files.json",
@@ -21,7 +27,7 @@ export default class Directories {
           })
         ).data;
 
-        const remoteDirectories = directories.map((directory) => {
+        const remoteDirectories = directories.map((directory: Directory) => {
           return {
             name: directory.name,
             expanded: false,

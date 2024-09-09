@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Modal from "react-modal";
+
 import Button from "../../Button";
 import styles from "./FileUploadModal.module.css";
 
 Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 
-const FileUploadModal = ({ isOpen, onClose }) => {
-  const [selectedFile, setSelectedFile] = useState(null);
+interface FileUploadModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) => {
+  // TODO: we might want to reconsider naming
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
   const handleUpload = () => {
@@ -17,9 +26,15 @@ const FileUploadModal = ({ isOpen, onClose }) => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
+        // @ts-ignore
+        // TODO: fix these null errors
         const fileContent = e.target.result;
-        localStorage.setItem(selectedFile.name, fileContent);
-        console.log("File saved to localStorage:", selectedFile.name);
+        if (typeof fileContent === "string") {
+          localStorage.setItem(selectedFile.name, fileContent);
+          console.log("File saved to localStorage:", selectedFile.name);
+        } else {
+          console.warn("No file content saved.")
+        }
         onClose(); // Close the modal after upload
       };
 

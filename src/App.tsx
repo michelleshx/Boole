@@ -4,6 +4,7 @@ import SplitPane from "react-split-pane";
 import { useState } from "react";
 
 import { download } from "./common/download";
+import { File } from "./common/files";
 
 import './App.css';
 import AppBar from "./AppBar";
@@ -15,7 +16,7 @@ import SideBar from "./SideBar";
 
 function App() {
   const [value, setValue] = useState("");
-  const [openFile, setOpenFile] = useState({ name: "test-file.grg" }); // TODO update when files implemented
+  const [openFile, setOpenFile] = useState<File>(new File("test-file.grg")); // TODO update when files implemented
   const [feedback, setFeedback] = useState(
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
@@ -39,16 +40,17 @@ function App() {
     setFeedbackExpanded(true);
   };
 
-  // const onFileOpen = async (file) => {
-  //   try {
-  //     setValue(await file.get());
-  //     setOpenFile(file);
-  //   } catch {
-  //     alert("Failed to open file!"); // TODO debug this
-  //   }
-  //
-  //   // TODO reset editor
-  // };
+  const onFileOpen = async (file: File) => {
+    try {
+      // to do handle null values
+      setValue(await file.get() ?? "");
+      setOpenFile(file);
+    } catch {
+      alert("Failed to open file!"); // TODO debug this
+    }
+
+    // TODO reset editor
+  };
 
   return (
     <div className="App">
@@ -61,19 +63,23 @@ function App() {
         <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
         {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
         {/* @ts-ignore TS2322 */}
-        {/*<SplitPane*/}
-        {/*  split="vertical"*/}
-        {/*  minSize={464}*/}
-        {/*  maxSize={800}*/}
-        {/*  style={{ position: "relative" }}*/}
-        {/*>*/}
-        {/*  {activeTab == "files" ? (*/}
-        {/*    <FileExplorer openFile={openFile} onFileOpen={onFileOpen} />*/}
-        {/*  ) : (*/}
-        {/*    <SidePanel />*/}
-        {/*  )}*/}
-        {/*  <CodeEditor value={value} setValue={setValue} openFile={openFile}/>*/}
-        {/*</SplitPane>*/}
+        <SplitPane
+          split="vertical"
+          minSize={464}
+          maxSize={800}
+          style={{ position: "relative" }}
+        >
+          {activeTab == "files" ? (
+            <FileExplorer openFile={openFile} onFileOpen={onFileOpen} />
+          ) : (
+            <SidePanel />
+          )}
+          <CodeEditor
+            value={value}
+            setValue={setValue}
+            // openFile={openFile} not used?
+          />
+        </SplitPane>
       </div>
       <BottomPanel
         feedback={feedback}

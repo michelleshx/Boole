@@ -22,7 +22,7 @@
     "test": "echo 'No tests yet :('"
   },
   "eslintConfig": {
-    "extends": "react"
+    "extends": "react-app"
   },
   "browserslist": [
     ">0.2%",
@@ -41,6 +41,7 @@
     "@types/node": "^16.18.98",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "@types/react-modal": "^3.16.3",
     "ace-builds": "^1.33.0",
     "axios": "^1.6.8",
     "brace": "^0.11.1",

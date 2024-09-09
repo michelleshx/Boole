@@ -3,29 +3,38 @@
 import { useState, useEffect } from "react";
 import styles from "./FileExplorer.module.css";
 
-import Directories from "../common/directories";
+import Directories, { Directory } from "../common/directories";
 import { File } from "../common/files";
-
 import ExpandableListItem from "../components/ExpandableListItem";
 
-const FileExplorer = ({ openFile, onFileOpen }) => {
-  const [directories, setDirectories] = useState(null);
+interface FileExplorerProps {
+  openFile: File | null;
+  onFileOpen: (file: File) => void;
+}
+
+const FileExplorer: React.FC<FileExplorerProps> = ({ openFile, onFileOpen }) => {
+  const [directories, setDirectories] = useState<Directory[]>([]);
   const [defaultFileSet, setDefaultFileSet] = useState(false);
 
   useEffect(() => {
     const fetchDirectories = async () => {
       let directories = await Directories.get();
-      setDirectories(directories);
-      if (!defaultFileSet && directories.length > 0 && directories[0].files.length > 0) {
-        onFileOpen(directories[0].files[0]);
-        setDefaultFileSet(true);
+
+      if (Array.isArray(directories)) {
+        setDirectories(directories);
+        if (!defaultFileSet && directories.length > 0 && directories[0].files.length > 0) {
+          onFileOpen(directories[0].files[0]);
+          setDefaultFileSet(true);
+        }
+      } else {
+        console.warn("Directories is not an array.")
       }
     };
 
     fetchDirectories();
   }, [onFileOpen, defaultFileSet]);
 
-  const toggleDirectoryExpanded = (directoryIndex) => {
+  const toggleDirectoryExpanded = (directoryIndex: number) => {
     const updatedDirectories = [...directories];
     const directory = updatedDirectories[directoryIndex];
     updatedDirectories[directoryIndex] = {
@@ -35,7 +44,7 @@ const FileExplorer = ({ openFile, onFileOpen }) => {
     setDirectories(updatedDirectories);
   };
 
-  const openFileHandler = (targetFile) => {
+  const openFileHandler = (targetFile: File) => {
     if (targetFile === openFile) return;
 
     gtag("event", "open", {
@@ -45,7 +54,7 @@ const FileExplorer = ({ openFile, onFileOpen }) => {
     onFileOpen(targetFile);
   };
 
-  const reset = async (targetFile) => {
+  const reset = async (targetFile: File) => {
     if (
       !window.confirm(
         "Are you sure you would like to reset this file?\nWARNING: You will lose all your changes for this file!"

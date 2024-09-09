@@ -3,7 +3,7 @@ import axios from "axios";
 import LocalStorage from "./local-storage";
 
 // Adapted from https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
-function hash(data) {
+function hash(data: string) {
   let digest = 0;
   for (let i = 0; i < data.length; i++) {
     digest = (digest << 5) - digest + data.charCodeAt(i);
@@ -14,34 +14,39 @@ function hash(data) {
 }
 
 export class File {
-  constructor(name) {
+  private readonly key: string;
+  readonly name: string;
+
+  constructor(name: string) {
     this.name = name;
     this.key = `file:${name}`;
   }
 
-  async get() {
+  async get(): Promise<string | null> {
     return await LocalStorage.get(this.key);
   }
-  get = this.get.bind(this);
+  // get = this.get.bind(this);
 
-  set = (value) => {
+  set = (value: string) => {
     LocalStorage.set(this.key, value);
   };
 
   reset = async () => {
     // Back up the file just in case the user needs to recover it
     const deletedFileContent = await this.get();
-    LocalStorage.set(
-      `deleted_file:${this.name}-${hash(deletedFileContent)}`,
-      deletedFileContent
-    );
+      LocalStorage.set(
+        `deleted_file:${this.name}-${hash(deletedFileContent ?? "")}`,
+        deletedFileContent ?? ""
+      );
 
     LocalStorage.reset(this.key);
   };
 }
 
 export class DefaultFile extends File {
-  constructor(name, defaultValue) {
+  readonly defaultValue: string;
+
+  constructor(name: string, defaultValue: string) {
     super(name);
 
     this.defaultValue = defaultValue;
@@ -56,11 +61,13 @@ export class DefaultFile extends File {
       return this.defaultValue;
     }
   }
-  get = this.get.bind(this);
+  // get = this.get.bind(this);
 }
 
 export class RemoteFile extends File {
-  constructor(name, path) {
+  path: string;
+
+  constructor(name: string, path: string) {
     super(name);
 
     this.path = path;
@@ -75,5 +82,5 @@ export class RemoteFile extends File {
       return (await axios.get(`/files${this.path}`)).data;
     }
   }
-  get = this.get.bind(this);
+  // get = this.get.bind(this);
 }
