@@ -1,8 +1,10 @@
 import React from "react";
 import AceEditor from "react-ace";
-// import styles from "./CodeEditor.module.css";
+import styles from "./CodeEditor.css";
 
 import "ace-builds/src-noconflict/theme-monokai";
+import "./ace-mode-george";
+import "./ace-auto-complete-george";
 
 interface EditorProps {
   value: string;
