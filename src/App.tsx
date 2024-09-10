@@ -81,11 +81,11 @@ function App() {
           />
         </SplitPane>
       </div>
-      <BottomPanel
+      {/* <BottomPanel
         feedback={feedback}
         feedbackExpanded={feedbackExpanded}
         setFeedbackExpanded={setFeedbackExpanded}
-      />
+      /> */}
     </div>
   );
 }

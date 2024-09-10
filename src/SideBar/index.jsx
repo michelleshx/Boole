@@ -15,7 +15,7 @@ const SideBar = ({ activeTab, setActiveTab }) => {
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
-      <button
+      {/* <button
         className={[
           styles.button,
           styles[`button--${activeTab == "debug" ? "active" : ""}`],
@@ -23,7 +23,7 @@ const SideBar = ({ activeTab, setActiveTab }) => {
         onClick={() => setActiveTab("debug")}
       >
         <FontAwesomeIcon icon={faBug} />
-      </button>
+      </button> */}
     </div>
   );
 };
