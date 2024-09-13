@@ -1,20 +1,33 @@
 /* global gtag */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styles from "./FileExplorer.module.css";
 
 import Directories, { Directory } from "../common/directories";
 import { File } from "../common/files";
 import ExpandableListItem from "../components/ExpandableListItem";
 
-interface FileExplorerProps {
-  openFile: File | null;
-  onFileOpen: (file: File) => void;
-}
+import { FileContext } from "../context/FileContext";
 
-const FileExplorer: React.FC<FileExplorerProps> = ({ openFile, onFileOpen }) => {
+interface FileExplorerProps {}
+
+const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [defaultFileSet, setDefaultFileSet] = useState(false);
+
+  const { setValue, openFile, setOpenFile } = useContext(FileContext);
+
+  const onFileOpen = async (file: File) => {
+    try {
+      // to do handle null values
+      setValue((await file.get()) ?? "");
+      setOpenFile(file);
+    } catch {
+      alert("Failed to open file!"); // TODO debug this
+    }
+
+    // TODO reset editor
+  };
 
   useEffect(() => {
     const fetchDirectories = async () => {
@@ -22,12 +35,16 @@ const FileExplorer: React.FC<FileExplorerProps> = ({ openFile, onFileOpen }) => 
 
       if (Array.isArray(directories)) {
         setDirectories(directories);
-        if (!defaultFileSet && directories.length > 0 && directories[0].files.length > 0) {
+        if (
+          !defaultFileSet &&
+          directories.length > 0 &&
+          directories[0].files.length > 0
+        ) {
           onFileOpen(directories[0].files[0]);
           setDefaultFileSet(true);
         }
       } else {
-        console.warn("Directories is not an array.")
+        console.warn("Directories is not an array.");
       }
     };
 

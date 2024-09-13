@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
+/* global gtag */
+import { useState, useContext } from "react";
 import styles from "./AppBar.module.css";
+
 import { Button, Loading, Toggle } from "../components";
-import useVerification from "../hooks/useVerification";
-
 import FileUploadModal from "../components/Modals/FileUploadModal";
-
+import useVerification from "../hooks/useVerification";
+import { FileContext } from "../context/FileContext";
+import { download } from "../common/download";
 
 interface AppBarProps {
-  value: string;
-  onDownload: () => void;
   onVerify: (feedback: string) => void;
 }
 
-const AppBar = ({ value, onDownload, onVerify}: AppBarProps) => {
+const AppBar = ({ onVerify }: AppBarProps) => {
+  const { value, openFile } = useContext(FileContext);
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const onDownload = () => {
+    gtag("event", "download", {
+      event_label: openFile,
+    });
+    download(openFile.name, value);
   };
 
   return (
@@ -51,14 +50,21 @@ const AppBar = ({ value, onDownload, onVerify}: AppBarProps) => {
             {verifiedValue === value &&
               (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
           </Button>
-          <Button text="Upload file" variant="secondary" onClick={openModal} />
-          <FileUploadModal isOpen={isModalOpen} onClose={closeModal} />
+          <Button
+            text="Upload file"
+            variant="secondary"
+            onClick={() => setIsModalOpen(true)}
+          />
+          <FileUploadModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
           <Button text="Download" variant="secondary" onClick={onDownload} />
         </div>
         <Toggle />
       </div>
     </header>
   );
-}
+};
 
 export default AppBar;

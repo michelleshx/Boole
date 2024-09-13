@@ -2,6 +2,19 @@ import axios from "axios";
 
 import LocalStorage from "./local-storage";
 
+export enum FileType {
+  PREDTYPE,
+  PRED,
+  Z,
+  COUNTEREXAMPLE,
+  TP,
+  ST,
+  PROP,
+  PC,
+  ND,
+  NONE,
+}
+
 // Adapted from https://werxltd.com/wp/2010/05/13/javascript-implementation-of-javas-string-hashcode-method/
 function hash(data: string) {
   let digest = 0;
@@ -34,10 +47,10 @@ export class File {
   reset = async () => {
     // Back up the file just in case the user needs to recover it
     const deletedFileContent = await this.get();
-      LocalStorage.set(
-        `deleted_file:${this.name}-${hash(deletedFileContent ?? "")}`,
-        deletedFileContent ?? ""
-      );
+    LocalStorage.set(
+      `deleted_file:${this.name}-${hash(deletedFileContent ?? "")}`,
+      deletedFileContent ?? ""
+    );
 
     LocalStorage.reset(this.key);
   };
