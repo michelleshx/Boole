@@ -7,6 +7,7 @@ interface IButtonProps {
   size?: string;
   onClick?: () => void;
   disabled?: boolean;
+  fullWidth?: boolean;
   children?: ReactNode;
 }
 
@@ -16,6 +17,7 @@ const Button: React.FC<IButtonProps> = ({
   size = "large",
   onClick = () => {},
   disabled = false,
+  fullWidth,
   children,
 }) => {
   return (
@@ -24,6 +26,7 @@ const Button: React.FC<IButtonProps> = ({
         styles.button,
         styles[`button--${variant}`],
         styles[`button--${size}`],
+        styles[`button--${fullWidth ? "fullWidth" : ""}`],
       ].join(" ")}
       onClick={onClick}
       disabled={disabled}

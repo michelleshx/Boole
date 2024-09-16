@@ -1,20 +1,21 @@
-import React from "react";
+import { useContext } from "react";
 import AceEditor from "react-ace";
 import "./CodeEditor.css";
+
+import { FileContext } from "../context/FileContext";
 
 import "ace-builds/src-noconflict/theme-monokai";
 import "./ace-mode-george";
 import "./ace-auto-complete-george";
 
-interface EditorProps {
-  value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
-}
+interface EditorProps {}
 
-const CodeEditor = ({ value, setValue }: EditorProps) => {
-  const onChange = (newValue: string ) => {
+const CodeEditor = ({}: EditorProps) => {
+  const { value, setValue, openFile } = useContext(FileContext);
+
+  const onChange = (newValue: string) => {
     setValue(newValue);
-    console.log("change", newValue);
+    if (openFile !== null) openFile.set(newValue);
   };
 
   return (
@@ -45,6 +46,6 @@ const CodeEditor = ({ value, setValue }: EditorProps) => {
       />
     </div>
   );
-}
+};
 
 export default CodeEditor;

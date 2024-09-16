@@ -32,11 +32,22 @@
   background-color: #D9D9D9;
 }
 
+.button--fullWidth {
+  width: 100%;
+}
+
 .button--large {
     height: 38px;
     font-size: 16px;
     padding-left: 16px;
     padding-right: 16px;
+}
+
+.button--medium {
+  height: 32px;
+  font-size: 14px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .button--small {
