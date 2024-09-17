@@ -1,8 +1,10 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useContext } from "react";
 import Modal from "react-modal";
 
-import Button from "../../Button";
+import { Button } from "../../../components";
 import styles from "./FileUploadModal.module.css";
+
+import { FileContext } from "../../../context/FileContext";
 
 Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 
@@ -12,34 +14,32 @@ interface FileUploadModalProps {
 }
 
 const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) => {
-  // TODO: we might want to reconsider naming
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>();
+  const { setValue, openFile } = useContext(FileContext);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
+      setUploadedFile(event.target.files[0]);
     }
   };
 
   const handleUpload = () => {
-    if (selectedFile) {
+    if (uploadedFile) {
       const reader = new FileReader();
 
       reader.onload = (e) => {
-        // @ts-ignore
-        // TODO: fix these null errors
-        const fileContent = e.target.result;
+        const fileContent = e?.target?.result;
         if (typeof fileContent === "string") {
-          localStorage.setItem(selectedFile.name, fileContent);
-          console.log("File saved to localStorage:", selectedFile.name);
+          openFile.set(fileContent);
+          setValue(fileContent);
+          localStorage.setItem(openFile.name, fileContent);
         } else {
-          console.warn("No file content saved.")
+          console.warn("No file content saved.");
         }
-        onClose(); // Close the modal after upload
+        onClose();
       };
 
-      // Read the file as a data URL
-      reader.readAsDataURL(selectedFile);
+      reader.readAsText(uploadedFile);
     }
   };
 
@@ -52,10 +52,8 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) =>
       transform: "translate(-50%, -50%)",
       zIndex: 1000, // Ensure the modal is on top
       width: "30%", // Adjust the width of the modal
-      height: "20%", // Adjust the height of the modal
-      background: "#1F1C31",
-      // maxWidth: "500px", // set a maximum width
-      // maxHeight: "300px", // set a maximum height
+      minHeight: "180px",
+      background: "var(--background-1)",
     },
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.75)",
