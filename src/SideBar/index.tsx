@@ -6,9 +6,16 @@ import { faFolder, faBug } from "@fortawesome/free-solid-svg-icons";
 interface SideBarProps {
   isFileTab: boolean;
   setIsFileTab: React.Dispatch<React.SetStateAction<boolean>>;
+  showRightPanel: boolean;
+  setShowRightPanel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({ isFileTab, setIsFileTab }: SideBarProps) => {
+const SideBar = ({
+  isFileTab,
+  setIsFileTab,
+  showRightPanel,
+  setShowRightPanel,
+}: SideBarProps) => {
   return (
     <div className={styles.sideBar}>
       <button
@@ -16,7 +23,12 @@ const SideBar = ({ isFileTab, setIsFileTab }: SideBarProps) => {
           styles.button,
           styles[`button--${isFileTab ? "active" : ""}`],
         ].join(" ")}
-        onClick={() => setIsFileTab(true)}
+        onClick={() => {
+          isFileTab
+            ? setShowRightPanel(!showRightPanel)
+            : setShowRightPanel(true);
+          setIsFileTab(true);
+        }}
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
@@ -25,7 +37,12 @@ const SideBar = ({ isFileTab, setIsFileTab }: SideBarProps) => {
           styles.button,
           styles[`button--${!isFileTab ? "active" : ""}`],
         ].join(" ")}
-        onClick={() => setIsFileTab(false)}
+        onClick={() => {
+          !isFileTab
+            ? setShowRightPanel(!showRightPanel)
+            : setShowRightPanel(true);
+          setIsFileTab(false);
+        }}
       >
         <FontAwesomeIcon icon={faBug} />
       </button>

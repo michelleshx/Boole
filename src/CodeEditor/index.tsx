@@ -48,7 +48,7 @@ const CodeEditor = ({}: EditorProps) => {
   }, []);
 
   return (
-    <div className="editor">
+    <div style={{ height: "100%" }} >
       <AceEditor
         mode="george"
         theme="monokai"
