@@ -31,15 +31,17 @@ const CodeEditor = ({}: EditorProps) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
-        event.preventDefault();
+        event.preventDefault(); // Prevent the default browser search
         if (editorRef.current) {
-          editorRef.current.execCommand('find');
+          editorRef.current.execCommand('find'); // Trigger Ace Editor's search
         }
       }
     };
 
+    // Add the event listener to the document
     document.addEventListener('keydown', handleKeyDown);
 
+    // Cleanup the event listener on component unmount
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
