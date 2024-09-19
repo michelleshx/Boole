@@ -1,3 +1,9 @@
+.container {
+  flex-direction: column;
+  position: sticky;
+  bottom: 0;
+}
+
 .bottomPanel {
     background: var(--background-1);
     border-top: 1px solid var(--border);
@@ -59,4 +65,14 @@
 
     scrollbar-color: var(--text-color-secondary) var(--background-1);
     scrollbar-width: thin;
+}
+
+.topHeader {
+    text-align: right;
+    width: 100%;
+    padding: 4px;
+    padding-right: 8px;
+    background: var(--background-4);
+    color: var(--text-color-tertiary);
+    border-top: 1px solid var(--border);
 }

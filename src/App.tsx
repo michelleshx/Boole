@@ -18,6 +18,7 @@ function App() {
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
+  const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
 
   const onVerify = (feedback: string) => {
@@ -30,14 +31,26 @@ function App() {
       <FileProvider>
         <StateProvider>
           <AppBar onVerify={(feedback) => onVerify(feedback)} />
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <SideBar isFileTab={isFileTab} setIsFileTab={setIsFileTab} />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexGrow: "1",
+              overflow: "hidden",
+            }}
+          >
+            <SideBar
+              isFileTab={isFileTab}
+              setIsFileTab={setIsFileTab}
+              showRightPanel={showRightPanel}
+              setShowRightPanel={setShowRightPanel}
+            />
             {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
             {/* @ts-ignore TS2322 */}
             <SplitPane
               split="vertical"
-              minSize={464}
-              maxSize={800}
+              minSize={showRightPanel ? (isFileTab ? 160 : 464) : 0}
+              maxSize={showRightPanel ? 800 : 0}
               style={{ position: "relative" }}
             >
               {isFileTab ? (
