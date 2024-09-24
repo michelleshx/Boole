@@ -60,7 +60,7 @@
     border: 0;
     resize: none;
     background: transparent;
-    font-family: "Space Mono", "Courier New", monospace;
+    font-family: "Roboto Mono", "Courier New", monospace;
     color: var(--text-color);
 
     scrollbar-color: var(--text-color-secondary) var(--background-1);
