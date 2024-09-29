@@ -8,6 +8,7 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "./ace-mode-george";
 import "./ace-auto-complete-george";
 import "ace-builds/src-noconflict/ext-searchbox"; // Import the searchbox extension
+import "ace-builds/src-noconflict/ext-language_tools"; // Import language tools
 
 interface EditorProps {}
 
@@ -25,6 +26,18 @@ const CodeEditor = ({}: EditorProps) => {
   // Function to handle editor loading
   const onEditorLoad = (editor: any) => {
     editorRef.current = editor;
+    if (!editor.commands.commands.toggleComment) {
+      editor.commands.addCommand({
+        name: "toggleComment",
+        bindKey: { win: "Ctrl-/", mac: "Command-/" },
+        exec: function (editor: any) {
+          editor.toggleCommentLines();
+        },
+        multiSelectAction: "forEachLine",
+        scrollIntoView: "cursor",
+        readOnly: false,
+      });
+    }
   };
 
   // useEffect to add the keydown event listener
@@ -51,11 +64,11 @@ const CodeEditor = ({}: EditorProps) => {
     <div style={{ height: "100%" }} >
       <AceEditor
         mode="george"
-        theme="monokai"
+        theme={"monokai"}
         width="100%"
         onChange={onChange}
+        onLoad={onEditorLoad} // Add the onLoad prop
         value={value}
-        onLoad={onEditorLoad} // Set the onLoad prop to get the editor instance
         setOptions={{
           fontSize: 15,
           highlightActiveLine: false,
