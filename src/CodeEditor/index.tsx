@@ -69,6 +69,7 @@ const CodeEditor = ({}: EditorProps) => {
         onChange={onChange}
         onLoad={onEditorLoad} // Add the onLoad prop
         value={value}
+        wrapEnabled={true}
         setOptions={{
           fontSize: 15,
           highlightActiveLine: false,
