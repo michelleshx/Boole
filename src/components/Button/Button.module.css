@@ -27,6 +27,16 @@
   transition: 0.4s;
 }
 
+.button--tertiary {
+  background-color: #8c8c8c;
+}
+
+.button--tertiary:hover {
+  background-color: #b2b2b2;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
 .button--exit {
   color: black;
   background-color: #b7b7b7;
