@@ -14,6 +14,7 @@ import FileProvider from "./context/FileContext";
 import StateProvider from "./context/StateContext";
 
 function App() {
+  const [isDarkMode, setDarkMode] = useState<boolean>(true);
   const [feedback, setFeedback] = useState(
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
@@ -30,7 +31,11 @@ function App() {
     <div className="App">
       <FileProvider>
         <StateProvider>
-          <AppBar onVerify={(feedback) => onVerify(feedback)} />
+          <AppBar 
+            onVerify={(feedback) => onVerify(feedback)}
+            isDarkMode={isDarkMode} 
+            setDarkMode={setDarkMode}
+            />
           <div
             style={{
               display: "flex",
@@ -58,7 +63,7 @@ function App() {
               ) : (
                 <SidePanel onVerify={(feedback) => onVerify(feedback)} />
               )}
-              <CodeEditor />
+              <CodeEditor isDarkMode={isDarkMode}/>
             </SplitPane>
           </div>
           <BottomPanel

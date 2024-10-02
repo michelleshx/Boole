@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 import styles from "./Toggle.module.css";
-
-const Toggle = () => {
-  const [isDarkMode, setDarkMode] = useState(true);
+interface ToggleProps {
+  isDarkMode: boolean
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>
+}
+const Toggle = ({isDarkMode, setDarkMode}: ToggleProps) => {  
 
   useEffect(() => {
     const storedMode = localStorage.getItem("darkMode");

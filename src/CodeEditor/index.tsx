@@ -5,14 +5,17 @@ import "./CodeEditor.css";
 import { FileContext } from "../context/FileContext";
 
 import "ace-builds/src-noconflict/theme-monokai";
+import "ace-builds/src-noconflict/theme-xcode";
 import "./ace-mode-george";
 import "./ace-auto-complete-george";
 import "ace-builds/src-noconflict/ext-searchbox"; // Import the searchbox extension
 import "ace-builds/src-noconflict/ext-language_tools"; // Import language tools
 
-interface EditorProps {}
+interface EditorProps {
+  isDarkMode: boolean
+}
 
-const CodeEditor = ({}: EditorProps) => {
+const CodeEditor = ({isDarkMode}: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
 
   const onChange = (newValue: string) => {
@@ -64,7 +67,7 @@ const CodeEditor = ({}: EditorProps) => {
     <div style={{ height: "100%" }} >
       <AceEditor
         mode="george"
-        theme={"monokai"}
+        theme={isDarkMode? "monokai": "xcode"}
         width="100%"
         onChange={onChange}
         onLoad={onEditorLoad} // Add the onLoad prop

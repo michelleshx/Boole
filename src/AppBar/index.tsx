@@ -10,9 +10,12 @@ import { download } from "../common/download";
 
 interface AppBarProps {
   onVerify: (feedback: string) => void;
+  isDarkMode: boolean
+  setDarkMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AppBar = ({ onVerify }: AppBarProps) => {
+const AppBar = ({ onVerify, isDarkMode, setDarkMode }: AppBarProps) => {
+
   const { value, openFile } = useContext(FileContext);
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
@@ -61,7 +64,7 @@ const AppBar = ({ onVerify }: AppBarProps) => {
           />
           <Button text="Download" variant="secondary" onClick={onDownload} />
         </div>
-        <Toggle />
+        <Toggle isDarkMode={isDarkMode} setDarkMode={setDarkMode}/>
       </div>
     </header>
   );
