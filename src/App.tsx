@@ -54,7 +54,7 @@ function App() {
             {/* @ts-ignore TS2322 */}
             <SplitPane
               split="vertical"
-              minSize={showRightPanel ? (isFileTab ? 160 : 464) : 0}
+              minSize={showRightPanel ? (isFileTab ? 170 : 464) : 0}
               maxSize={showRightPanel ? 800 : 0}
               style={{ position: "relative" }}
             >

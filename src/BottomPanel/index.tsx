@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import SplitPane from "react-split-pane";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronRight,
@@ -35,13 +34,6 @@ const BottomPanel = ({
       </button>
       {showBottomPanel && (
         <div className={styles.bottomPanel}>
-          {/* <SplitPane
-        split="vertical"
-        minSize={464}
-        maxSize={1168}
-        allowResize={feedbackExpanded && expressionExpanded}
-        style={{ position: "relative" }}
-      > */}
           <div
             className={[
               styles.panel,
@@ -98,7 +90,6 @@ const BottomPanel = ({
             </button>
             {expressionExpanded && <ExpressionEvaluator />}
           </div>
-          {/* </SplitPane> */}
         </div>
       )}
     </div>

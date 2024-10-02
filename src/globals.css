@@ -3,33 +3,36 @@
     --dark-1: #1f1c31;
     --dark-2: #232037;
     --dark-3: #292541;
-    --dark-4: #342e5a;
-    --dark-5: #675b90;
-    --dark-6: #918cb0;
-    --text-dark-mode-secondary: #918cb0;
-    --text-dark-mode: #c3c7e8; /*b2add6 */
-    --text-highlighted-dark-mode: #7581f4;
-    --text-dark-mode-tertiary: #d9d9d9;
-    --border-dark: #323232;
+    --dark-4: #2f2b4a;
+    --dark-5: #403864;
+    --text-dark-mode-primary: #a9a4c1;
+    --text-dark-mode-secondary: #6e64aa;
+    --text-dark-mode-tertiary: #4a4273;
+    --text-highlighted-dark-mode: #9989f4;
+    --border-dark: #171424;
     --logo-dark: #fff;
-    --dark-grey: #333041;
 
-    /* TODO LIGHT MODE */
+    /* LIGHT MODE */
     --light-1: #e2def7;
-    --light-2: #edecf9;
-    --light-3: #f2f1f8;
+    --light-2: #EDECF9;
+    --light-3: #F2F1F8;
     --light-4: #f2f1f8;
-    --border-light: #000;
-    --text-light-mode: #000;
-    --text-light-mode-tertiary: #10006d;
-    --text-highlighted-light-mode: #7581f4;
-    --logo-light: #000;
-    --grey: #d4d3dd;
+    --light-5: #D8D3F6;
+    --text-light-mode-primary: #26007C;
+    --text-light-mode-secondary: #75708F ;
+    --text-light-mode-tertiary: #C1B4F5;
+    --text-highlighted-light-mode: #745AEF;
+    --border-light: #C3C0D8;
+    --logo-light: #26007C;
 
     /* OTHER COLOURS! */
     --teal: #4b9eb6;
     --teal-2: #5dc9a7;
+    --teal-3: #5AE5A3;
+    --blue: #6BB2ED;
     --red: #ff3939;
+    --grey: #d4d3dd;
+    --dark-grey: #333041;
 }
 
 body {
@@ -38,13 +41,14 @@ body {
     --background-3: var(--light-3);
     --background-4: var(--grey);
     --background-5: var(--light-4);
-    --text-color: var(--text-light-mode);
-    --text-color-secondary: var(--text-light-mode);
+    --background-highlighted: var(--light-5);
+
+    --text-color: var(--text-light-mode-primary);
+    --text-color-secondary: var(--text-light-mode-secondary);
     --text-color-tertiary: var(--text-light-mode-tertiary);
-    --text-color-highlighted: var(--text-light-mode-tertiary);
+    --text-color-highlighted: var(--text-highlighted-light-mode);
+
     --border: var(--border-light);
-    /* --background-2: var(--light-2);
-    --background-3: var(--light-3); */
     --logo: var(--logo-light);
 }
 
@@ -54,10 +58,13 @@ body.dark {
     --background-3: var(--dark-3);
     --background-4: var(--dark-grey);
     --background-5: var(--dark-4);
-    --text-color: var(--text-dark-mode);
+    --background-highlighted: var(--dark-5);
+
+    --text-color: var(--text-dark-mode-primary);
     --text-color-secondary: var(--text-dark-mode-secondary);
     --text-color-tertiary: var(--text-dark-mode-tertiary);
     --text-color-highlighted: var(--text-highlighted-dark-mode);
+
     --border: var(--border-dark);
     --logo: var(--logo-dark);
 }
@@ -90,7 +97,7 @@ button {
 }
 
 h2 {
-    color: var(--text-color-secondary);
+    color: var(--text-color-highlighted);
     font-size: 14px;
 }
 
@@ -103,7 +110,6 @@ input {
 
 input:focus {
     outline: none;
-    background-color: var(--background-5);
 }
 
 div {
@@ -115,7 +121,6 @@ div {
     z-index: 1;
 }
 
-/* TODO check here */
 .Resizer.horizontal {
     height: 11px;
     margin: -4px 0;
@@ -127,4 +132,13 @@ div {
     width: 12px;
     margin: 0 -5px;
     cursor: col-resize;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  background: rgba(82, 69, 165, 0.35);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(82, 69, 165, 0.35);
 }

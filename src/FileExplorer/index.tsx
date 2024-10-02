@@ -9,6 +9,9 @@ import ExpandableListItem from "../components/ExpandableListItem";
 
 import { FileContext } from "../context/FileContext";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRotate } from "@fortawesome/free-solid-svg-icons";
+
 interface FileExplorerProps {}
 
 const FileExplorer: React.FC<FileExplorerProps> = () => {
@@ -91,7 +94,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     <ul className={styles.fileExplorer}>
       {directories === null ? (
         <div
-          className="file-explorer-loading"
+          className={styles.fileExplorerLoading}
           role="img"
           title="Loading..."
           aria-label="Loading..."
@@ -103,24 +106,27 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
             key={directory.name}
             onClick={() => toggleDirectoryExpanded(directoryIndex)}
           >
-            <ul
-              className={
-                directory.expanded ? "file-explorer-directory-expanded" : ""
-              }
-            >
+            <ul>
               {directory.files.map((file, fileIndex) => (
-                <li key={file.name} className={styles.directoryFileList}>
+                <li
+                  key={file.name}
+                  className={[
+                    styles.directoryFileList,
+                    styles[
+                      `fileExplorerLabel--${
+                        file === openFile ? "selected" : ""
+                      }`
+                    ],
+                  ].join(" ")}
+                >
                   <div
-                    className={
-                      "file-explorer-label" +
-                      (file === openFile ? " file-explorer-selected" : "")
-                    }
+                    className={styles.fileExplorerLabel}
                     onClick={() => openFileHandler(file)}
                   >
-                    <span className="file-explorer-name">{file.name}</span>
+                    <span>{file.name}</span>
                     {file === openFile ? (
                       <span
-                        className={styles.fileExplorerResetutton}
+                        className={styles.fileExplorerResetButton}
                         role="img"
                         title="Reset"
                         aria-label="Reset"
@@ -129,7 +135,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
                           reset(file);
                         }}
                       >
-                        🔄
+                        <FontAwesomeIcon icon={faRotate} />
                       </span>
                     ) : null}
                   </div>
