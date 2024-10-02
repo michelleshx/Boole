@@ -40,7 +40,7 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
     <div className={styles.defaultTab}>
       <Popover
         isOpen={isPopoverOpen}
-        positions={["top", "bottom"]}
+        positions={["bottom"]}
         padding={8}
         content={
           <div className={styles.popOverContainer}>

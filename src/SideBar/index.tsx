@@ -21,7 +21,7 @@ const SideBar = ({
       <button
         className={[
           styles.button,
-          styles[`button--${isFileTab ? "active" : ""}`],
+          styles[`button--${showRightPanel && isFileTab ? "active" : ""}`],
         ].join(" ")}
         onClick={() => {
           isFileTab
@@ -35,7 +35,7 @@ const SideBar = ({
       <button
         className={[
           styles.button,
-          styles[`button--${!isFileTab ? "active" : ""}`],
+          styles[`button--${showRightPanel && !isFileTab ? "active" : ""}`],
         ].join(" ")}
         onClick={() => {
           !isFileTab

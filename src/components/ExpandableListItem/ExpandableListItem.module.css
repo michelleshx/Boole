@@ -7,7 +7,7 @@
     align-items: center;
     gap: 8px;
     width: 100%;
-    color: var(--text-color-secondary);
+    color: var(--text-color);
     fill: var(--text-color-secondary);
     font-size: 14px;
     background-color: transparent;
