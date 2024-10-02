@@ -36,6 +36,17 @@ ace.define("ace/mode/george_highlight_rules", ["require", "exports", "module", "
           defaultToken: "comment.line.percentage.source.grg"
         }]
       }, {
+        // New rule for // comments
+        token: "comment.line.double-slash.source.grg",
+        regex: /\/\//,
+        push: [{
+          token: "comment.line.double-slash.source.grg",
+          regex: /$/,
+          next: "pop"
+        }, {
+          defaultToken: "comment.line.double-slash.source.grg"
+        }]
+      }, {
         token: "support.type.source.grg",
         regex: /\b(?:by|on|forall|exists|schema|pred|end|proc|fun|assert|if|then|else|while|do)\b/
       }, {
@@ -177,13 +188,19 @@ ace.define("ace/mode/george_highlight_rules", ["require", "exports", "module", "
       , s = e("./george_highlight_rules").GeorgeHighlightingHighlightRules
       , o = e("./folding/cstyle").FoldMode
       , u = function() {
-      this.HighlightRules = s,
-        this.foldingRules = new o
-    };
+        this.HighlightRules = s;
+        this.foldingRules = new o;
+  
+        // Add these two lines here:
+        this.lineCommentStart = "//";
+        this.blockComment = { start: "/*", end: "*/" };
+      };
+  
     r.inherits(u, i),
       function() {
         this.$id = "ace/mode/george"
       }
-        .call(u.prototype),
+      .call(u.prototype),
       t.Mode = u
-  })
+  });
+  

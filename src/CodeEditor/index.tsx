@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useRef, useEffect, useContext } from 'react';
 import AceEditor from "react-ace";
 import "./CodeEditor.css";
 
@@ -8,6 +8,8 @@ import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/theme-xcode";
 import "./ace-mode-george";
 import "./ace-auto-complete-george";
+import "ace-builds/src-noconflict/ext-searchbox"; // Import the searchbox extension
+import "ace-builds/src-noconflict/ext-language_tools"; // Import language tools
 
 interface EditorProps {
   isDarkMode: boolean
@@ -21,14 +23,56 @@ const CodeEditor = ({isDarkMode}: EditorProps) => {
     if (openFile !== null) openFile.set(newValue);
   };
 
+  // Create a ref to store the editor instance
+  const editorRef = useRef<any>(null);
+
+  // Function to handle editor loading
+  const onEditorLoad = (editor: any) => {
+    editorRef.current = editor;
+    if (!editor.commands.commands.toggleComment) {
+      editor.commands.addCommand({
+        name: "toggleComment",
+        bindKey: { win: "Ctrl-/", mac: "Command-/" },
+        exec: function (editor: any) {
+          editor.toggleCommentLines();
+        },
+        multiSelectAction: "forEachLine",
+        scrollIntoView: "cursor",
+        readOnly: false,
+      });
+    }
+  };
+
+  // useEffect to add the keydown event listener
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
+        event.preventDefault(); // Prevent the default browser search
+        if (editorRef.current) {
+          editorRef.current.execCommand('find'); // Trigger Ace Editor's search
+        }
+      }
+    };
+
+    // Add the event listener to the document
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
-    <div className="editor">
+    <div style={{ height: "100%" }} >
       <AceEditor
         mode="george"
         theme={isDarkMode? "monokai": "xcode"}
         width="100%"
         onChange={onChange}
+        onLoad={onEditorLoad} // Add the onLoad prop
         value={value}
+        wrapEnabled={true}
         setOptions={{
           fontSize: 15,
           highlightActiveLine: false,

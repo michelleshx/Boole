@@ -49,7 +49,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     };
 
     fetchDirectories();
-  }, [onFileOpen, defaultFileSet]);
+  }, [defaultFileSet]);
 
   const toggleDirectoryExpanded = (directoryIndex: number) => {
     const updatedDirectories = [...directories];

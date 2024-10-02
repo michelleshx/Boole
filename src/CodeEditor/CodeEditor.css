@@ -1,5 +1,10 @@
 .ace_editor {
     background-color: var(--background-1);
+    height: 100% !important;
+}
+
+.ace_content {
+    cursor: text;
 }
 
 .ace_gutter {
@@ -15,3 +20,14 @@
 .ace_editor .ace_content .ace_text-layer {
     color: var(--text-color) !important; /* Example: Light purple */
 }
+
+.ace_search_field {
+    background-color: white !important;
+    color: black;
+  }
+  
+.ace_search_field:focus {
+    background-color: white !important;
+    color: black;
+}
+  
