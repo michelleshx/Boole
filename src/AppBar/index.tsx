@@ -63,6 +63,7 @@ const AppBar = ({ onVerify, isDarkMode, setDarkMode }: AppBarProps) => {
             onClose={() => setIsModalOpen(false)}
           />
           <Button text="Download" variant="secondary" onClick={onDownload} />
+          <Button text="Feedback" variant="secondary" onClick={() => window.open('https://forms.gle/UbCcHdR9eoDsCdUk7', '_blank')} />
         </div>
         <Toggle isDarkMode={isDarkMode} setDarkMode={setDarkMode}/>
       </div>
