@@ -1,6 +1,9 @@
-import React, { useRef, useEffect, useContext } from 'react';
+import React, { useRef, useEffect, useContext, useState } from 'react';
 import AceEditor from "react-ace";
 import "./CodeEditor.css";
+
+import "ace-builds/src-noconflict/keybinding-vim";
+import "ace-builds/src-noconflict/keybinding-emacs";
 
 import { FileContext } from "../context/FileContext";
 
@@ -17,6 +20,8 @@ interface EditorProps {
 
 const CodeEditor = ({isDarkMode}: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
+  
+  const [keybinding, setKeybinding] = useState<string>("default");
 
   const onChange = (newValue: string) => {
     setValue(newValue);
@@ -43,6 +48,10 @@ const CodeEditor = ({isDarkMode}: EditorProps) => {
     }
   };
 
+  const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setKeybinding(event.target.value);
+  };
+
   // useEffect to add the keydown event listener
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -65,6 +74,14 @@ const CodeEditor = ({isDarkMode}: EditorProps) => {
 
   return (
     <div style={{ height: "100%" }} >
+      <div style={{ marginBottom: "5px", display: "flex", justifyContent: "flex-end", marginTop: "5px", marginRight: "10px"}}>
+        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}>Keybinding:</label>
+        <select id="keybinding-select" value={keybinding} onChange={handleKeybindingChange}>
+          <option value="default">Default</option>
+          <option value="vim">Vim</option>
+          <option value="emacs">Emacs</option>
+        </select>
+      </div>
       <AceEditor
         mode="george"
         theme={isDarkMode? "monokai": "xcode"}
@@ -73,6 +90,7 @@ const CodeEditor = ({isDarkMode}: EditorProps) => {
         onLoad={onEditorLoad} // Add the onLoad prop
         value={value}
         wrapEnabled={true}
+        keyboardHandler={keybinding === 'default' ? undefined : keybinding}
         setOptions={{
           fontSize: 15,
           highlightActiveLine: false,
