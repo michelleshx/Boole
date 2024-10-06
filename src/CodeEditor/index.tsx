@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useContext, useState } from 'react';
+import React, { useRef, useEffect, useContext, useState } from "react";
 import AceEditor from "react-ace";
 import "./CodeEditor.css";
 
@@ -15,12 +15,13 @@ import "ace-builds/src-noconflict/ext-searchbox"; // Import the searchbox extens
 import "ace-builds/src-noconflict/ext-language_tools"; // Import language tools
 
 interface EditorProps {
-  isDarkMode: boolean
+  isDarkMode: boolean;
+  onCheck: (val: string) => void;
 }
 
-const CodeEditor = ({isDarkMode}: EditorProps) => {
+const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
-  
+
   const [keybinding, setKeybinding] = useState<string>("default");
 
   const onChange = (newValue: string) => {
@@ -55,28 +56,46 @@ const CodeEditor = ({isDarkMode}: EditorProps) => {
   // useEffect to add the keydown event listener
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === 'f') {
-        event.preventDefault(); // Prevent the default browser search
-        if (editorRef.current) {
-          editorRef.current.execCommand('find'); // Trigger Ace Editor's search
+      if (event.metaKey || event.ctrlKey) {
+        if (event.key === "f") {
+          event.preventDefault(); // Prevent the default browser search
+          if (editorRef.current) {
+            editorRef.current.execCommand("find"); // Trigger Ace Editor's search
+          }
+        } else if (event.key === "Enter") {
+          onCheck(value);
         }
       }
     };
 
     // Add the event listener to the document
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     // Cleanup the event listener on component unmount
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [value, onCheck]);
 
   return (
-    <div style={{ height: "100%" }} >
-      <div style={{ marginBottom: "5px", display: "flex", justifyContent: "flex-end", marginTop: "5px", marginRight: "10px"}}>
-        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}>Keybinding:</label>
-        <select id="keybinding-select" value={keybinding} onChange={handleKeybindingChange}>
+    <div style={{ height: "100%" }}>
+      <div
+        style={{
+          marginBottom: "5px",
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: "5px",
+          marginRight: "10px",
+        }}
+      >
+        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}>
+          Keybinding:
+        </label>
+        <select
+          id="keybinding-select"
+          value={keybinding}
+          onChange={handleKeybindingChange}
+        >
           <option value="default">Default</option>
           <option value="vim">Vim</option>
           <option value="emacs">Emacs</option>
@@ -84,13 +103,13 @@ const CodeEditor = ({isDarkMode}: EditorProps) => {
       </div>
       <AceEditor
         mode="george"
-        theme={isDarkMode? "monokai": "xcode"}
+        theme={isDarkMode ? "monokai" : "xcode"}
         width="100%"
         onChange={onChange}
         onLoad={onEditorLoad} // Add the onLoad prop
         value={value}
         wrapEnabled={true}
-        keyboardHandler={keybinding === 'default' ? undefined : keybinding}
+        keyboardHandler={keybinding === "default" ? undefined : keybinding}
         setOptions={{
           fontSize: 15,
           highlightActiveLine: false,

@@ -4,6 +4,7 @@
   padding-top: 8px;
   border-right: 1px solid var(--border);
   list-style-type: none;
+  overflow-y: auto;
 }
 
 .directoryFileList {

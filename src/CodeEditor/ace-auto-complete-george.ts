@@ -11,6 +11,7 @@ const words = [
   "check Z",
   "check PC",
   "check NONE",
+  "check PREDTYPES",
 
   // keywords
   "false",

@@ -1,7 +1,5 @@
-/* global gtag */
-
 import SplitPane from "react-split-pane";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import "./App.css";
 import AppBar from "./AppBar";
@@ -13,29 +11,46 @@ import SideBar from "./SideBar";
 import FileProvider from "./context/FileContext";
 import StateProvider from "./context/StateContext";
 
+import useVerification from "./hooks/useVerification";
+import { FileContext } from "./context/FileContext";
+
 function App() {
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
   const [feedback, setFeedback] = useState(
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
+  const [showBottomPanel, setShowBottomPanel] = useState<boolean>(true);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
+  const { value } = useContext(FileContext);
 
   const onVerify = (feedback: string) => {
     setFeedback(feedback);
+    setShowBottomPanel(true);
     setFeedbackExpanded(true);
+  };
+
+  const { verifying, verifiedValue, valid, magicUsed, verify } =
+    useVerification(value, onVerify);
+
+  const onCheck = (val: string) => {
+    verify(val);
   };
 
   return (
     <div className="App">
       <FileProvider>
         <StateProvider>
-          <AppBar 
-            onVerify={(feedback) => onVerify(feedback)}
-            isDarkMode={isDarkMode} 
+          <AppBar
+            isDarkMode={isDarkMode}
             setDarkMode={setDarkMode}
-            />
+            verifying={verifying}
+            verifiedValue={verifiedValue}
+            valid={valid}
+            magicUsed={magicUsed}
+            onCheck={onCheck}
+          />
           <div
             style={{
               display: "flex",
@@ -63,13 +78,15 @@ function App() {
               ) : (
                 <SidePanel onVerify={(feedback) => onVerify(feedback)} />
               )}
-              <CodeEditor isDarkMode={isDarkMode}/>
+              <CodeEditor isDarkMode={isDarkMode} onCheck={onCheck} />
             </SplitPane>
           </div>
           <BottomPanel
             feedback={feedback}
             feedbackExpanded={feedbackExpanded}
             setFeedbackExpanded={setFeedbackExpanded}
+            showBottomPanel={showBottomPanel}
+            setShowBottomPanel={setShowBottomPanel}
           />
         </StateProvider>
       </FileProvider>

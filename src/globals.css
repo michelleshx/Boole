@@ -137,6 +137,7 @@ div {
 /* Scrollbar */
 ::-webkit-scrollbar {
   background: rgba(82, 69, 165, 0.35);
+  width: 16px;
 }
 
 ::-webkit-scrollbar-thumb {
