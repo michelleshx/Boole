@@ -14,21 +14,28 @@ interface BottomPanelProps {
   feedback: string;
   feedbackExpanded: boolean;
   setFeedbackExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  showBottomPanel: boolean;
+  setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const BottomPanel = ({
   feedback,
   feedbackExpanded,
   setFeedbackExpanded,
+  showBottomPanel,
+  setShowBottomPanel,
 }: BottomPanelProps) => {
   const [expressionExpanded, setExpressionExpanded] = useState(false);
-  const [showBottomPanel, setShowBottomPanel] = useState<boolean>(true);
 
   return (
     <div className={styles.container}>
       <button
         className={styles.topHeader}
         onClick={() => setShowBottomPanel(!showBottomPanel)}
+        aria-label={
+          showBottomPanel ? "Minimize Panel Size" : "Maximize Panel Size"
+        }
+        title={showBottomPanel ? "Minimize Panel Size" : "Maximize Panel Size"}
       >
         <FontAwesomeIcon icon={showBottomPanel ? faChevronDown : faChevronUp} />
       </button>
@@ -48,6 +55,8 @@ const BottomPanel = ({
                 ],
               ].join(" ")}
               onClick={() => setFeedbackExpanded(!feedbackExpanded)}
+              aria-label="Debug Console"
+              title="Debug Console"
             >
               <FontAwesomeIcon
                 icon={feedbackExpanded ? faChevronDown : faChevronRight}
@@ -78,6 +87,8 @@ const BottomPanel = ({
                 ],
               ].join(" ")}
               onClick={() => setExpressionExpanded(!expressionExpanded)}
+              aria-label="Expression Evaluator"
+              title="Expression Evaluator"
             >
               <FontAwesomeIcon
                 icon={expressionExpanded ? faChevronDown : faChevronRight}

@@ -8,6 +8,8 @@ interface IButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   fullWidth?: boolean;
+  title: string;
+  ariaLabel?: string;
   children?: ReactNode;
 }
 
@@ -18,6 +20,8 @@ const Button: React.FC<IButtonProps> = ({
   onClick = () => {},
   disabled = false,
   fullWidth,
+  title,
+  ariaLabel,
   children,
 }) => {
   return (
@@ -30,6 +34,8 @@ const Button: React.FC<IButtonProps> = ({
       ].join(" ")}
       onClick={onClick}
       disabled={disabled}
+      title={title}
+      aria-label={ariaLabel ? ariaLabel : title}
     >
       {text}
       <span className={styles.icon}>{children}</span>

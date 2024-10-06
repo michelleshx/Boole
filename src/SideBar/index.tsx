@@ -29,6 +29,8 @@ const SideBar = ({
             : setShowRightPanel(true);
           setIsFileTab(true);
         }}
+        aria-label="File Explorer"
+        title="File Explorer"
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
@@ -43,6 +45,8 @@ const SideBar = ({
             : setShowRightPanel(true);
           setIsFileTab(false);
         }}
+        aria-label="Debug"
+        title="Debug"
       >
         <FontAwesomeIcon icon={faBug} />
       </button>

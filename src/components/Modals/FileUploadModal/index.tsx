@@ -74,8 +74,13 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) =>
       </h2>
       <input type="file" accept=".txt,.grg" onChange={handleFileChange} />
       <div className={styles.buttonContainer}>
-        <Button text="Upload" variant="primary" onClick={handleUpload} />
-        <Button text="Close" variant="exit" onClick={onClose} />
+        <Button
+          text="Upload"
+          variant="primary"
+          onClick={handleUpload}
+          title="Upload"
+        />
+        <Button text="Close" variant="exit" onClick={onClose} title="Close" />
       </div>
     </Modal>
   );

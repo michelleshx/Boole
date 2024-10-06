@@ -4,20 +4,29 @@ import styles from "./AppBar.module.css";
 
 import { Button, Loading, Toggle } from "../components";
 import FileUploadModal from "../components/Modals/FileUploadModal";
-import useVerification from "../hooks/useVerification";
 import { FileContext } from "../context/FileContext";
 import { download } from "../common/download";
 
 interface AppBarProps {
-  onVerify: (feedback: string) => void;
   isDarkMode: boolean;
   setDarkMode: React.Dispatch<React.SetStateAction<boolean>>;
+  verifying: boolean;
+  verifiedValue: string | null;
+  valid: boolean;
+  magicUsed: boolean;
+  onCheck: (val: string) => void;
 }
 
-const AppBar = ({ onVerify, isDarkMode, setDarkMode }: AppBarProps) => {
+const AppBar = ({
+  isDarkMode,
+  setDarkMode,
+  verifying,
+  verifiedValue,
+  valid,
+  magicUsed,
+  onCheck,
+}: AppBarProps) => {
   const { value, openFile } = useContext(FileContext);
-  const { verifying, verifiedValue, valid, magicUsed, verify } =
-    useVerification(value, onVerify);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onDownload = () => {
@@ -46,7 +55,8 @@ const AppBar = ({ onVerify, isDarkMode, setDarkMode }: AppBarProps) => {
             text="Ask George"
             variant="primary"
             disabled={verifying || verifiedValue === value}
-            onClick={() => verify(value)}
+            onClick={() => onCheck(value)}
+            title="Ask George (Ctrl+Enter)"
           >
             {verifying && <Loading />}
             {verifiedValue === value &&
@@ -56,18 +66,25 @@ const AppBar = ({ onVerify, isDarkMode, setDarkMode }: AppBarProps) => {
             text="Upload file"
             variant="secondary"
             onClick={() => setIsModalOpen(true)}
+            title="Upload file"
           />
           <FileUploadModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
           />
-          <Button text="Download" variant="secondary" onClick={onDownload} />
+          <Button
+            text="Download"
+            variant="secondary"
+            onClick={onDownload}
+            title="Download"
+          />
           <Button
             text="Report a bug"
             variant="tertiary"
             onClick={() =>
               window.open("https://forms.gle/VFa46GjTy2nDf9VPA", "_blank")
             }
+            title="Report a bug"
           />
         </div>
         <Toggle isDarkMode={isDarkMode} setDarkMode={setDarkMode} />

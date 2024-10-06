@@ -61,7 +61,13 @@ const OperationsTab = () => {
             );
           })}
           <div className={styles.rightAlign}>
-            <Button text="Apply Operation" variant="primary" size="small" />
+            <Button
+              text="Apply Operation"
+              variant="primary"
+              size="small"
+              aria-label="Apply Operation"
+              title="Apply Operation"
+            />
           </div>
         </ExpandableListItem>
       ))}

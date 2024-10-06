@@ -68,6 +68,7 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
         onClick={() => onDebug()}
         disabled={debugging}
         fullWidth
+        title="Start Debugging"
       >
         {debugging && <Loading />}
       </Button>

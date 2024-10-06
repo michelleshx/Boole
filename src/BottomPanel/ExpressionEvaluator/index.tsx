@@ -24,6 +24,8 @@ const ExpressionEvaluator = () => {
         <button
           className={styles.iconButton}
           onClick={() => evaluateExpression()}
+          aria-label="Evaluate expression"
+          title="Evaluate expression"
         >
           <FontAwesomeIcon icon={faPlay} style={{ marginLeft: "2px" }} />
         </button>

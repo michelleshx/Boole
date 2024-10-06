@@ -9,7 +9,7 @@
 
 .ace_gutter {
     background-color: var(--background-3) !important;
-    color: var(--text-color) !important;
+    color: var(--text-color-secondary) !important;
 }
 
 .ace_gutter-active-line {
@@ -31,3 +31,6 @@
     color: black;
 }
   
+.ace_editor.ace_autocomplete {
+    height: 168px !important;
+}
