@@ -1,7 +1,8 @@
 {
-  "name": "Boole",
-  "version": "0.1.0",
+  "name": "James (Formerly Boole)",
+  "version": "0.2.0",
   "description": "A full-featured front end for George with various qualify-of-life features and workflow improvements.",
+  "homepage": ".",
   "author": [
     "Shazz Amin <me@shazz.me>",
     "Derek Yin <derek.yin@uwaterloo.ca>"
