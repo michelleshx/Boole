@@ -4,10 +4,10 @@ import {
   faChevronRight,
   faChevronDown,
   faBug,
-  faCalculator,
+  // faCalculator,
   faChevronUp,
 } from "@fortawesome/free-solid-svg-icons";
-import ExpressionEvaluator from "./ExpressionEvaluator";
+// import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
 
 interface BottomPanelProps {
@@ -25,7 +25,7 @@ const BottomPanel = ({
   showBottomPanel,
   setShowBottomPanel,
 }: BottomPanelProps) => {
-  const [expressionExpanded, setExpressionExpanded] = useState(false);
+  // const [expressionExpanded, setExpressionExpanded] = useState(false);
 
   return (
     <div className={styles.container}>

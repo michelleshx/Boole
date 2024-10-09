@@ -22,14 +22,14 @@ interface SidePanelProps {
 
 const SidePanel = ({ onVerify }: SidePanelProps) => {
   const [activeTab, setActiveTab] = useState(tabs.state);
-  const { value, fileType, setFileType } = useContext(FileContext); // TODO set file type when setisdebugging clicked
+  const { fileType } = useContext(FileContext); // TODO set file type when setisdebugging clicked
   const [isDebugging, setIsDebugging] = useState(false); // TODO move this to global context (simplified or not)
 
   return (
     <aside className={styles.sidePanel}>
       {!isDebugging ? (
         <DefaultTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
-      ) : fileType == FileType.Z ? (
+      ) : fileType === FileType.Z ? (
         <>
           <div className={styles.tabHeaders}>
             {Object.keys(tabs).map((tabKey) => (

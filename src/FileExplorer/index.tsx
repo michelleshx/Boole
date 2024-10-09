@@ -1,6 +1,6 @@
 /* global gtag */
 
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import styles from "./FileExplorer.module.css";
 
 import Directories, { Directory } from "../common/directories";
@@ -20,17 +20,20 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 
   const { setValue, openFile, setOpenFile } = useContext(FileContext);
 
-  const onFileOpen = async (file: File) => {
-    try {
-      // to do handle null values
-      setValue((await file.get()) ?? "");
-      setOpenFile(file);
-    } catch {
-      alert("Failed to open file!"); // TODO debug this
-    }
+  const onFileOpen = useCallback(
+    async (file: File) => {
+      try {
+        // to do handle null values
+        setValue((await file.get()) ?? "");
+        setOpenFile(file);
+      } catch {
+        alert("Failed to open file!"); // TODO debug this
+      }
 
-    // TODO reset editor
-  };
+      // TODO reset editor
+    },
+    [setValue, setOpenFile]
+  );
 
   useEffect(() => {
     const fetchDirectories = async () => {
@@ -52,7 +55,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     };
 
     fetchDirectories();
-  }, [defaultFileSet]);
+  }, [defaultFileSet, onFileOpen]);
 
   const toggleDirectoryExpanded = (directoryIndex: number) => {
     const updatedDirectories = [...directories];

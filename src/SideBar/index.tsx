@@ -1,7 +1,10 @@
 import styles from "./SideBar.module.css";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder, faBug } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFolder,
+  // faBug
+} from "@fortawesome/free-solid-svg-icons";
 
 interface SideBarProps {
   isFileTab: boolean;

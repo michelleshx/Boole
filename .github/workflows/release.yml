@@ -19,7 +19,7 @@ jobs:
 
       - run: npm run build
 
-      - run: tar -czf ../Boole.tar.gz *
+      - run: tar -cJf ../James.tar.gz *
         working-directory: build/
 
       - run: echo "::set-output name=datetime::$(date +'%Y-%m-%dT%H-%M-%S')"
@@ -27,7 +27,7 @@ jobs:
 
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "Boole.tar.gz"
+          artifacts: "James.tar.xz"
           tag: ${{ steps.datetime.outputs.datetime }}
           commit: "main-se212website"
           token: ${{ secrets.GITHUB_TOKEN }}
