@@ -38,7 +38,7 @@ const SidePanel = ({ onVerify }: SidePanelProps) => {
                 className={styles.tab}
                 onClick={() => setActiveTab(tabs[tabKey as keyof Tabs])}
               >
-                <a
+                <div
                   className={
                     activeTab === tabs[tabKey as keyof Tabs]
                       ? styles["tab--active"]
@@ -46,7 +46,7 @@ const SidePanel = ({ onVerify }: SidePanelProps) => {
                   }
                 >
                   {tabKey}
-                </a>
+                </div>
               </div>
             ))}
           </div>
@@ -59,13 +59,13 @@ const SidePanel = ({ onVerify }: SidePanelProps) => {
       ) : (
         <>
           <div className={styles.tabHeaders}>
-            <a
+            <div
               className={
                 activeTab === tabs["state"] ? styles["tab--active"] : undefined
               }
             >
               State
-            </a>
+            </div>
           </div>
           <div className={styles.tabContent}>
             {activeTab === tabs.state && <StateTab />}
