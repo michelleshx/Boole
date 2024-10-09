@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [ master-se212website ]
+    branches: [james-se212website]
   workflow_dispatch:
 
 jobs:
@@ -13,7 +13,7 @@ jobs:
 
       - uses: actions/setup-node@v2-beta
         with:
-          node-version: '10.10'
+          node-version: "18.17"
 
       - run: npm install
 
@@ -29,5 +29,5 @@ jobs:
         with:
           artifacts: "Boole.tar.gz"
           tag: ${{ steps.datetime.outputs.datetime }}
-          commit: "master-se212website"
+          commit: "main-se212website"
           token: ${{ secrets.GITHUB_TOKEN }}
