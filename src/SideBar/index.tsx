@@ -34,7 +34,7 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
-      {/* <button
+      <button
         className={[
           styles.button,
           styles[`button--${showRightPanel && !isFileTab ? "active" : ""}`],
@@ -49,7 +49,7 @@ const SideBar = ({
         title="Debug"
       >
         <FontAwesomeIcon icon={faBug} />
-      </button> */}
+      </button>
     </div>
   );
 };
