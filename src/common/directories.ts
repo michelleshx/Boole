@@ -22,7 +22,7 @@ export default class Directories {
         const directories: Directory[] = (
           await axios({
             method: "get",
-            url: "/files.json",
+            url: "/~se212/files.json",
             responseType: "json",
           })
         ).data;
