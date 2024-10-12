@@ -71,7 +71,7 @@ const BottomPanel = ({
               />
             )}
           </div>
-          {/* <div
+          <div
             className={[
               styles.panel,
               styles[
@@ -100,7 +100,7 @@ const BottomPanel = ({
               )}
             </button>
             {expressionExpanded && <ExpressionEvaluator />}
-          </div> */}
+          </div>
         </div>
       )}
     </div>

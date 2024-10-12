@@ -3,7 +3,10 @@
 import { useState } from "react";
 import axios from "axios";
 
-const useVerification = (value: string, onVerify: (feedback: string) => void) => {
+const useVerification = (
+  value: string,
+  onVerify: (feedback: string) => void
+) => {
   const [verifying, setVerifying] = useState(false);
   const [verifiedValue, setVerifiedValue] = useState<string | null>(null);
   const [valid, setValid] = useState(false);
@@ -15,7 +18,7 @@ const useVerification = (value: string, onVerify: (feedback: string) => void) =>
     gtag("event", "verify");
 
     axios
-      .post("https://student.cs.uwaterloo.ca/~se212/george/ask-george/cgi-bin/george.cgi/check", valueToValidate, {
+      .post("/george/ask-george/cgi-bin/george.cgi/check", valueToValidate, {
         headers: { "Content-type": "text/plain" },
       })
       .then((response) => {
@@ -26,7 +29,7 @@ const useVerification = (value: string, onVerify: (feedback: string) => void) =>
 
         const isMagicUsed =
           feedback.indexOf("\n-- Warning: magic rule has been used.\n") !==
-          -1 || feedback.indexOf("\n-- Warning: branch is open") !== -1;
+            -1 || feedback.indexOf("\n-- Warning: branch is open") !== -1;
 
         setVerifiedValue(valueToValidate);
         setValid(isValid);

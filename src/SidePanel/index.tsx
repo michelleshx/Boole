@@ -22,14 +22,14 @@ interface SidePanelProps {
 
 const SidePanel = ({ onVerify }: SidePanelProps) => {
   const [activeTab, setActiveTab] = useState(tabs.state);
-  const { value, fileType, setFileType } = useContext(FileContext); // TODO set file type when setisdebugging clicked
+  const { fileType } = useContext(FileContext); // TODO set file type when setisdebugging clicked
   const [isDebugging, setIsDebugging] = useState(false); // TODO move this to global context (simplified or not)
 
   return (
     <aside className={styles.sidePanel}>
       {!isDebugging ? (
         <DefaultTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
-      ) : fileType == FileType.Z ? (
+      ) : fileType === FileType.Z ? (
         <>
           <div className={styles.tabHeaders}>
             {Object.keys(tabs).map((tabKey) => (
@@ -38,7 +38,7 @@ const SidePanel = ({ onVerify }: SidePanelProps) => {
                 className={styles.tab}
                 onClick={() => setActiveTab(tabs[tabKey as keyof Tabs])}
               >
-                <a
+                <div
                   className={
                     activeTab === tabs[tabKey as keyof Tabs]
                       ? styles["tab--active"]
@@ -46,7 +46,7 @@ const SidePanel = ({ onVerify }: SidePanelProps) => {
                   }
                 >
                   {tabKey}
-                </a>
+                </div>
               </div>
             ))}
           </div>
@@ -59,13 +59,13 @@ const SidePanel = ({ onVerify }: SidePanelProps) => {
       ) : (
         <>
           <div className={styles.tabHeaders}>
-            <a
+            <div
               className={
                 activeTab === tabs["state"] ? styles["tab--active"] : undefined
               }
             >
               State
-            </a>
+            </div>
           </div>
           <div className={styles.tabContent}>
             {activeTab === tabs.state && <StateTab />}
