@@ -51,13 +51,13 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
       >
         <p className={styles.text}>
           Open a&nbsp;
-          <a
+          <span
             className={styles.hoverText}
             onMouseOver={() => setIsPopoverOpen(true)}
             onMouseLeave={() => setIsPopoverOpen(false)}
           >
             supported*
-          </a>
+          </span>
           &nbsp;file to start debugging.
         </p>
       </Popover>

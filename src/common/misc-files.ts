@@ -1,4 +1,4 @@
-export default [
+const example = [
   {
     name: "scratchpad.grg",
     contents: `#u name
@@ -29,3 +29,5 @@ p => !q, r => q |- p => !r
 6) p => !r by imp_i on 3-5`,
   },
 ];
+
+export default example;
