@@ -23,9 +23,13 @@ const useDebugger = (onVerify: (feedback: string) => void) => {
 
     // TODO change this to the correct check predtype endpoint?
     axios
-      .post("/george/ask-george/cgi-bin/george.cgi/check", valueToValidate, {
-        headers: { "Content-type": "text/plain" },
-      })
+      .post(
+        "/~se212/george/ask-george/cgi-bin/george.cgi/check",
+        valueToValidate,
+        {
+          headers: { "Content-type": "text/plain" },
+        }
+      )
       .then((response) => {
         const feedback = response.data;
         const isValid =
