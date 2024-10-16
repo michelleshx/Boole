@@ -105,7 +105,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           <option value="vim">Vim</option>
           <option value="emacs">Emacs</option>
         </select>
-        <label htmlFor="autocomplete-select" style={{ marginLeft: "10px", marginRight: "5px" }}> // Label for autocomplete dropdown
+        <label htmlFor="autocomplete-select" style={{ marginLeft: "10px", marginRight: "5px" }}>
         Autocomplete:
         </label>
         <select
