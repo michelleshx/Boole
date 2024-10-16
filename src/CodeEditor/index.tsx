@@ -21,7 +21,7 @@ interface EditorProps {
 
 const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
-  const [autocomplete, setAutocomplete] = useState<boolean>(true);
+  const [autocomplete, setAutocomplete] = useState<boolean>(true); //State for autocomplete
 
   const [keybinding, setKeybinding] = useState<string>("default");
 
@@ -54,7 +54,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
     setKeybinding(event.target.value);
   };
 
-  const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => { //Handle autcomplete change
     setAutocomplete(event.target.value === "true");
   };
 
@@ -93,7 +93,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           marginRight: "10px",
         }}
       >
-        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}>
+        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}> 
           Keybinding:
         </label>
         <select
@@ -105,7 +105,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           <option value="vim">Vim</option>
           <option value="emacs">Emacs</option>
         </select>
-        <label htmlFor="autocomplete-select" style={{ marginRight: "5px" }}>
+        <label htmlFor="autocomplete-select" style={{ marginLeft: "10px", marginRight: "5px" }}> // Label for autocomplete dropdown
         Autocomplete:
         </label>
         <select
@@ -139,7 +139,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           showPrintMargin: false,
           scrollPastEnd: true,
           displayIndentGuides: true,
-          enableBasicAutocompletion: autocomplete,
+          enableBasicAutocompletion: autocomplete, // Toggle autocomplete via autocomplete state
           enableLiveAutocompletion: autocomplete,
         }}
         name="UNIQUE_ID_OF_DIV"
