@@ -21,6 +21,7 @@ interface EditorProps {
 
 const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
+  const [autocomplete, setAutocomplete] = useState<boolean>(true); //State for autocomplete
 
   const [keybinding, setKeybinding] = useState<string>("default");
 
@@ -51,6 +52,10 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
 
   const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setKeybinding(event.target.value);
+  };
+
+  const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => { //Handle autcomplete change
+    setAutocomplete(event.target.value === "true");
   };
 
   // useEffect to add the keydown event listener
@@ -88,7 +93,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           marginRight: "10px",
         }}
       >
-        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}>
+        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}> 
           Keybinding:
         </label>
         <select
@@ -100,6 +105,18 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           <option value="vim">Vim</option>
           <option value="emacs">Emacs</option>
         </select>
+        <label htmlFor="autocomplete-select" style={{ marginLeft: "10px", marginRight: "5px" }}>
+        Autocomplete:
+        </label>
+        <select
+          id="autocomplete-select"
+          value={autocomplete.toString()}
+          onChange={handleAutocompleteChange}
+        >
+          <option value="true">On</option>
+          <option value="false">Off</option>
+        </select>
+          
       </div>
       <AceEditor
         mode="george"
@@ -122,8 +139,8 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           showPrintMargin: false,
           scrollPastEnd: true,
           displayIndentGuides: true,
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
+          enableBasicAutocompletion: autocomplete, // Toggle autocomplete via autocomplete state
+          enableLiveAutocompletion: autocomplete,
         }}
         name="UNIQUE_ID_OF_DIV"
         editorProps={{ $blockScrolling: true }}
