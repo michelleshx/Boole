@@ -15,6 +15,9 @@ interface AppBarProps {
   valid: boolean;
   magicUsed: boolean;
   onCheck: (val: string) => void;
+  onSubmit: (val: string) => void;
+  submittedValue: string | null;
+  submitting: boolean;
 }
 
 const AppBar = ({
@@ -25,6 +28,9 @@ const AppBar = ({
   valid,
   magicUsed,
   onCheck,
+  onSubmit,
+  submittedValue,
+  submitting,
 }: AppBarProps) => {
   const { value, openFile } = useContext(FileContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -61,6 +67,16 @@ const AppBar = ({
             {verifying && <Loading />}
             {verifiedValue === value &&
               (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
+          </Button>
+          <Button
+            text="Submit to Markus"
+            onClick={() => onSubmit(value)}
+            title="Submit to Markus"
+            variant="markus"
+            disabled={submitting || submittedValue === value}
+          >
+            {submitting && <Loading />}
+            {submittedValue && submittedValue === value && "✔"}
           </Button>
           <Button
             text="Upload file"

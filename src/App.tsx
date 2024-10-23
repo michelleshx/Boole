@@ -13,11 +13,12 @@ import StateProvider from "./context/StateContext";
 
 import useVerification from "./hooks/useVerification";
 import { FileContext } from "./context/FileContext";
+import useSubmission from "./hooks/useSubmission";
 
 function App() {
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
   const [feedback, setFeedback] = useState(
-    'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
+    'Click the "Ask George" button (Ctrl+Enter) to get feedback or Start Debugging a Z-Spec'
   );
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(true);
@@ -33,9 +34,14 @@ function App() {
 
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
+  const { submitting, submittedValue, submit } = useSubmission(onVerify);
 
   const onCheck = (val: string) => {
     verify(val);
+  };
+
+  const onSubmit = (val: string) => {
+    submit(val);
   };
 
   return (
@@ -50,6 +56,9 @@ function App() {
             valid={valid}
             magicUsed={magicUsed}
             onCheck={onCheck}
+            onSubmit={onSubmit}
+            submittedValue={submittedValue}
+            submitting={submitting}
           />
           <div
             style={{
