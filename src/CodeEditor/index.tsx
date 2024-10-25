@@ -83,7 +83,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
   }, [value, onCheck]);
 
   return (
-    <div style={{ height: "100%" }}>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <div
         style={{
           marginBottom: "5px",
@@ -118,33 +118,36 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
         </select>
           
       </div>
-      <AceEditor
-        mode="george"
-        theme={isDarkMode ? "monokai" : "xcode"}
-        width="100%"
-        onChange={onChange}
-        onLoad={onEditorLoad} // Add the onLoad prop
-        value={value}
-        wrapEnabled={true}
-        keyboardHandler={keybinding === "default" ? undefined : keybinding}
-        setOptions={{
-          fontSize: 15,
-          highlightActiveLine: false,
-          fixedWidthGutter: true,
-          useSoftTabs: true,
-          tabSize: 4,
-          selectionStyle: "line",
-          behavioursEnabled: true,
-          showLineNumbers: true,
-          showPrintMargin: false,
-          scrollPastEnd: true,
-          displayIndentGuides: true,
-          enableBasicAutocompletion: autocomplete, // Toggle autocomplete via autocomplete state
-          enableLiveAutocompletion: autocomplete,
-        }}
-        name="UNIQUE_ID_OF_DIV"
-        editorProps={{ $blockScrolling: true }}
-      />
+      <div style={{ flexGrow: 1 }}>
+        <AceEditor
+          mode="george"
+          theme={isDarkMode ? "monokai" : "xcode"}
+          width="100%"
+          height="100%"
+          onChange={onChange}
+          onLoad={onEditorLoad} // Add the onLoad prop
+          value={value}
+          wrapEnabled={true}
+          keyboardHandler={keybinding === "default" ? undefined : keybinding}
+          setOptions={{
+            fontSize: 15,
+            highlightActiveLine: false,
+            fixedWidthGutter: true,
+            useSoftTabs: true,
+            tabSize: 4,
+            selectionStyle: "line",
+            behavioursEnabled: true,
+            showLineNumbers: true,
+            showPrintMargin: false,
+            scrollPastEnd: true,
+            displayIndentGuides: true,
+            enableBasicAutocompletion: autocomplete, // Toggle autocomplete via autocomplete state
+            enableLiveAutocompletion: autocomplete,
+          }}
+          name="UNIQUE_ID_OF_DIV"
+          editorProps={{ $blockScrolling: true }}
+        />
+      </div>
     </div>
   );
 };
