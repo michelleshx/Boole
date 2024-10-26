@@ -138,8 +138,8 @@ const SideBar = ({
             return newSettingsExpanded;
           });
         }}
-        aria-label="Expression Evaluator"
-        title="Expression Evaluator"
+        aria-label="Settings"
+        title="Settings"
       >
         <FontAwesomeIcon icon={faGear} />
       </button>
