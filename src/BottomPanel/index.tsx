@@ -16,6 +16,8 @@ interface BottomPanelProps {
   setFeedbackExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
+  expressionExpanded: boolean;
+  setExpressionExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const BottomPanel = ({
@@ -24,8 +26,9 @@ const BottomPanel = ({
   setFeedbackExpanded,
   showBottomPanel,
   setShowBottomPanel,
+  expressionExpanded,
+  setExpressionExpanded
 }: BottomPanelProps) => {
-  const [expressionExpanded, setExpressionExpanded] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -47,7 +50,7 @@ const BottomPanel = ({
               styles[`panel--${feedbackExpanded ? "horizontal" : "vertical"}`],
             ].join(" ")}
           >
-            <button
+            {/* <button
               className={[
                 styles.button,
                 styles[
@@ -62,7 +65,7 @@ const BottomPanel = ({
                 icon={feedbackExpanded ? faChevronDown : faChevronRight}
               />
               {feedbackExpanded ? "Feedback" : <FontAwesomeIcon icon={faBug} />}
-            </button>
+            </button> */}
             {feedbackExpanded && (
               <textarea
                 className={styles.output}
@@ -71,15 +74,17 @@ const BottomPanel = ({
               />
             )}
           </div>
-          <div
+
+          {/* // */}
+          {/* <div
             className={[
               styles.panel,
               styles[
                 `panel--${expressionExpanded ? "horizontal" : "vertical"}`
               ],
             ].join(" ")}
-          >
-            <button
+          > */}
+            {/* <button
               className={[
                 styles.button,
                 styles[
@@ -98,9 +103,10 @@ const BottomPanel = ({
               ) : (
                 <FontAwesomeIcon icon={faCalculator} />
               )}
-            </button>
+            </button> */}
             {expressionExpanded && <ExpressionEvaluator />}
-          </div>
+          {/* </div> */}
+
         </div>
       )}
     </div>
