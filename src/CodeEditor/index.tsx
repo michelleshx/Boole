@@ -17,13 +17,23 @@ import "ace-builds/src-noconflict/ext-language_tools"; // Import language tools
 interface EditorProps {
   isDarkMode: boolean;
   onCheck: (val: string) => void;
+  autocomplete: boolean;
+  setAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
+  keybinding: string;
+  setKeybinding: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
+const CodeEditor = ({ 
+  isDarkMode, 
+  onCheck,
+  autocomplete,
+  setAutocomplete,
+  keybinding,
+  setKeybinding
+}: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
-  const [autocomplete, setAutocomplete] = useState<boolean>(true); //State for autocomplete
-
-  const [keybinding, setKeybinding] = useState<string>("default");
+  // const [autocomplete, setAutocomplete] = useState<boolean>(true); //State for autocomplete
+  // const [keybinding, setKeybinding] = useState<string>("default");
 
   const onChange = (newValue: string) => {
     setValue(newValue);
@@ -50,13 +60,13 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
     }
   };
 
-  const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setKeybinding(event.target.value);
-  };
+  // const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setKeybinding(event.target.value);
+  // };
 
-  const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => { //Handle autcomplete change
-    setAutocomplete(event.target.value === "true");
-  };
+  // const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => { //Handle autcomplete change
+  //   setAutocomplete(event.target.value === "true");
+  // };
 
   // useEffect to add the keydown event listener
   useEffect(() => {
@@ -84,7 +94,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <div
+      {/* <div
         style={{
           marginBottom: "5px",
           display: "flex",
@@ -117,7 +127,7 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
           <option value="false">Off</option>
         </select>
           
-      </div>
+      </div> */}
       <div style={{ flexGrow: 1 }}>
         <AceEditor
           mode="george"

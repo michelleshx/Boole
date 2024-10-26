@@ -1,7 +1,7 @@
 import styles from "./SideBar.module.css";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder, faBug, faCalculator, faExclamationCircle } from "@fortawesome/free-solid-svg-icons";
+import { faFolder, faBug, faCalculator, faExclamationCircle, faGear } from "@fortawesome/free-solid-svg-icons";
 
 interface SideBarProps {
   isFileTab: boolean;
@@ -14,6 +14,8 @@ interface SideBarProps {
   setExpressionExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
+  settingsExpanded: boolean;
+  setSettingsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SideBar = ({
@@ -26,7 +28,9 @@ const SideBar = ({
   expressionExpanded,
   setExpressionExpanded,
   showBottomPanel,
-  setShowBottomPanel
+  setShowBottomPanel,
+  settingsExpanded,
+  setSettingsExpanded,
 }: SideBarProps) => {
   return (
     <div className={styles.sideBar}>
@@ -82,7 +86,7 @@ const SideBar = ({
             } else {
               newFeedbackExpanded = true;
             }
-            setShowBottomPanel(newFeedbackExpanded || expressionExpanded);
+            setShowBottomPanel(newFeedbackExpanded || expressionExpanded || settingsExpanded);
             return newFeedbackExpanded;
           });
         }}
@@ -106,7 +110,7 @@ const SideBar = ({
             } else {
               newExpressionExpanded = true;
             }
-            setShowBottomPanel(newExpressionExpanded || feedbackExpanded);
+            setShowBottomPanel(newExpressionExpanded || feedbackExpanded || settingsExpanded);
             return newExpressionExpanded;
           });
         }}
@@ -114,6 +118,30 @@ const SideBar = ({
         title="Expression Evaluator"
       >
         <FontAwesomeIcon icon={faCalculator} />
+      </button>
+
+      <button
+        className={[
+          styles.button,
+          styles[`button--${settingsExpanded ? "active" : ""}`],
+          styles.bottomButton,
+        ].join(" ")}
+        onClick={() => {
+          setSettingsExpanded((prev) => {
+            var newSettingsExpanded = prev;
+            if (showBottomPanel){
+              newSettingsExpanded = !prev;
+            } else {
+              newSettingsExpanded = true;
+            }
+            setShowBottomPanel(newSettingsExpanded || feedbackExpanded || expressionExpanded);
+            return newSettingsExpanded;
+          });
+        }}
+        aria-label="Expression Evaluator"
+        title="Expression Evaluator"
+      >
+        <FontAwesomeIcon icon={faGear} />
       </button>
       
     </div>

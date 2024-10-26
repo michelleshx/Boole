@@ -19,12 +19,15 @@ function App() {
   const [feedback, setFeedback] = useState(
     'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
   );
+  const [settingsExpanded, setSettingsExpanded] = useState<boolean>(false);
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
   const [expressionExpanded, setExpressionExpanded] = useState(false);
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
   const { value } = useContext(FileContext);
+  const [autocomplete, setAutocomplete] = useState<boolean>(true);
+  const [keybinding, setKeybinding] = useState<string>("default");
 
   const onVerify = (feedback: string) => {
     setFeedback(feedback);
@@ -73,6 +76,8 @@ function App() {
               setExpressionExpanded={setExpressionExpanded} 
               showBottomPanel={showBottomPanel} 
               setShowBottomPanel={setShowBottomPanel}
+              settingsExpanded={settingsExpanded}
+              setSettingsExpanded={setSettingsExpanded}
             />
             <div
               style={{
@@ -95,7 +100,14 @@ function App() {
                 ) : (
                   <SidePanel onVerify={(feedback) => onVerify(feedback)} />
                 )}
-                <CodeEditor isDarkMode={isDarkMode} onCheck={onCheck} />
+                <CodeEditor 
+                isDarkMode={isDarkMode} 
+                onCheck={onCheck} 
+                autocomplete={autocomplete}
+                setAutocomplete={setAutocomplete}
+                keybinding={keybinding}
+                setKeybinding={setKeybinding}
+                />
               </SplitPane>
               <BottomPanel
                 feedback={feedback}
@@ -105,6 +117,12 @@ function App() {
                 setExpressionExpanded={setExpressionExpanded}
                 showBottomPanel={showBottomPanel}
                 setShowBottomPanel={setShowBottomPanel}
+                settingsExpanded={settingsExpanded}
+                setSettingsExpanded={setSettingsExpanded}
+                autocomplete={autocomplete}
+                setAutocomplete={setAutocomplete}
+                keybinding={keybinding}
+                setKeybinding={setKeybinding}
               />
             </div>
           </div>
