@@ -56,7 +56,7 @@ const AppBar = ({
             variant="primary"
             disabled={verifying || verifiedValue === value}
             onClick={() => onCheck(value)}
-            title="Ask George (Ctrl+Enter)"
+            title="Ask George (Ctrl/Cmd+Enter)"
           >
             {verifying && <Loading />}
             {verifiedValue === value &&
