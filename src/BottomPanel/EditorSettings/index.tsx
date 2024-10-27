@@ -71,7 +71,7 @@ const EditorSettings: React.FC<EditorSettingsProps> = ({
               text="Report bug"
               variant="primary"
               size="medium"
-              onClick={() => handleButtonClick}
+              onClick={handleButtonClick}
               title="Report bug"
             ></Button>
           </div>
