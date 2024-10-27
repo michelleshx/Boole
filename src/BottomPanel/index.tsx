@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
+import EditorSettings from "./EditorSettings";
 
 interface BottomPanelProps {
   feedback: string;
@@ -16,6 +17,14 @@ interface BottomPanelProps {
   setFeedbackExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
+  expressionExpanded: boolean;
+  setExpressionExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  settingsExpanded: boolean;
+  setSettingsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
+  autocomplete: boolean;
+  setAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
+  keybinding: string;
+  setKeybinding: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const BottomPanel = ({
@@ -24,8 +33,15 @@ const BottomPanel = ({
   setFeedbackExpanded,
   showBottomPanel,
   setShowBottomPanel,
+  expressionExpanded,
+  setExpressionExpanded,
+  settingsExpanded,
+  setSettingsExpanded,
+  autocomplete,
+  setAutocomplete,
+  keybinding,
+  setKeybinding
 }: BottomPanelProps) => {
-  const [expressionExpanded, setExpressionExpanded] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -41,13 +57,13 @@ const BottomPanel = ({
       </button>
       {showBottomPanel && (
         <div className={styles.bottomPanel}>
-          <div
+          {/* <div
             className={[
               styles.panel,
               styles[`panel--${feedbackExpanded ? "horizontal" : "vertical"}`],
             ].join(" ")}
-          >
-            <button
+          > */}
+            {/* <button
               className={[
                 styles.button,
                 styles[
@@ -62,7 +78,7 @@ const BottomPanel = ({
                 icon={feedbackExpanded ? faChevronDown : faChevronRight}
               />
               {feedbackExpanded ? "Feedback" : <FontAwesomeIcon icon={faBug} />}
-            </button>
+            </button> */}
             {feedbackExpanded && (
               <textarea
                 className={styles.output}
@@ -70,16 +86,18 @@ const BottomPanel = ({
                 value={feedback}
               />
             )}
-          </div>
-          <div
+          
+
+          {/* // */}
+          {/* <div
             className={[
               styles.panel,
               styles[
                 `panel--${expressionExpanded ? "horizontal" : "vertical"}`
               ],
             ].join(" ")}
-          >
-            <button
+          > */}
+            {/* <button
               className={[
                 styles.button,
                 styles[
@@ -98,9 +116,17 @@ const BottomPanel = ({
               ) : (
                 <FontAwesomeIcon icon={faCalculator} />
               )}
-            </button>
+            </button> */}
             {expressionExpanded && <ExpressionEvaluator />}
-          </div>
+
+            {settingsExpanded && <EditorSettings 
+                autocomplete={autocomplete}
+                setAutocomplete={setAutocomplete}
+                keybinding={keybinding}
+                setKeybinding={setKeybinding}
+            />}
+          {/* </div> */}
+
         </div>
       )}
     </div>

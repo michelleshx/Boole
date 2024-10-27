@@ -25,3 +25,16 @@
   border-left: 1px solid var(--text-color-highlighted);
   background-color: var(--background-highlighted);
 }
+
+.sideBar {
+  display: flex;
+  flex-direction: column;
+  /* Remove fixed height to prevent overflow */
+}
+
+.spacer {
+  flex-grow: 1; /* Pushes the bottom buttons to the bottom */
+}
+
+
+
