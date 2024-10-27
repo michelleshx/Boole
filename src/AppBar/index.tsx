@@ -78,14 +78,7 @@ const AppBar = ({
             onClick={onDownload}
             title="Download"
           />
-          <Button
-            text="Report a bug"
-            variant="tertiary"
-            onClick={() =>
-              window.open("https://forms.gle/VFa46GjTy2nDf9VPA", "_blank")
-            }
-            title="Report a bug"
-          />
+          
         </div>
         <Toggle isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
       </div>
