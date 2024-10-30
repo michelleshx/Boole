@@ -101,24 +101,19 @@ function App() {
                   <SidePanel onVerify={(feedback) => onVerify(feedback)} />
                 )}
                 <CodeEditor 
-                isDarkMode={isDarkMode} 
-                onCheck={onCheck} 
-                autocomplete={autocomplete}
-                setAutocomplete={setAutocomplete}
-                keybinding={keybinding}
-                setKeybinding={setKeybinding}
+                  isDarkMode={isDarkMode} 
+                  onCheck={onCheck} 
+                  autocomplete={autocomplete}
+                  keybinding={keybinding}
                 />
               </SplitPane>
               <BottomPanel
                 feedback={feedback}
                 feedbackExpanded={feedbackExpanded}
-                setFeedbackExpanded={setFeedbackExpanded}
                 expressionExpanded={expressionExpanded}
-                setExpressionExpanded={setExpressionExpanded}
                 showBottomPanel={showBottomPanel}
                 setShowBottomPanel={setShowBottomPanel}
                 settingsExpanded={settingsExpanded}
-                setSettingsExpanded={setSettingsExpanded}
                 autocomplete={autocomplete}
                 setAutocomplete={setAutocomplete}
                 keybinding={keybinding}

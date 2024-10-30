@@ -18,22 +18,16 @@ interface EditorProps {
   isDarkMode: boolean;
   onCheck: (val: string) => void;
   autocomplete: boolean;
-  setAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
   keybinding: string;
-  setKeybinding: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CodeEditor = ({ 
-  isDarkMode, 
+const CodeEditor = ({
+  isDarkMode,
   onCheck,
   autocomplete,
-  setAutocomplete,
   keybinding,
-  setKeybinding
 }: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
-  // const [autocomplete, setAutocomplete] = useState<boolean>(true); //State for autocomplete
-  // const [keybinding, setKeybinding] = useState<string>("default");
 
   const onChange = (newValue: string) => {
     setValue(newValue);
@@ -59,14 +53,6 @@ const CodeEditor = ({
       });
     }
   };
-
-  // const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setKeybinding(event.target.value);
-  // };
-
-  // const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => { //Handle autcomplete change
-  //   setAutocomplete(event.target.value === "true");
-  // };
 
   // useEffect to add the keydown event listener
   useEffect(() => {
@@ -94,40 +80,6 @@ const CodeEditor = ({
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      {/* <div
-        style={{
-          marginBottom: "5px",
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "5px",
-          marginRight: "10px",
-        }}
-      >
-        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}> 
-          Keybinding:
-        </label>
-        <select
-          id="keybinding-select"
-          value={keybinding}
-          onChange={handleKeybindingChange}
-        >
-          <option value="default">Default</option>
-          <option value="vim">Vim</option>
-          <option value="emacs">Emacs</option>
-        </select>
-        <label htmlFor="autocomplete-select" style={{ marginLeft: "10px", marginRight: "5px" }}>
-        Autocomplete:
-        </label>
-        <select
-          id="autocomplete-select"
-          value={autocomplete.toString()}
-          onChange={handleAutocompleteChange}
-        >
-          <option value="true">On</option>
-          <option value="false">Off</option>
-        </select>
-          
-      </div> */}
       <div style={{ flexGrow: 1 }}>
         <AceEditor
           mode="george"
