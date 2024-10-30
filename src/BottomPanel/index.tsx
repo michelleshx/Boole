@@ -1,12 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronRight,
-  faChevronDown,
-  faBug,
-  faCalculator,
-  faChevronUp,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
 import EditorSettings from "./EditorSettings";
@@ -14,13 +8,10 @@ import EditorSettings from "./EditorSettings";
 interface BottomPanelProps {
   feedback: string;
   feedbackExpanded: boolean;
-  setFeedbackExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
   expressionExpanded: boolean;
-  setExpressionExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   settingsExpanded: boolean;
-  setSettingsExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   autocomplete: boolean;
   setAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
   keybinding: string;
@@ -30,19 +21,15 @@ interface BottomPanelProps {
 const BottomPanel = ({
   feedback,
   feedbackExpanded,
-  setFeedbackExpanded,
   showBottomPanel,
   setShowBottomPanel,
   expressionExpanded,
-  setExpressionExpanded,
   settingsExpanded,
-  setSettingsExpanded,
   autocomplete,
   setAutocomplete,
   keybinding,
-  setKeybinding
+  setKeybinding,
 }: BottomPanelProps) => {
-
   return (
     <div className={styles.container}>
       <button
@@ -57,76 +44,23 @@ const BottomPanel = ({
       </button>
       {showBottomPanel && (
         <div className={styles.bottomPanel}>
-          {/* <div
-            className={[
-              styles.panel,
-              styles[`panel--${feedbackExpanded ? "horizontal" : "vertical"}`],
-            ].join(" ")}
-          > */}
-            {/* <button
-              className={[
-                styles.button,
-                styles[
-                  `button--${feedbackExpanded ? "horizontal" : "vertical"}`
-                ],
-              ].join(" ")}
-              onClick={() => setFeedbackExpanded(!feedbackExpanded)}
-              aria-label="Debug Console"
-              title="Debug Console"
-            >
-              <FontAwesomeIcon
-                icon={feedbackExpanded ? faChevronDown : faChevronRight}
-              />
-              {feedbackExpanded ? "Feedback" : <FontAwesomeIcon icon={faBug} />}
-            </button> */}
-            {feedbackExpanded && (
-              <textarea
-                className={styles.output}
-                readOnly={true}
-                value={feedback}
-              />
-            )}
-          
+          {feedbackExpanded && (
+            <textarea
+              className={styles.output}
+              readOnly={true}
+              value={feedback}
+            />
+          )}
+          {expressionExpanded && <ExpressionEvaluator />}
 
-          {/* // */}
-          {/* <div
-            className={[
-              styles.panel,
-              styles[
-                `panel--${expressionExpanded ? "horizontal" : "vertical"}`
-              ],
-            ].join(" ")}
-          > */}
-            {/* <button
-              className={[
-                styles.button,
-                styles[
-                  `button--${expressionExpanded ? "horizontal" : "vertical"}`
-                ],
-              ].join(" ")}
-              onClick={() => setExpressionExpanded(!expressionExpanded)}
-              aria-label="Expression Evaluator"
-              title="Expression Evaluator"
-            >
-              <FontAwesomeIcon
-                icon={expressionExpanded ? faChevronDown : faChevronRight}
-              />
-              {expressionExpanded ? (
-                "expression evaluator"
-              ) : (
-                <FontAwesomeIcon icon={faCalculator} />
-              )}
-            </button> */}
-            {expressionExpanded && <ExpressionEvaluator />}
-
-            {settingsExpanded && <EditorSettings 
-                autocomplete={autocomplete}
-                setAutocomplete={setAutocomplete}
-                keybinding={keybinding}
-                setKeybinding={setKeybinding}
-            />}
-          {/* </div> */}
-
+          {settingsExpanded && (
+            <EditorSettings
+              autocomplete={autocomplete}
+              setAutocomplete={setAutocomplete}
+              keybinding={keybinding}
+              setKeybinding={setKeybinding}
+            />
+          )}
         </div>
       )}
     </div>

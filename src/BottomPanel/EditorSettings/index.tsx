@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './EditorSettings.module.css';
+import React, { useEffect } from "react";
+import styles from "./EditorSettings.module.css";
 import { Button, Loading, Toggle } from "../../components";
 
 interface EditorSettingsProps {
@@ -15,16 +15,26 @@ const EditorSettings: React.FC<EditorSettingsProps> = ({
   keybinding,
   setKeybinding,
 }) => {
-  const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  useEffect(() => {
+    const storedMode = localStorage.getItem("keybinding");
+    storedMode && setKeybinding(JSON.parse(storedMode));
+  }, [keybinding, setKeybinding]);
+
+  const handleKeybindingChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setKeybinding(event.target.value);
+    localStorage.setItem("keybinding", JSON.stringify(event.target.value));
   };
 
-  const handleAutocompleteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setAutocomplete(event.target.value === 'true');
+  const handleAutocompleteChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setAutocomplete(event.target.value === "true");
   };
 
   const handleButtonClick = () => {
-    window.open("https://forms.gle/VFa46GjTy2nDf9VPA", "_blank")
+    window.open("https://forms.gle/VFa46GjTy2nDf9VPA", "_blank");
   };
 
   return (
@@ -61,21 +71,21 @@ const EditorSettings: React.FC<EditorSettingsProps> = ({
           </select>
         </div>
       </div>
-        <label className={styles.label}>Other</label>
-        <div className={styles.settingsContainer}>
-          <div className={styles.settingItem}>
-            <label htmlFor="action-button" className={styles.settingLabel}>
-                Spotted an Issue?
-            </label>
-            <Button
-              text="Report bug"
-              variant="primary"
-              size="medium"
-              onClick={handleButtonClick}
-              title="Report bug"
-            ></Button>
-          </div>
+      <label className={styles.label}>Other</label>
+      <div className={styles.settingsContainer}>
+        <div className={styles.settingItem}>
+          <label htmlFor="action-button" className={styles.settingLabel}>
+            Spotted an Issue?
+          </label>
+          <Button
+            text="Report bug"
+            variant="primary"
+            size="medium"
+            onClick={handleButtonClick}
+            title="Report bug"
+          ></Button>
         </div>
+      </div>
     </div>
   );
 };
