@@ -69,11 +69,16 @@ const useSubmission = (onVerify: (feedback: string) => void) => {
     axios
       .post(`/george/ask-george/cgi-bin/markus_submit.cgi`, data)
       .then((response) => {
-        console.log(response.data);
-        setSubmittedValue(valueToValidate);
-        onVerify(
-          `Successfully submitted a${assignmentNum}q${questionNum}.grg to Markus!`
-        );
+        if (response.data.status === 200) {
+          setSubmittedValue(valueToValidate);
+          onVerify(
+            `Successfully submitted a${assignmentNum}q${questionNum}.grg to Markus!`
+          );
+        } else {
+          onVerify(
+            `Error submitting assignment to Markus: ${response.data.message}`
+          );
+        }
       })
       .catch((e) => {
         console.error(e);
