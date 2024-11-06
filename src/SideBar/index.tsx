@@ -51,7 +51,7 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
-      <button
+      {/* <button
         className={[
           styles.button,
           styles[`button--${showRightPanel && !isFileTab ? "active" : ""}`],
@@ -66,7 +66,7 @@ const SideBar = ({
         title="Debug"
       >
         <FontAwesomeIcon icon={faBug} />
-      </button>
+      </button> */}
 
       {/* Spacer to push bottom buttons */}
       <div className={styles.spacer}></div>
@@ -96,6 +96,30 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faCommentDots} />
       </button>
+
+      {/* <button
+        className={[
+          styles.button,
+          styles[`button--${expressionExpanded ? "active" : ""}`],
+          styles.bottomButton,
+        ].join(" ")}
+        onClick={() => {
+          setExpressionExpanded((prev) => {
+            var newExpressionExpanded = prev;
+            if (showBottomPanel){
+              newExpressionExpanded = !prev;
+            } else {
+              newExpressionExpanded = true;
+            }
+            setShowBottomPanel(newExpressionExpanded || feedbackExpanded || settingsExpanded);
+            return newExpressionExpanded;
+          });
+        }}
+        aria-label="Expression Evaluator"
+        title="Expression Evaluator"
+      >
+        <FontAwesomeIcon icon={faCalculator} />
+      </button> */}
 
       <button
         className={[
