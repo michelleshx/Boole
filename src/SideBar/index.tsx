@@ -1,7 +1,13 @@
 import styles from "./SideBar.module.css";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder, faBug, faCalculator, faExclamationCircle, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFolder,
+  faBug,
+  faCalculator,
+  faGear,
+  faFileCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface SideBarProps {
   isFileTab: boolean;
@@ -51,7 +57,7 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
-      <button
+      {/* <button
         className={[
           styles.button,
           styles[`button--${showRightPanel && !isFileTab ? "active" : ""}`],
@@ -66,7 +72,7 @@ const SideBar = ({
         title="Debug"
       >
         <FontAwesomeIcon icon={faBug} />
-      </button>
+      </button> */}
 
       {/* Spacer to push bottom buttons */}
       <div className={styles.spacer}></div>
@@ -93,10 +99,10 @@ const SideBar = ({
         aria-label="Feedback"
         title="Feedback"
       >
-        <FontAwesomeIcon icon={faExclamationCircle} />
+        <FontAwesomeIcon icon={faFileCircleCheck} />
       </button>
 
-      <button
+      {/* <button
         className={[
           styles.button,
           styles[`button--${expressionExpanded ? "active" : ""}`],
@@ -118,7 +124,7 @@ const SideBar = ({
         title="Expression Evaluator"
       >
         <FontAwesomeIcon icon={faCalculator} />
-      </button>
+      </button> */}
 
       <button
         className={[
