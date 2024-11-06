@@ -17,12 +17,17 @@ import "ace-builds/src-noconflict/ext-language_tools"; // Import language tools
 interface EditorProps {
   isDarkMode: boolean;
   onCheck: (val: string) => void;
+  autocomplete: boolean;
+  keybinding: string;
 }
 
-const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
+const CodeEditor = ({
+  isDarkMode,
+  onCheck,
+  autocomplete,
+  keybinding,
+}: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
-
-  const [keybinding, setKeybinding] = useState<string>("default");
 
   const onChange = (newValue: string) => {
     setValue(newValue);
@@ -47,10 +52,6 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
         readOnly: false,
       });
     }
-  };
-
-  const handleKeybindingChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setKeybinding(event.target.value);
   };
 
   // useEffect to add the keydown event listener
@@ -78,56 +79,37 @@ const CodeEditor = ({ isDarkMode, onCheck }: EditorProps) => {
   }, [value, onCheck]);
 
   return (
-    <div style={{ height: "100%" }}>
-      <div
-        style={{
-          marginBottom: "5px",
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: "5px",
-          marginRight: "10px",
-        }}
-      >
-        <label htmlFor="keybinding-select" style={{ marginRight: "5px" }}>
-          Keybinding:
-        </label>
-        <select
-          id="keybinding-select"
-          value={keybinding}
-          onChange={handleKeybindingChange}
-        >
-          <option value="default">Default</option>
-          <option value="vim">Vim</option>
-          <option value="emacs">Emacs</option>
-        </select>
+    <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ flexGrow: 1 }}>
+        <AceEditor
+          mode="george"
+          theme={isDarkMode ? "monokai" : "xcode"}
+          width="100%"
+          height="100%"
+          onChange={onChange}
+          onLoad={onEditorLoad} // Add the onLoad prop
+          value={value}
+          wrapEnabled={true}
+          keyboardHandler={keybinding === "default" ? undefined : keybinding}
+          setOptions={{
+            fontSize: 15,
+            highlightActiveLine: false,
+            fixedWidthGutter: true,
+            useSoftTabs: true,
+            tabSize: 4,
+            selectionStyle: "line",
+            behavioursEnabled: true,
+            showLineNumbers: true,
+            showPrintMargin: false,
+            scrollPastEnd: true,
+            displayIndentGuides: true,
+            enableBasicAutocompletion: autocomplete, // Toggle autocomplete via autocomplete state
+            enableLiveAutocompletion: autocomplete,
+          }}
+          name="UNIQUE_ID_OF_DIV"
+          editorProps={{ $blockScrolling: true }}
+        />
       </div>
-      <AceEditor
-        mode="george"
-        theme={isDarkMode ? "monokai" : "xcode"}
-        width="100%"
-        onChange={onChange}
-        onLoad={onEditorLoad} // Add the onLoad prop
-        value={value}
-        wrapEnabled={true}
-        keyboardHandler={keybinding === "default" ? undefined : keybinding}
-        setOptions={{
-          fontSize: 15,
-          highlightActiveLine: false,
-          fixedWidthGutter: true,
-          useSoftTabs: true,
-          tabSize: 4,
-          selectionStyle: "line",
-          behavioursEnabled: true,
-          showLineNumbers: true,
-          showPrintMargin: false,
-          scrollPastEnd: true,
-          displayIndentGuides: true,
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-        }}
-        name="UNIQUE_ID_OF_DIV"
-        editorProps={{ $blockScrolling: true }}
-      />
     </div>
   );
 };

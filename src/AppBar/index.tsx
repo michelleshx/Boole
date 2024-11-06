@@ -56,7 +56,7 @@ const AppBar = ({
             variant="primary"
             disabled={verifying || verifiedValue === value}
             onClick={() => onCheck(value)}
-            title="Ask George (Ctrl+Enter)"
+            title="Ask George (Ctrl/Cmd+Enter)"
           >
             {verifying && <Loading />}
             {verifiedValue === value &&
@@ -78,14 +78,7 @@ const AppBar = ({
             onClick={onDownload}
             title="Download"
           />
-          <Button
-            text="Report a bug"
-            variant="tertiary"
-            onClick={() =>
-              window.open("https://forms.gle/VFa46GjTy2nDf9VPA", "_blank")
-            }
-            title="Report a bug"
-          />
+          
         </div>
         <Toggle isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
       </div>
