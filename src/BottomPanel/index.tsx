@@ -34,7 +34,12 @@ const BottomPanel = ({
     <div className={styles.container}>
       <button
         className={styles.topHeader}
-        onClick={() => setShowBottomPanel(!showBottomPanel)}
+        onClick={() => {
+            if ((settingsExpanded || feedbackExpanded)) {
+              setShowBottomPanel(!showBottomPanel)
+            }
+          }
+        }
         aria-label={
           showBottomPanel ? "Minimize Panel Size" : "Maximize Panel Size"
         }
