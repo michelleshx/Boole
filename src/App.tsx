@@ -29,23 +29,26 @@ function App() {
   const { value } = useContext(FileContext);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [keybinding, setKeybinding] = useState<string>("default");
+  const [submissionFeedback, setSubmissionFeedback] = useState("");
 
-  const onVerify = (feedback: string) => {
+  const onVerify = (feedback: string, markus: boolean = false) => {
     setFeedback(feedback);
     setShowBottomPanel(true);
     setFeedbackExpanded(true);
+    setSubmissionFeedback(markus ? feedback : "");
   };
 
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
-  const { submitting, submittedValue, submit } = useSubmission(onVerify);
+  const { submitting, submittedValue, submit, assignments } =
+    useSubmission(onVerify);
 
   const onCheck = (val: string) => {
     verify(val);
   };
 
-  const onSubmit = (val: string) => {
-    submit(val);
+  const onSubmit = (val: string, assignmentId: number) => {
+    submit(val, assignmentId);
   };
 
   return (
@@ -64,8 +67,11 @@ function App() {
             magicUsed={magicUsed}
             onCheck={onCheck}
             onSubmit={onSubmit}
+            assignments={assignments}
             submittedValue={submittedValue}
             submitting={submitting}
+            submissionFeedback={submissionFeedback}
+            setSubmissionFeedback={setSubmissionFeedback}
           />
           <div
             style={{
@@ -82,8 +88,8 @@ function App() {
               feedbackExpanded={feedbackExpanded}
               setFeedbackExpanded={setFeedbackExpanded}
               expressionExpanded={expressionExpanded}
-              setExpressionExpanded={setExpressionExpanded} 
-              showBottomPanel={showBottomPanel} 
+              setExpressionExpanded={setExpressionExpanded}
+              showBottomPanel={showBottomPanel}
               setShowBottomPanel={setShowBottomPanel}
               settingsExpanded={settingsExpanded}
               setSettingsExpanded={setSettingsExpanded}
@@ -109,9 +115,9 @@ function App() {
                 ) : (
                   <SidePanel onVerify={(feedback) => onVerify(feedback)} />
                 )}
-                <CodeEditor 
-                  isDarkMode={isDarkMode} 
-                  onCheck={onCheck} 
+                <CodeEditor
+                  isDarkMode={isDarkMode}
+                  onCheck={onCheck}
                   autocomplete={autocomplete}
                   keybinding={keybinding}
                 />
