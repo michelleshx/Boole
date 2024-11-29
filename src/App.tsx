@@ -26,7 +26,7 @@ function App() {
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
-  const { value } = useContext(FileContext);
+  const { value, openFile } = useContext(FileContext);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [keybinding, setKeybinding] = useState<string>("default");
   const [submissionFeedback, setSubmissionFeedback] = useState("");
@@ -48,7 +48,7 @@ function App() {
   };
 
   const onSubmit = (val: string, assignmentId: number) => {
-    submit(val, assignmentId);
+    submit(val, assignmentId, openFile.name);
   };
 
   return (
