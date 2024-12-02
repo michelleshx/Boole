@@ -2,22 +2,18 @@ import React, { useState, ChangeEvent, useContext } from "react";
 import Modal from "react-modal";
 
 import { Button, Loading } from "../../../components";
+import { FileContext } from "../../../context/FileContext";
 import styles from "./MarkusModal.module.css";
 
-Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
+import { Assignment } from "../../../types/Assignment";
 
-// TODO move to types
-interface Assignment {
-  id: number;
-  short_identifier: string;
-  description: string;
-}
+Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 
 interface MarkusModalProps {
   isOpen: boolean;
   onClose: () => void;
   assignments: Assignment[];
-  onSubmit: (val: string, assignmentId: number) => void;
+  onSubmit: (val: string, assignmentId: number, fileName: string) => void;
   value: string;
   submittedValue: string | null;
   submitting: boolean;
@@ -53,6 +49,7 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
     },
   };
 
+  const { openFile } = useContext(FileContext);
   const [assignmentId, setAssignmentId] = useState(-1);
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -86,7 +83,7 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
         <Button
           text="Submit"
           variant="primary"
-          onClick={() => onSubmit(value, assignmentId)}
+          onClick={() => onSubmit(value, assignmentId, openFile.name)}
           title="Submit"
         >
           {submitting && <Loading />}

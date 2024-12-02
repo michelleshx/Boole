@@ -8,12 +8,7 @@ import MarkusModal from "../components/Modals/MarkusModal";
 import { FileContext } from "../context/FileContext";
 import { download } from "../common/download";
 
-// TODO move to types
-interface Assignment {
-  id: number;
-  short_identifier: string;
-  description: string;
-}
+import { Assignment } from "../types/Assignment";
 
 interface AppBarProps {
   isDarkMode: boolean;
@@ -23,7 +18,7 @@ interface AppBarProps {
   valid: boolean;
   magicUsed: boolean;
   onCheck: (val: string) => void;
-  onSubmit: (val: string, assignmentId: number) => void;
+  onSubmit: (val: string, assignmentId: number, fileName: string) => void;
   submittedValue: string | null;
   submitting: boolean;
   assignments: Assignment[];

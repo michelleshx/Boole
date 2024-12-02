@@ -3,11 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-interface Assignment {
-  id: number;
-  short_identifier: string;
-  description: string;
-}
+import { Assignment } from "../types/Assignment";
 
 const useSubmission = (
   onVerify: (feedback: string, markus: boolean) => void
@@ -27,10 +23,7 @@ const useSubmission = (
         const assignments = response.data.assignments;
         setAssignments(assignments);
       } else {
-        onVerify(
-          `Error fetching assignments from Markus`,
-          true
-        );
+        onVerify(`Error fetching assignments from Markus`, true);
         console.error("Error fetching assignments:", response.data.message);
       }
     } catch (error) {
@@ -63,10 +56,7 @@ const useSubmission = (
       .then((response) => {
         if (response.data.status === 200) {
           setSubmittedValue(valueToValidate);
-          onVerify(
-            `Successfully submitted ${filename} to Markus!`,
-            true
-          );
+          onVerify(`Successfully submitted ${filename} to Markus!`, true);
         } else {
           onVerify(
             `Error submitting assignment to Markus: ${response.data.message}`,
