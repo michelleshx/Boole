@@ -84,7 +84,6 @@ const AppBar = ({
             onClick={() => setIsMarkusModalOpen(true)}
             title="Submit to Markus"
             variant="markus"
-            disabled={submitting || submittedValue === value}
           />
           <MarkusModal
             isOpen={isMarkusModalOpen}

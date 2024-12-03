@@ -11,6 +11,7 @@ const useSubmission = (
   const [submitting, setSubmitting] = useState(false);
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [defaultAssignment, setDefaultAssignment] = useState(-1);
 
   const getAssignments = async () => {
     try {
@@ -22,6 +23,7 @@ const useSubmission = (
       if (response.data.success) {
         const assignments = response.data.assignments;
         setAssignments(assignments);
+        if (assignments.length > 0) setDefaultAssignment(assignments[0].id);
       } else {
         onVerify(`Error fetching assignments from Markus`, true);
         console.error("Error fetching assignments:", response.data.message);
@@ -45,7 +47,7 @@ const useSubmission = (
     gtag("event", "submit");
 
     const data = {
-      assignment_id: assignmentId,
+      assignment_id: assignmentId != -1 ? assignmentId : defaultAssignment,
       files: [
         {
           filename: filename,
