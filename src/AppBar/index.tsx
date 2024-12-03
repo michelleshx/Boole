@@ -8,7 +8,7 @@ import MarkusModal from "../components/Modals/MarkusModal";
 import { FileContext } from "../context/FileContext";
 import { download } from "../common/download";
 
-import { Assignment } from "../types/Assignment";
+import { Assignment } from "../common/types";
 
 interface AppBarProps {
   isDarkMode: boolean;

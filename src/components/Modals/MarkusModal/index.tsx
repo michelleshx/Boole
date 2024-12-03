@@ -5,7 +5,7 @@ import { Button, Loading } from "../../../components";
 import { FileContext } from "../../../context/FileContext";
 import styles from "./MarkusModal.module.css";
 
-import { Assignment } from "../../../types/Assignment";
+import { Assignment } from "../../../common/types";
 
 Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 

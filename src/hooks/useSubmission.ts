@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import { Assignment } from "../types/Assignment";
+import { Assignment } from "../common/types";
 
 const useSubmission = (
   onVerify: (feedback: string, markus: boolean) => void
@@ -35,7 +35,11 @@ const useSubmission = (
     getAssignments();
   }, []);
 
-  const submit = (valueToValidate: string, assignmentId: number, filename: string) => {
+  const submit = (
+    valueToValidate: string,
+    assignmentId: number,
+    filename: string
+  ) => {
     setSubmitting(true);
 
     gtag("event", "submit");
@@ -52,7 +56,10 @@ const useSubmission = (
     };
 
     axios
-      .post(`https://student.cs.uwaterloo.ca/~m272xu/george/ask-george/cgi-bin/markus_submit.cgi`, data)
+      .post(
+        `https://student.cs.uwaterloo.ca/~m272xu/george/ask-george/cgi-bin/markus_submit.cgi`,
+        data
+      )
       .then((response) => {
         if (response.data.status === 200) {
           setSubmittedValue(valueToValidate);
