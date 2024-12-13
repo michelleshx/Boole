@@ -7,9 +7,12 @@ module.exports = function (app) {
       target: "https://student.cs.uwaterloo.ca/~se212",
       changeOrigin: true,
       pathFilter: [
-        "/files.json", // TODO check this URL
+        "/files.json",
         "/george/ask-george/cgi-bin/george.cgi/check",
         "/files",
+        "/assignments.json",
+        "/assignments/",
+        "/cgi-bin/markus_submit.cgi",
       ],
       pathRewrite: { "^/files/": "/" },
     })

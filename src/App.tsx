@@ -13,11 +13,12 @@ import StateProvider from "./context/StateContext";
 
 import useVerification from "./hooks/useVerification";
 import { FileContext } from "./context/FileContext";
+import useSubmission from "./hooks/useSubmission";
 
 function App() {
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
   const [feedback, setFeedback] = useState(
-    'Click the "Ask George" button to get feedback or Start Debugging a Z-Spec'
+    'Click the "Ask George" button (Ctrl+Enter) to get feedback or Start Debugging a Z-Spec'
   );
   const [settingsExpanded, setSettingsExpanded] = useState<boolean>(false);
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
@@ -28,18 +29,26 @@ function App() {
   const { value } = useContext(FileContext);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [keybinding, setKeybinding] = useState<string>("default");
+  const [submissionFeedback, setSubmissionFeedback] = useState("");
 
-  const onVerify = (feedback: string) => {
+  const onVerify = (feedback: string, markus: boolean = false) => {
     setFeedback(feedback);
     setShowBottomPanel(true);
     setFeedbackExpanded(true);
+    setSubmissionFeedback(markus ? feedback : "");
   };
 
   const { verifying, verifiedValue, valid, magicUsed, verify } =
     useVerification(value, onVerify);
+  const { submitting, submittedValue, submit, assignments } =
+    useSubmission(onVerify);
 
   const onCheck = (val: string) => {
     verify(val);
+  };
+
+  const onSubmit = (val: string, assignmentId: number, fileName: string) => {
+    submit(val, assignmentId, fileName);
   };
 
   return (
@@ -57,6 +66,12 @@ function App() {
             valid={valid}
             magicUsed={magicUsed}
             onCheck={onCheck}
+            onSubmit={onSubmit}
+            assignments={assignments}
+            submittedValue={submittedValue}
+            submitting={submitting}
+            submissionFeedback={submissionFeedback}
+            setSubmissionFeedback={setSubmissionFeedback}
           />
           <div
             style={{
@@ -73,8 +88,8 @@ function App() {
               feedbackExpanded={feedbackExpanded}
               setFeedbackExpanded={setFeedbackExpanded}
               expressionExpanded={expressionExpanded}
-              setExpressionExpanded={setExpressionExpanded} 
-              showBottomPanel={showBottomPanel} 
+              setExpressionExpanded={setExpressionExpanded}
+              showBottomPanel={showBottomPanel}
               setShowBottomPanel={setShowBottomPanel}
               settingsExpanded={settingsExpanded}
               setSettingsExpanded={setSettingsExpanded}
@@ -100,9 +115,9 @@ function App() {
                 ) : (
                   <SidePanel onVerify={(feedback) => onVerify(feedback)} />
                 )}
-                <CodeEditor 
-                  isDarkMode={isDarkMode} 
-                  onCheck={onCheck} 
+                <CodeEditor
+                  isDarkMode={isDarkMode}
+                  onCheck={onCheck}
                   autocomplete={autocomplete}
                   keybinding={keybinding}
                 />
