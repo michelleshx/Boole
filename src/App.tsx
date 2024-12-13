@@ -104,7 +104,7 @@ function App() {
                   isDarkMode={isDarkMode} 
                   onCheck={onCheck} 
                   autocomplete={autocomplete}
-                  keybinding={keybinding}
+                  // keybinding={keybinding}
                 />
               </SplitPane>
               <BottomPanel

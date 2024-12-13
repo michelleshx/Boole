@@ -9,8 +9,12 @@
     --text-dark-mode-secondary: #6e64aa;
     --text-dark-mode-tertiary: #4a4273;
     --text-highlighted-dark-mode: #9989f4;
+    --text-dark-mode-editor: #ffffff;
+    --text-dark-mode-editor-secondary: #65acdf;
+    --text-dark-mode-editor-tertiary: #8be9fd;
     --border-dark: #171424;
     --logo-dark: #fff;
+    --cursor-dark: #fff;
 
     /* LIGHT MODE */
     --light-1: #e2def7;
@@ -22,8 +26,12 @@
     --text-light-mode-secondary: #75708F ;
     --text-light-mode-tertiary: #C1B4F5;
     --text-highlighted-light-mode: #745AEF;
+    --text-light-mode-editor: #26007C;
+    --text-light-mode-editor-secondary: #175fac;
+    --text-light-mode-editor-tertiary: #12062d;
     --border-light: #C3C0D8;
     --logo-light: #26007C;
+    --cursor-light: #26007C;
 
     /* OTHER COLOURS! */
     --teal: #4b9eb6;
@@ -47,9 +55,13 @@ body {
     --text-color-secondary: var(--text-light-mode-secondary);
     --text-color-tertiary: var(--text-light-mode-tertiary);
     --text-color-highlighted: var(--text-highlighted-light-mode);
+    --text-color-editor: var(--text-light-mode-editor);
+    --text-color-editor-secondary: var(--text-light-mode-editor-secondary);
+    --text-color-editor-tertiary: var(--text-light-mode-editor-tertiary);
 
     --border: var(--border-light);
     --logo: var(--logo-light);
+    --cursor: var(--cursor-light);
 }
 
 body.dark {
@@ -64,9 +76,13 @@ body.dark {
     --text-color-secondary: var(--text-dark-mode-secondary);
     --text-color-tertiary: var(--text-dark-mode-tertiary);
     --text-color-highlighted: var(--text-highlighted-dark-mode);
+    --text-color-editor: var(--text-dark-mode-editor);
+    --text-color-editor-secondary: var(--text-dark-mode-editor-secondary);
+    --text-color-editor-tertiary: var(--text-dark-mode-editor-tertiary);
 
     --border: var(--border-dark);
     --logo: var(--logo-dark);
+    --cursor: var(--cursor-dark);
 }
 
 body {
