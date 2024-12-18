@@ -16,7 +16,7 @@ const useSubmission = (
   const getAssignments = async () => {
     try {
       const response = await axios.get(
-        "https://student.cs.uwaterloo.ca/~m272xu/george/ask-george/cgi-bin/markus_get.cgi",
+        "/~se212/george/ask-george/cgi-bin/markus_get.cgi",
         {}
       );
       // Check if the response was successful
@@ -59,7 +59,7 @@ const useSubmission = (
 
     axios
       .post(
-        `https://student.cs.uwaterloo.ca/~m272xu/george/ask-george/cgi-bin/markus_submit.cgi`,
+        `/~se212/george/ask-george/cgi-bin/markus_submit.cgi`,
         data
       )
       .then((response) => {

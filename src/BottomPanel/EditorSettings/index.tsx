@@ -41,7 +41,7 @@ const EditorSettings: React.FC<EditorSettingsProps> = ({
     <div className={styles.editorSettings}>
       <label className={styles.label}>Settings</label>
       <div className={styles.settingsContainer}>
-        <div className={styles.settingItem}>
+        {/* <div className={styles.settingItem}>
           <label htmlFor="keybinding-select" className={styles.settingLabel}>
             Keybinding
           </label>
@@ -55,7 +55,7 @@ const EditorSettings: React.FC<EditorSettingsProps> = ({
             <option value="vim">Vim</option>
             <option value="emacs">Emacs</option>
           </select>
-        </div>
+        </div> */}
         <div className={styles.settingItem}>
           <label htmlFor="autocomplete-select" className={styles.settingLabel}>
             Autocomplete
