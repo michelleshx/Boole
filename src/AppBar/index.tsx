@@ -4,8 +4,11 @@ import styles from "./AppBar.module.css";
 
 import { Button, Loading, Toggle } from "../components";
 import FileUploadModal from "../components/Modals/FileUploadModal";
+import MarkusModal from "../components/Modals/MarkusModal";
 import { FileContext } from "../context/FileContext";
 import { download } from "../common/download";
+
+import { Assignment } from "../common/types";
 
 interface AppBarProps {
   isDarkMode: boolean;
@@ -15,6 +18,12 @@ interface AppBarProps {
   valid: boolean;
   magicUsed: boolean;
   onCheck: (val: string) => void;
+  onSubmit: (val: string, assignmentId: number, fileName: string) => void;
+  submittedValue: string | null;
+  submitting: boolean;
+  assignments: Assignment[];
+  submissionFeedback: string;
+  setSubmissionFeedback: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const AppBar = ({
@@ -25,9 +34,16 @@ const AppBar = ({
   valid,
   magicUsed,
   onCheck,
+  onSubmit,
+  submittedValue,
+  submitting,
+  assignments,
+  submissionFeedback,
+  setSubmissionFeedback,
 }: AppBarProps) => {
   const { value, openFile } = useContext(FileContext);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMarkusModalOpen, setIsMarkusModalOpen] = useState(false);
 
   const onDownload = () => {
     gtag("event", "download", {
@@ -62,6 +78,28 @@ const AppBar = ({
             {verifiedValue === value &&
               (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
           </Button>
+          {/* Markus */}
+          <Button
+            text="Submit to Markus"
+            onClick={() => setIsMarkusModalOpen(true)}
+            title="Submit to Markus"
+            variant="markus"
+          />
+          <MarkusModal
+            isOpen={isMarkusModalOpen}
+            onClose={() => {
+              setIsMarkusModalOpen(false);
+              setSubmissionFeedback("");
+            }}
+            assignments={assignments}
+            onSubmit={onSubmit}
+            value={value}
+            submitting={submitting}
+            submittedValue={submittedValue}
+            submissionFeedback={submissionFeedback}
+            setSubmissionFeedback={setSubmissionFeedback}
+          />
+          {/*File Upload*/}
           <Button
             text="Upload file"
             variant="secondary"
@@ -78,7 +116,6 @@ const AppBar = ({
             onClick={onDownload}
             title="Download"
           />
-          
         </div>
         <Toggle isDarkMode={isDarkMode} setDarkMode={setDarkMode} />
       </div>

@@ -1,0 +1,18 @@
+/* Modal header styling */
+.header {
+  margin-bottom: 16px;
+}
+
+.dropdown {
+  padding: 8px;
+  height: 36px;
+  font-size: 16px;
+  width: 100%;
+}
+
+/* Button container styling */
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+}
