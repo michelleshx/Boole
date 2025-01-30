@@ -8,6 +8,7 @@ import { File } from "../common/files";
 import ExpandableListItem from "../components/ExpandableListItem";
 
 import { FileContext } from "../context/FileContext";
+import { WebSocketContext } from '../context/WebSocketContext'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -19,12 +20,18 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [defaultFileSet, setDefaultFileSet] = useState(false);
 
   const { setValue, openFile, setOpenFile } = useContext(FileContext);
+  const { sendDidOpenMessage, sendDidCloseMessage } = useContext(WebSocketContext);
 
   const onFileOpen = useCallback(
     async (file: File) => {
       try {
         // to do handle null values
         setValue((await file.get()) ?? "");
+
+		if(file.name) {
+		  sendDidOpenMessage(file.name, await file.get() ?? "");
+		}
+
         setOpenFile(file);
       } catch {
         alert("Failed to open file!"); // TODO debug this
@@ -74,6 +81,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       event_label: targetFile.name,
     });
 
+	sendDidCloseMessage(openFile.name);
     onFileOpen(targetFile);
   };
 
@@ -88,6 +96,8 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     gtag("event", "reset", {
       event_label: targetFile.name,
     });
+
+	sendDidCloseMessage(openFile.name);
 
     await targetFile.reset();
     onFileOpen(targetFile);

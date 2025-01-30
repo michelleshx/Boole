@@ -10,6 +10,7 @@ import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
 import FileProvider from "./context/FileContext";
 import StateProvider from "./context/StateContext";
+import WebSocketContext from './context/WebSocketContext'
 
 import useVerification from "./hooks/useVerification";
 import { FileContext } from "./context/FileContext";
@@ -58,84 +59,86 @@ function App() {
     >
       <FileProvider>
         <StateProvider>
-          <AppBar
-            isDarkMode={isDarkMode}
-            setDarkMode={setDarkMode}
-            verifying={verifying}
-            verifiedValue={verifiedValue}
-            valid={valid}
-            magicUsed={magicUsed}
-            onCheck={onCheck}
-            onSubmit={onSubmit}
-            assignments={assignments}
-            submittedValue={submittedValue}
-            submitting={submitting}
-            submissionFeedback={submissionFeedback}
-            setSubmissionFeedback={setSubmissionFeedback}
-          />
-          <div
-            style={{
-              flexGrow: 1,
-              display: "flex",
-              overflow: "hidden",
-            }}
-          >
-            <SideBar
-              isFileTab={isFileTab}
-              setIsFileTab={setIsFileTab}
-              showRightPanel={showRightPanel}
-              setShowRightPanel={setShowRightPanel}
-              feedbackExpanded={feedbackExpanded}
-              setFeedbackExpanded={setFeedbackExpanded}
-              expressionExpanded={expressionExpanded}
-              setExpressionExpanded={setExpressionExpanded}
-              showBottomPanel={showBottomPanel}
-              setShowBottomPanel={setShowBottomPanel}
-              settingsExpanded={settingsExpanded}
-              setSettingsExpanded={setSettingsExpanded}
-            />
-            <div
-              style={{
-                flexGrow: 1,
-                display: "flex",
-                flexDirection: "column",
-                overflow: "hidden",
-              }}
-            >
-              {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
-              {/* @ts-ignore TS2322 */}
-              <SplitPane
-                split="vertical"
-                minSize={showRightPanel ? (isFileTab ? 170 : 464) : 0}
-                maxSize={showRightPanel ? 800 : 0}
-                style={{ position: "relative", flexGrow: 1 }}
-              >
-                {isFileTab ? (
-                  <FileExplorer />
-                ) : (
-                  <SidePanel onVerify={(feedback) => onVerify(feedback)} />
-                )}
-                <CodeEditor
-                  isDarkMode={isDarkMode}
-                  onCheck={onCheck}
-                  autocomplete={autocomplete}
-                  // keybinding={keybinding}
-                />
-              </SplitPane>
-              <BottomPanel
-                feedback={feedback}
-                feedbackExpanded={feedbackExpanded}
-                expressionExpanded={expressionExpanded}
-                showBottomPanel={showBottomPanel}
-                setShowBottomPanel={setShowBottomPanel}
-                settingsExpanded={settingsExpanded}
-                autocomplete={autocomplete}
-                setAutocomplete={setAutocomplete}
-                keybinding={keybinding}
-                setKeybinding={setKeybinding}
-              />
-            </div>
-          </div>
+		  <WebSocketContext>
+			<AppBar
+			  isDarkMode={isDarkMode}
+			  setDarkMode={setDarkMode}
+			  verifying={verifying}
+			  verifiedValue={verifiedValue}
+			  valid={valid}
+			  magicUsed={magicUsed}
+			  onCheck={onCheck}
+			  onSubmit={onSubmit}
+			  assignments={assignments}
+			  submittedValue={submittedValue}
+			  submitting={submitting}
+			  submissionFeedback={submissionFeedback}
+			  setSubmissionFeedback={setSubmissionFeedback}
+			/>
+			<div
+			  style={{
+				flexGrow: 1,
+				display: "flex",
+				overflow: "hidden",
+			  }}
+			>
+			  <SideBar
+				isFileTab={isFileTab}
+				setIsFileTab={setIsFileTab}
+				showRightPanel={showRightPanel}
+				setShowRightPanel={setShowRightPanel}
+				feedbackExpanded={feedbackExpanded}
+				setFeedbackExpanded={setFeedbackExpanded}
+				expressionExpanded={expressionExpanded}
+				setExpressionExpanded={setExpressionExpanded}
+				showBottomPanel={showBottomPanel}
+				setShowBottomPanel={setShowBottomPanel}
+				settingsExpanded={settingsExpanded}
+				setSettingsExpanded={setSettingsExpanded}
+			  />
+			  <div
+				style={{
+				  flexGrow: 1,
+				  display: "flex",
+				  flexDirection: "column",
+				  overflow: "hidden",
+				}}
+			  >
+				{/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
+				{/* @ts-ignore TS2322 */}
+				<SplitPane
+				  split="vertical"
+				  minSize={showRightPanel ? (isFileTab ? 170 : 464) : 0}
+				  maxSize={showRightPanel ? 800 : 0}
+				  style={{ position: "relative", flexGrow: 1 }}
+				>
+				  {isFileTab ? (
+					<FileExplorer />
+				  ) : (
+					<SidePanel onVerify={(feedback) => onVerify(feedback)} />
+				  )}
+				  <CodeEditor
+					isDarkMode={isDarkMode}
+					onCheck={onCheck}
+					autocomplete={autocomplete}
+					// keybinding={keybinding}
+				  />
+				</SplitPane>
+				<BottomPanel
+				  feedback={feedback}
+				  feedbackExpanded={feedbackExpanded}
+				  expressionExpanded={expressionExpanded}
+				  showBottomPanel={showBottomPanel}
+				  setShowBottomPanel={setShowBottomPanel}
+				  settingsExpanded={settingsExpanded}
+				  autocomplete={autocomplete}
+				  setAutocomplete={setAutocomplete}
+				  keybinding={keybinding}
+				  setKeybinding={setKeybinding}
+				/>
+			  </div>
+			</div>
+		  </WebSocketContext>
         </StateProvider>
       </FileProvider>
     </div>
