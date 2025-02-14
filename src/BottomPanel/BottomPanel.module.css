@@ -61,6 +61,7 @@
   background: transparent;
   font-family: "Roboto Mono", "Courier New", monospace;
   color: var(--text-color);
+  overflow: auto;
 }
 
 .topHeader {

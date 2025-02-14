@@ -8,7 +8,7 @@ import { File } from "../common/files";
 import ExpandableListItem from "../components/ExpandableListItem";
 
 import { FileContext } from "../context/FileContext";
-import { WebSocketContext } from '../context/WebSocketContext'
+import { LanguageServerContext } from '../context/LanguageServerContext'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -20,7 +20,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [defaultFileSet, setDefaultFileSet] = useState(false);
 
   const { setValue, openFile, setOpenFile } = useContext(FileContext);
-  const { sendDidOpenMessage, sendDidCloseMessage } = useContext(WebSocketContext);
+  const { sendDidOpenMessage, sendDidCloseMessage } = useContext(LanguageServerContext);
 
   const onFileOpen = useCallback(
     async (file: File) => {

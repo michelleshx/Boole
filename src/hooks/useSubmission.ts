@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import { Assignment } from "../common/types";
+import { Assignment, Feedback } from "../common/types";
 
 const useSubmission = (
-  onVerify: (feedback: string, markus: boolean) => void
+  onVerify: (feedback: Feedback, markus: boolean) => void
 ) => {
   const [submitting, setSubmitting] = useState(false);
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
