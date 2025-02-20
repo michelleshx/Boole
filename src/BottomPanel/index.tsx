@@ -4,9 +4,11 @@ import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
 import EditorSettings from "./EditorSettings";
+import { Feedback } from "../common/types";
+import LinkedFeedback from '../components/LinkedFeedback'
 
 interface BottomPanelProps {
-  feedback: string;
+  feedback: Feedback;
   feedbackExpanded: boolean;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
@@ -50,12 +52,24 @@ const BottomPanel = ({
       {showBottomPanel && (
         <div className={styles.bottomPanel}>
           {feedbackExpanded && (
-            <textarea
-              className={styles.output}
-              readOnly={true}
-              value={feedback}
-            />
-          )}
+			  Array.isArray(feedback) ? (
+				<div className={styles.output}>
+				  {feedback.map((item, index) => 
+					  (typeof item === "string") ? (
+						<p key={index} style={{whiteSpace: "pre-wrap", fontFamily: "inherit", color: "inherit"}}>{item}</p>
+					  ) : (
+						<LinkedFeedback feedbackWithLineRange={item} key={index}/>
+					  )
+				  )}
+				</div>
+			  ) : (
+				<textarea
+				  className={styles.output}
+				  readOnly={true}
+				  value={feedback}
+				/>
+			  )
+		  )}
           {expressionExpanded && <ExpressionEvaluator />}
 
           {settingsExpanded && (

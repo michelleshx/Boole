@@ -7,6 +7,7 @@ import TraceTab from "./Tabs/TraceTab";
 import DefaultTab from "./Tabs/DefaultTab";
 import { FileContext } from "../context/FileContext";
 import { FileType } from "../common/files";
+import { Feedback } from "../common/types";
 
 type Tabs = {
   state: string;
@@ -17,7 +18,7 @@ type Tabs = {
 const tabs: Tabs = { state: "state", operations: "operations", trace: "trace" };
 
 interface SidePanelProps {
-  onVerify: (feedback: string) => void;
+  onVerify: (feedback: Feedback) => void;
 }
 
 const SidePanel = ({ onVerify }: SidePanelProps) => {

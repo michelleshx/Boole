@@ -1,9 +1,10 @@
 import { FileContext } from "../context/FileContext";
-import React, { useEffect, useState, useContext, useRef } from 'react';
-import Editor, { useMonaco } from '@monaco-editor/react';
+import { LanguageServerContext } from '../context/LanguageServerContext'
+import React, { useEffect, useContext } from 'react';
+import Editor from '@monaco-editor/react';
 import {registerGeorge} from './monaco-george';
 import { BeforeMount, Monaco, OnMount } from "@monaco-editor/react";
-import monaco from "monaco-editor";
+import * as monaco from "monaco-editor";
 
 interface EditorProps {
   isDarkMode: boolean;
@@ -17,10 +18,8 @@ const CodeEditor = ({
   autocomplete,
 }: EditorProps) => {
   const { value, setValue, openFile } = useContext(FileContext);
-  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-  const monacoRef = useRef<Monaco | null>(null);
-
-
+  const { editorRef, monacoRef, sendDidChangeMessage  } = useContext(LanguageServerContext);
+  
   const handleEditorWillMount: BeforeMount = (monaco) => {
     // Remove all keybindings we want to handle globally
     monaco.editor.addKeybindingRules([
@@ -52,6 +51,11 @@ const CodeEditor = ({
       setValue(value);
       if (openFile !== null) openFile.set(value);
     }
+
+	if(editorRef.current?.getModel()) {
+	  sendDidChangeMessage(editorRef.current.getModel()!);
+	}
+
   };
 
   function setEditorTheme(){
@@ -107,7 +111,6 @@ const CodeEditor = ({
           'input.border': '#44475a', // Text field border color
         },
       });
-      
     }
   }
 
