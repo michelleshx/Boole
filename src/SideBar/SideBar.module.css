@@ -2,6 +2,7 @@
   border-right: 1px solid var(--border);
   background: var(--background-3);
   width: 52px;
+  min-width: 52px;
   display: flex;
   flex-direction: column;
 }
@@ -35,6 +36,3 @@
 .spacer {
   flex-grow: 1; /* Pushes the bottom buttons to the bottom */
 }
-
-
-
