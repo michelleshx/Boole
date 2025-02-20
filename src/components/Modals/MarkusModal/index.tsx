@@ -5,7 +5,7 @@ import { Button, Loading } from "../../../components";
 import { FileContext } from "../../../context/FileContext";
 import styles from "./MarkusModal.module.css";
 
-import { Assignment } from "../../../common/types";
+import { Assignment, Feedback } from "../../../common/types";
 
 Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 
@@ -17,8 +17,8 @@ interface MarkusModalProps {
   value: string;
   submittedValue: string | null;
   submitting: boolean;
-  submissionFeedback: string;
-  setSubmissionFeedback: React.Dispatch<React.SetStateAction<string>>;
+  submissionFeedback: Feedback;
+  setSubmissionFeedback: React.Dispatch<React.SetStateAction<Feedback>>;
 }
 
 const MarkusModal: React.FC<MarkusModalProps> = ({

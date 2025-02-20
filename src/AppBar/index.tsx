@@ -8,7 +8,7 @@ import MarkusModal from "../components/Modals/MarkusModal";
 import { FileContext } from "../context/FileContext";
 import { download } from "../common/download";
 
-import { Assignment } from "../common/types";
+import { Assignment, Feedback } from "../common/types";
 
 interface AppBarProps {
   isDarkMode: boolean;
@@ -22,8 +22,8 @@ interface AppBarProps {
   submittedValue: string | null;
   submitting: boolean;
   assignments: Assignment[];
-  submissionFeedback: string;
-  setSubmissionFeedback: React.Dispatch<React.SetStateAction<string>>;
+  submissionFeedback: Feedback;
+  setSubmissionFeedback: React.Dispatch<React.SetStateAction<Feedback>>;
 }
 
 const AppBar = ({

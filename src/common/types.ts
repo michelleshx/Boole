@@ -3,3 +3,8 @@ export interface Assignment {
   short_identifier: string;
   description: string;
 }
+
+export type FeedBackWithLineRange = [[number, number] | null, string];
+
+export type Feedback = ((string | FeedBackWithLineRange)[]) | string;
+
