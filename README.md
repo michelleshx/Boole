@@ -1,47 +1,54 @@
-Boole
-=====
+# James
 
-*by Shazz Amin, Derek Yin*
+Forked from the original [Boole](https://github.com/ShazzAmin/Boole), created by Shazz Amin and Derek Yin
 
-A full-featured front end for George with various qualify-of-life features and workflow improvements.
+A modern, feature-enhanced front end for George, building upon the foundation of the original Boole project. This fork introduces new improvements for usability, performance, and workflow efficiency.
 
 ![](/docs/screenshots/main.png)
 
+### What's New in This Fork
+
+<!---
+TODO include gifs of new features
+-->
+
+- Enhanced debugging features for Z-specs
+
+- Expression evaluator
+
+- Automatic submission to MarkUs
+
+- Dark and Light Mode Support: A new theme option for better readability
+
+- Quality of life improvements: Collapsible panels, text wrapping, keyboard shortcuts
 
 ### Features
 
-* Auto-complete
+- Auto-complete for George
 
-![](/docs/gifs/auto-complete.gif)
+- File management for assignments and homeworks (auto-fetching, saving, downloading)
 
-* File management for assignments and homeworks (auto-fetching, saving, downloading)
-
-![](/docs/gifs/file-management.gif)
-
-* Verification by George (with distinct indicators for different types of feedback)
-
-![](/docs/gifs/verification.gif)
-
+- Verification by George (with distinct indicators for different types of feedback)
 
 ### Set-up
+
 ##### Prerequisites:
-* nodejs (^10.10.0)
-* npm (^6.4.1)
+
+- Node.js (^16.0.0)
+- npm (^8.0.0)
 
 `npm install`
-
 
 ### Run
 
 `npm run start`
 
-
 ### Build
 
 `npm run build`
 
-
 ### License
+
 [MIT](LICENSE)
 
-Copyright (c) 2018 Shazz Amin, Derek Yin
+This project is based on the original James by Shazz Amin and Derek Yin and is maintained with additional features by new contributors.
