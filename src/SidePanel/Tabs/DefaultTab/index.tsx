@@ -17,11 +17,15 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  const { value, fileType } = useContext(FileContext);
+  const { value, setFileType, getFileType } = useContext(FileContext);
 
   const { debugging, debug } = useDebugger(onVerify);
 
   const onDebug = () => {
+    const fileType = getFileType(value);
+    setFileType(fileType); // set the file type
+
+    // Check if the file is debuggable
     if (
       fileType === FileType.PREDTYPE ||
       fileType === FileType.Z ||
@@ -44,8 +48,7 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
         padding={8}
         content={
           <div className={styles.popOverContainer}>
-            Supported files include: #check PREDTYPE, #check Z, #check
-            COUNTEREXAMPLE.
+            Supported files include: #check PREDTYPE, #check Z, #check CE.
           </div>
         }
       >
