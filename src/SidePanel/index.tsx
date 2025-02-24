@@ -18,13 +18,18 @@ type Tabs = {
 const tabs: Tabs = { state: "state", operations: "operations", trace: "trace" };
 
 interface SidePanelProps {
-  onVerify: (feedback: Feedback) => void;
+  onVerify: (feedback: string) => void;
+  isDebugging: boolean;
+  setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SidePanel = ({ onVerify }: SidePanelProps) => {
+const SidePanel = ({
+  onVerify,
+  isDebugging,
+  setIsDebugging,
+}: SidePanelProps) => {
   const [activeTab, setActiveTab] = useState(tabs.state);
-  const { fileType } = useContext(FileContext); // TODO set file type when setisdebugging clicked
-  const [isDebugging, setIsDebugging] = useState(false); // TODO move this to global context (simplified or not)
+  const { fileType } = useContext(FileContext);
 
   return (
     <aside className={styles.sidePanel}>
