@@ -1,18 +1,16 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
-import ExpressionEvaluator from "./ExpressionEvaluator";
 import styles from "./BottomPanel.module.css";
 import EditorSettings from "./EditorSettings";
 import { Feedback } from "../common/types";
-import LinkedFeedback from '../components/LinkedFeedback'
+import LinkedFeedback from "../components/LinkedFeedback";
 
 interface BottomPanelProps {
   feedback: Feedback;
   feedbackExpanded: boolean;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
-  expressionExpanded: boolean;
   settingsExpanded: boolean;
   autocomplete: boolean;
   setAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,7 +23,6 @@ const BottomPanel = ({
   feedbackExpanded,
   showBottomPanel,
   setShowBottomPanel,
-  expressionExpanded,
   settingsExpanded,
   autocomplete,
   setAutocomplete,
@@ -37,11 +34,10 @@ const BottomPanel = ({
       <button
         className={styles.topHeader}
         onClick={() => {
-            if ((settingsExpanded || feedbackExpanded)) {
-              setShowBottomPanel(!showBottomPanel)
-            }
+          if (settingsExpanded || feedbackExpanded) {
+            setShowBottomPanel(!showBottomPanel);
           }
-        }
+        }}
         aria-label={
           showBottomPanel ? "Minimize Panel Size" : "Maximize Panel Size"
         }
@@ -51,27 +47,33 @@ const BottomPanel = ({
       </button>
       {showBottomPanel && (
         <div className={styles.bottomPanel}>
-          {feedbackExpanded && (
-			  Array.isArray(feedback) ? (
-				<div className={styles.output}>
-				  {feedback.map((item, index) => 
-					  (typeof item === "string") ? (
-						<p key={index} style={{whiteSpace: "pre-wrap", fontFamily: "inherit", color: "inherit"}}>{item}</p>
-					  ) : (
-						<LinkedFeedback feedbackWithLineRange={item} key={index}/>
-					  )
-				  )}
-				</div>
-			  ) : (
-				<textarea
-				  className={styles.output}
-				  readOnly={true}
-				  value={feedback}
-				/>
-			  )
-		  )}
-          {expressionExpanded && <ExpressionEvaluator />}
-
+          {feedbackExpanded &&
+            (Array.isArray(feedback) ? (
+              <div className={styles.output}>
+                {feedback.map((item, index) =>
+                  typeof item === "string" ? (
+                    <p
+                      key={index}
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        fontFamily: "inherit",
+                        color: "inherit",
+                      }}
+                    >
+                      {item}
+                    </p>
+                  ) : (
+                    <LinkedFeedback feedbackWithLineRange={item} key={index} />
+                  )
+                )}
+              </div>
+            ) : (
+              <textarea
+                className={styles.output}
+                readOnly={true}
+                value={feedback}
+              />
+            ))}
           {settingsExpanded && (
             <EditorSettings
               autocomplete={autocomplete}

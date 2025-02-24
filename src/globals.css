@@ -94,6 +94,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
     background: var(--background-3);
     color: var(--text-color);
+    overflow-x: hidden;
 }
 
 * {

@@ -1,7 +1,12 @@
 import styles from "./SideBar.module.css";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFolder, faBug, faCalculator, faExclamationCircle, faGear } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFolder,
+  faBug,
+  faExclamationCircle,
+  faGear,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface SideBarProps {
   isFileTab: boolean;
@@ -10,8 +15,6 @@ interface SideBarProps {
   setShowRightPanel: React.Dispatch<React.SetStateAction<boolean>>;
   feedbackExpanded: boolean;
   setFeedbackExpanded: React.Dispatch<React.SetStateAction<boolean>>;
-  expressionExpanded: boolean;
-  setExpressionExpanded: React.Dispatch<React.SetStateAction<boolean>>;
   showBottomPanel: boolean;
   setShowBottomPanel: React.Dispatch<React.SetStateAction<boolean>>;
   settingsExpanded: boolean;
@@ -25,8 +28,6 @@ const SideBar = ({
   setShowRightPanel,
   feedbackExpanded,
   setFeedbackExpanded,
-  expressionExpanded,
-  setExpressionExpanded,
   showBottomPanel,
   setShowBottomPanel,
   settingsExpanded,
@@ -81,12 +82,12 @@ const SideBar = ({
         onClick={() => {
           setFeedbackExpanded((prev) => {
             var newFeedbackExpanded = prev;
-            if (showBottomPanel){
+            if (showBottomPanel) {
               newFeedbackExpanded = !prev;
             } else {
               newFeedbackExpanded = true;
             }
-            setShowBottomPanel(newFeedbackExpanded || expressionExpanded || settingsExpanded);
+            setShowBottomPanel(newFeedbackExpanded || settingsExpanded);
             return newFeedbackExpanded;
           });
         }}
@@ -99,42 +100,18 @@ const SideBar = ({
       <button
         className={[
           styles.button,
-          styles[`button--${expressionExpanded ? "active" : ""}`],
-          styles.bottomButton,
-        ].join(" ")}
-        onClick={() => {
-          setExpressionExpanded((prev) => {
-            var newExpressionExpanded = prev;
-            if (showBottomPanel){
-              newExpressionExpanded = !prev;
-            } else {
-              newExpressionExpanded = true;
-            }
-            setShowBottomPanel(newExpressionExpanded || feedbackExpanded || settingsExpanded);
-            return newExpressionExpanded;
-          });
-        }}
-        aria-label="Expression Evaluator"
-        title="Expression Evaluator"
-      >
-        <FontAwesomeIcon icon={faCalculator} />
-      </button>
-
-      <button
-        className={[
-          styles.button,
           styles[`button--${settingsExpanded ? "active" : ""}`],
           styles.bottomButton,
         ].join(" ")}
         onClick={() => {
           setSettingsExpanded((prev) => {
             var newSettingsExpanded = prev;
-            if (showBottomPanel){
+            if (showBottomPanel) {
               newSettingsExpanded = !prev;
             } else {
               newSettingsExpanded = true;
             }
-            setShowBottomPanel(newSettingsExpanded || feedbackExpanded || expressionExpanded);
+            setShowBottomPanel(newSettingsExpanded || feedbackExpanded);
             return newSettingsExpanded;
           });
         }}
@@ -143,7 +120,6 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faGear} />
       </button>
-      
     </div>
   );
 };

@@ -21,7 +21,7 @@ const useDebugger = (onVerify: (feedback: string) => void) => {
     setDebugging(true);
     gtag("event", "debug");
 
-    // TODO change this to the correct check predtype endpoint?
+    // TODO change to string_to_interpretation
     axios
       .post("/george/ask-george/cgi-bin/george.cgi/check", valueToValidate, {
         headers: { "Content-type": "text/plain" },
