@@ -3,13 +3,18 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import { StateContext } from "../context/StateContext";
+import {
+  CurrentStateSpaceItem,
+  TypeItem,
+  ConstantItem,
+} from "../common/types";
 
 const useDebugger = (onVerify: (feedback: string) => void) => {
   const [debugging, setDebugging] = useState(false);
   const [valid, setValid] = useState(false);
 
   const {
-    stateSpace,
+    currentStateSpace,
     types,
     constants,
     setStateSpace,
@@ -29,14 +34,10 @@ const useDebugger = (onVerify: (feedback: string) => void) => {
       .then((response) => {
         const feedback = response.data;
         const isValid =
-          feedback.indexOf("\n- Failed\n") === -1 &&
-          feedback.indexOf("BAD STRUCTURE:") === -1;
+        feedback.indexOf("\n- Failed\n") === -1 &&
+        feedback.indexOf("BAD STRUCTURE:") === -1;
 
         setValid(isValid);
-        // TODO update these w proper response and data structure
-        setStateSpace([""]);
-        setTypes([""]);
-        setConstants([""]);
         onVerify(feedback);
       })
       .catch(() => {

@@ -1,62 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styles from "./StateTab.module.css";
+import { StateContext } from "../../../context/StateContext";
 
 // TODO replace with actual data
 import data from "../../../data/test-data.json";
 const stateTestData = data.dataForStateTab;
 
-interface StateData {
-  currentStateSpace: {
-    state: string;
-    type: string;
-    value: string;
-  }[];
-  types: {
-    type: string;
-    value: string;
-  }[];
-  constants: {
-    state: string;
-    type: string;
-    value: string;
-  }[];
-}
-
 const StateTab = () => {
-  const [stateData, setStateData] = useState<StateData>({
-    currentStateSpace: [],
-    types: [],
-    constants: [],
-  });
+  const {
+    currentStateSpace,
+    types,
+    constants,
+    setStateSpace,
+    setTypes,
+    setConstants,
+  } = useContext(StateContext);
+
+  // Map keys to their state values and setters
+  const stateMap = {
+    currentStateSpace: { value: currentStateSpace, setter: setStateSpace },
+    types: { value: types, setter: setTypes },
+    constants: { value: constants, setter: setConstants },
+  };
+
+  // Helper to update both state and localStorage for a given key
+  const updateStateAndStorage = (key: keyof typeof stateMap, newValue: any) => {
+    stateMap[key].setter(newValue);
+    localStorage.setItem(key, JSON.stringify(newValue));
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = stateTestData; // TODO replace with local storage fetch
-        setStateData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    try {
+      const keys: (keyof typeof stateMap)[] = ["currentStateSpace", "types", "constants"];
+      const localData = keys.reduce((acc, key) => {
+        const item = localStorage.getItem(key);
+        if (item) {
+          acc[key] = JSON.parse(item);
+        }
+        return acc;
+      }, {} as Partial<typeof stateMap>);
 
-    fetchData();
+      if (Object.keys(localData).length !== keys.length) {
+        updateStateAndStorage("currentStateSpace", stateTestData.currentStateSpace);
+        updateStateAndStorage("types", stateTestData.types);
+        updateStateAndStorage("constants", stateTestData.constants);
+      } else {
+        // Update all states from localStorage
+        keys.forEach((key) => {
+          updateStateAndStorage(key, localData[key]);
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }, []);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, index: number, type: 'currentStateSpace' | 'types' | 'constants') => {
+  // Generic input change handler
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number,
+    type: keyof typeof stateMap
+  ) => {
     const { value } = event.target;
-    const updatedValues = [...stateData[type]];
-    updatedValues[index].value = value;
-    setStateData({
-      ...stateData,
-      [type]: updatedValues, // unsure about this update
-    });
+    const currentData = stateMap[type].value;
+    const updatedData = currentData.map((item: any, i: number) =>
+      i === index ? { ...item, value } : item
+    );
+    updateStateAndStorage(type, updatedData);
   };
 
   return (
     <div className={styles.stateTab}>
       <div className={styles.section}>
         <h2>Current State Space</h2>
-        {stateData.currentStateSpace.map((states, index) => {
+        {currentStateSpace.map((states, index) => {
           return (
             <div className={styles.row} key={index}>
               <div className={styles.col}>{states.state}</div>
@@ -75,7 +92,7 @@ const StateTab = () => {
       </div>
       <div className={styles.section}>
         <h2>Types</h2>
-        {stateData.types.map((types, index) => {
+        {types.map((types, index) => {
           return (
             <div className={styles.row} key={index}>
               <div className={styles.col}>{types.type}</div>
@@ -91,7 +108,7 @@ const StateTab = () => {
       </div>
       <div className={styles.section}>
         <h2>Constants</h2>
-        {stateData.constants.map((constants, index) => {
+        {constants.map((constants, index) => {
           return (
             <div className={styles.row} key={index}>
               <div className={styles.col}>{constants.state}</div>
