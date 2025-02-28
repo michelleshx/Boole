@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction, createContext, useState } from "react";
+import { CurrentStateSpaceItem, TypeItem, ConstantItem } from "../common/types";
 
 type StateContextType = {
-  types: string[];
-  setTypes: Dispatch<SetStateAction<string[]>>;
-  constants: string[];
-  setConstants: Dispatch<SetStateAction<string[]>>;
-  stateSpace: string[];
-  setStateSpace: Dispatch<SetStateAction<string[]>>;
+  types: TypeItem[];
+  setTypes: Dispatch<SetStateAction<TypeItem[]>>;
+  constants: ConstantItem[];
+  setConstants: Dispatch<SetStateAction<ConstantItem[]>>;
+  currentStateSpace: CurrentStateSpaceItem[];
+  setStateSpace: Dispatch<SetStateAction<CurrentStateSpaceItem[]>>;
 };
 
 export const StateContext = createContext<StateContextType>(
@@ -16,10 +17,9 @@ export const StateContext = createContext<StateContextType>(
 const StateProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // TODO fix the data structure of these
-  const [types, setTypes] = useState<string[]>([]);
-  const [constants, setConstants] = useState<string[]>([]);
-  const [stateSpace, setStateSpace] = useState<string[]>([]);
+  const [types, setTypes] = useState<TypeItem[]>([]);
+  const [constants, setConstants] = useState<ConstantItem[]>([]);
+  const [currentStateSpace, setStateSpace] = useState<CurrentStateSpaceItem[]>([]);
 
   return (
     <StateContext.Provider
@@ -28,7 +28,7 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
         setTypes,
         constants,
         setConstants,
-        stateSpace,
+        currentStateSpace,
         setStateSpace,
       }}
     >
