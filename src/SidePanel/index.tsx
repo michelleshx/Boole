@@ -18,7 +18,7 @@ type Tabs = {
 const tabs: Tabs = { state: "state", operations: "operations", trace: "trace" };
 
 interface SidePanelProps {
-  onVerify: (feedback: string) => void;
+  onVerify: (feedback: Feedback) => void;
   isDebugging: boolean;
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
 }

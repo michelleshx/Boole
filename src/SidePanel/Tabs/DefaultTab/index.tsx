@@ -4,13 +4,14 @@ import Button from "../../../components/Button";
 import Loading from "../../../components/Loading";
 import { Popover } from "react-tiny-popover";
 
-import useDebugger from "../../../hooks/useDebugger";
+import useMessageHandler from "../../../hooks/useMessageHandler";
 import { FileContext } from "../../../context/FileContext";
 import { FileType } from "../../../common/files";
+import { Feedback } from "../../../common/types";
 
 interface DefaultTabProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
-  onVerify: (feedback: string) => void;
+  onVerify: (feedback: Feedback) => void;
 }
 
 const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
@@ -19,7 +20,10 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
 
   const { value, setFileType, getFileType } = useContext(FileContext);
 
-  const { debugging, debug } = useDebugger(onVerify);
+  const { processing, sendMessage } = useMessageHandler({
+    method: "custom/getZSpecComponents",
+    onSuccess: onVerify,
+  });
 
   const onDebug = () => {
     const fileType = getFileType(value);
@@ -31,7 +35,7 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
       fileType === FileType.Z ||
       fileType === FileType.COUNTEREXAMPLE
     ) {
-      debug(value);
+      sendMessage(value);
       setIsDebugging(true);
     } else {
       setErrorMessage(
@@ -68,12 +72,12 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
         text="Start Debugging"
         variant="primary"
         size="medium"
-        onClick={() => onDebug()}
-        disabled={debugging}
+        onClick={onDebug}
+        disabled={processing}
         fullWidth
         title="Start Debugging"
       >
-        {debugging && <Loading />}
+        {processing && <Loading />}
       </Button>
       <p className={styles.text}>{errorMessage}</p>
     </div>
