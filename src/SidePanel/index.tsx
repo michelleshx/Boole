@@ -35,7 +35,7 @@ const SidePanel = ({
     <aside className={styles.sidePanel}>
       {!isDebugging ? (
         <DefaultTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
-      ) : fileType === FileType.Z ? (
+      ) : (
         <>
           <div className={styles.tabHeaders}>
             {Object.keys(tabs).map((tabKey) => (
@@ -44,15 +44,15 @@ const SidePanel = ({
                 className={styles.tab}
                 onClick={() => setActiveTab(tabs[tabKey as keyof Tabs])}
               >
-                <div
+                <p
                   className={
                     activeTab === tabs[tabKey as keyof Tabs]
                       ? styles["tab--active"]
-                      : undefined
+                      : styles["tabText"]
                   }
                 >
                   {tabKey}
-                </div>
+                </p>
               </div>
             ))}
           </div>
@@ -60,21 +60,6 @@ const SidePanel = ({
             {activeTab === tabs.state && <StateTab />}
             {activeTab === tabs.operations && <OperationsTab />}
             {activeTab === tabs.trace && <TraceTab />}
-          </div>
-        </>
-      ) : (
-        <>
-          <div className={styles.tabHeaders}>
-            <div
-              className={
-                activeTab === tabs["state"] ? styles["tab--active"] : undefined
-              }
-            >
-              State
-            </div>
-          </div>
-          <div className={styles.tabContent}>
-            {activeTab === tabs.state && <StateTab />}
           </div>
         </>
       )}

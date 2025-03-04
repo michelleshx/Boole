@@ -1,16 +1,19 @@
 /* global gtag */
 import { useContext, useEffect, useState } from "react";
-import { FeedBackWithLineRange, Feedback } from "../common/types";
+import {
+  FeedBackWithLineRange,
+  Feedback,
+  CurrentStateSpaceItem,
+  TypeItem,
+  ConstantItem,
+  OperationItem,
+} from "../common/types";
 import { LanguageServerContext } from "../context/LanguageServerContext";
-// import { StateContext } from "../context/StateContext";
+import { StateContext } from "../context/StateContext";
 
 interface MessageHandlerConfig {
   method: "custom/getFeedback" | "custom/getZSpecComponents";
   onSuccess: (feedback: Feedback) => void;
-  // validateResponse?: (feedback: Feedback) => {
-  //   isValid: boolean;
-  //   isMagicUsed: boolean;
-  // };
 }
 
 const useMessageHandler = (config: MessageHandlerConfig) => {
@@ -24,6 +27,9 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     sendVerificationMessage,
     sendGetZSpecComponentsMessage,
   } = useContext(LanguageServerContext);
+
+  const { updateStateAndStorage, addOperationAndStorage } =
+    useContext(StateContext);
 
   const checkString = (message: string) => {
     return {
@@ -59,17 +65,66 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           setMagicUsed(isMagicUsed);
           config.onSuccess?.(feedback);
         } else if (lastJsonMessage.method === "custom/getZSpecComponents") {
-          const feedback: Feedback = lastJsonMessage.params.components;
-          console.log("message", feedback);
+          const feedback = lastJsonMessage.params.components;
+
           setValid(true);
-          config.onSuccess?.(feedback);
+          config.onSuccess?.(
+            typeof feedback === "object"
+              ? "Z Spec successfully interpreted!"
+              : feedback
+          );
+          if (!feedback) return; // Ensure feedback is defined before proceeding
+
+          // Set state values
+          // TODO update initial state once jacqueline changes getZSpec api
+          const stateSpaceList: CurrentStateSpaceItem[] =
+            // Assume: [1] contains the declarations, [2] contains the initial state
+            feedback.state_space?.[1]?.declarations?.map(
+              ({ name, type }: { name: string; type: string }) => ({
+                state: name,
+                type,
+                value: "",
+              })
+            ) || [];
+          const typesList: TypeItem[] =
+            feedback.types?.map((type: string) => ({
+              type,
+              value: "",
+            })) || [];
+          const constantsList: ConstantItem[] = Object.entries(
+            feedback.constants || {}
+          ).map(([key, value]) => ({
+            state: key,
+            type: String(value),
+            value: "",
+          }));
+
+          updateStateAndStorage("currentStateSpace", stateSpaceList);
+          updateStateAndStorage("types", typesList);
+          updateStateAndStorage("constants", constantsList);
+
+          // Set operations
+          const operations: OperationItem[] =
+            feedback.operations?.map((op: any) => ({
+              name: op.name,
+              declarations:
+                op.declarations?.map(
+                  ({ name, type }: { name: string; type: string }) => ({
+                    name,
+                    type,
+                    value: "",
+                  })
+                ) || [],
+            })) || [];
+
+          operations.forEach(addOperationAndStorage);
         }
       }
     } catch {
       config.onSuccess?.("Failed to process message!");
     }
     setProcessing(false);
-  }, [lastJsonMessage]);
+  }, [lastJsonMessage, config]);
 
   const sendMessage = (value: string) => {
     setProcessing(true);
@@ -78,7 +133,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     if (config.method === "custom/getFeedback") {
       sendVerificationMessage(value);
       setProcessedValue(value);
-    } else if (config.method == "custom/getZSpecComponents") {
+    } else if (config.method === "custom/getZSpecComponents") {
       sendGetZSpecComponentsMessage(value);
     }
   };

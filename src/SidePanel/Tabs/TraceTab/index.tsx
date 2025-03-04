@@ -1,28 +1,34 @@
+import { useEffect, useContext } from "react";
+import { StateContext } from "../../../context/StateContext";
 import { ExpandableListItem } from "../../../components";
 import styles from "./TraceTab.module.css";
-
-// TODO replace with actual data
-import data from "../../../data/test-data.json";
-const traceData = data.dataForTraceTab;
-
-// interface TraceData {
-//   name: string;
-//   parameters: {
-//     state: string;
-//     type: string;
-//     value: string;
-//   }[];
-// }
+import { OperationItem } from "../../../common/types";
 
 const TraceTab = () => {
+  const { traces, updateTracesAndStorage } = useContext(StateContext);
+
+  useEffect(() => {
+    try {
+      const item = localStorage.getItem("traces");
+      if (item) {
+        const localData = JSON.parse(item);
+        localData.array.forEach((trace: OperationItem) => {
+          updateTracesAndStorage(trace);
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
+
   return (
     <ul className={styles.traceTab}>
-      {traceData.map((trace) => (
+      {traces.map((trace) => (
         <ExpandableListItem title={trace.name}>
-          {trace.data.map((states) => {
+          {trace.declarations.map((states) => {
             return (
               <div className={styles.row}>
-                <div className={styles.col}>{states.state}</div>
+                <div className={styles.col}>{states.name}</div>
                 <div className={styles.col}>{states.type}</div>
                 <div className={styles.col}>{states.value}</div>
               </div>

@@ -2,7 +2,7 @@
   "dataForTraceTab": [
     {
       "name": "InitialState",
-      "data": [
+      "declarations": [
         { "state": "TeamsQualified", "type": "pow(Teams)", "value": "0" },
         {
           "state": "IndividualsQualified",
@@ -22,14 +22,14 @@
   "dataForOperationsTab": [
     {
       "name": "RegisterTeam",
-      "parameters": [
+      "declarations": [
         { "name": "team", "type": "Teams", "value": "0" },
         { "name": "people", "type": "pow(People)", "value": "0" }
       ]
     },
     {
       "name": "SubstituteRunner",
-      "parameters": [
+      "declarations": [
         { "name": "team", "type": "Teams", "value": "0" },
         { "name": "people", "type": "pow(People)", "value": "0" }
       ]

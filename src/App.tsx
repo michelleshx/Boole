@@ -1,6 +1,6 @@
 import SplitPane from "react-split-pane";
 
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import "./App.css";
 import AppBar from "./AppBar";
@@ -9,8 +9,6 @@ import SidePanel from "./SidePanel";
 import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
-import FileProvider, { FileContext } from "./context/FileContext";
-import StateProvider from "./context/StateContext";
 
 import useMessageHandler from "./hooks/useMessageHandler";
 import useSubmission from "./hooks/useSubmission";
@@ -32,7 +30,6 @@ function App() {
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
-  const { value } = useContext(FileContext);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [keybinding, setKeybinding] = useState<string>("default");
   const [submissionFeedback, setSubmissionFeedback] = useState<Feedback>("");

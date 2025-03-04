@@ -1,50 +1,44 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { StateContext } from "../../../context/StateContext";
 
 import { ExpandableListItem } from "../../../components";
 import Button from "../../../components/Button";
 import styles from "./OperationsTab.module.css";
-
-// TODO replace with actual data
-import data from "../../../data/test-data.json";
-const operationTestData = data.dataForOperationsTab;
-
-interface OperationsData {
-  name: string;
-  parameters: {
-    name: string;
-    type: string;
-    value: string;
-  }[];
-}
+import { OperationItem } from "../../../common/types";
 
 const OperationsTab = () => {
-  const [operationData, setOperationData] = useState<OperationsData[]>([]);
+  const { operations, updateOperationAndStorage } = useContext(StateContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = operationTestData; // TODO replace with local storage fetch
-        setOperationData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    try {
+      const item = localStorage.getItem("operations");
+      if (item) {
+        const localData = JSON.parse(item);
+        localData.forEach((op: OperationItem) => {
+          updateOperationAndStorage(op);
+        });
       }
-    };
-
-    fetchData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }, []);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, operationIndex: number, parameterIndex: number) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    operationIndex: number,
+    parameterIndex: number
+  ) => {
     const { value } = event.target;
-    const updatedData = [...operationData];
-    updatedData[operationIndex].parameters[parameterIndex].value = value;
-    setOperationData(updatedData);
+    const updatedData = [...operations];
+    updatedData[operationIndex].declarations[parameterIndex].value = value;
+    updateOperationAndStorage(updatedData[operationIndex]);
   };
 
   return (
     <ul className={styles.operationsTab}>
-      {operationData.map((operation, opIdx) => (
+      {operations.map((operation, opIdx) => (
         <ExpandableListItem title={operation.name} key={opIdx}>
-          {operation.parameters.map((inputs, inputIdx) => {
+          {operation.declarations.map((inputs, inputIdx) => {
             return (
               <div className={styles.row} key={inputIdx}>
                 <div className={styles.col}>{inputs.name}</div>
@@ -52,7 +46,8 @@ const OperationsTab = () => {
                 <input
                   type="text"
                   value={inputs.value}
-                  className={styles.col}
+                  className={[styles.col, styles.input].join(" ")}
+                  placeholder={inputs.type}
                   onChange={(event) =>
                     handleInputChange(event, opIdx, inputIdx)
                   }
@@ -67,6 +62,7 @@ const OperationsTab = () => {
               size="small"
               aria-label="Apply Operation"
               title="Apply Operation"
+              fullWidth
             />
           </div>
         </ExpandableListItem>

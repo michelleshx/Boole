@@ -1,31 +1,43 @@
 .sidePanel {
-    min-width: 464px;
-    height: 100%;
-    background: var(--background-2);
-    border-right: 1px solid var(--border);
+  min-width: 464px;
+  height: 100%;
+  background: var(--background-2);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
 }
 
 .tabHeaders {
-    display: flex;
-    gap: 40px;
-    padding: 16px;
-    border-bottom: 0.5px solid var(--border);
-    text-transform: uppercase;
-    font: 600 14px / 1 "Open Sans";
+  display: flex;
+  border-bottom: 0.5px solid var(--border);
+  text-transform: uppercase;
+  font: 600 14px / 1 "Open Sans";
 }
 
 .tab {
-    cursor: pointer;
-    flex: 1;
-    text-align: center;
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tab:hover,
+.tab:active {
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  background-color: rgba(82, 69, 165, 0.35);
+}
+
+.tabText {
+  padding: 16px;
 }
 
 .tab--active {
-    padding-bottom: 2px;
-    color: var(--text-color-highlighted);
-    border-bottom: 0.5px solid var(--text-color-highlighted);
+  padding: 16px;
+  text-decoration: underline;
+  color: var(--text-color-highlighted);
+  background-color: rgba(82, 69, 165, 0.35);
+  height: 100%;
 }
 
 .tabContent {
-    padding-top: 16px;
+  padding-top: 16px;
 }
