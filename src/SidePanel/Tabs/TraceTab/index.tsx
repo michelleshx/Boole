@@ -1,27 +1,33 @@
+import { useEffect, useContext } from "react";
+import { StateContext } from "../../../context/StateContext";
 import { ExpandableListItem } from "../../../components";
 import styles from "./TraceTab.module.css";
-
-// TODO replace with actual data
-import data from "../../../data/test-data.json";
-const traceData = data.dataForTraceTab;
-
-// interface TraceData {
-//   name: string;
-//   parameters: {
-//     state: string;
-//     type: string;
-//     value: string;
-//   }[];
-// }
+import { OperationItem } from "../../../common/types";
 
 const TraceTab = () => {
+  const { traces, updateTracesAndStorage } = useContext(StateContext);
+
+  useEffect(() => {
+    try {
+      const item = localStorage.getItem("traces");
+      if (item) {
+        const localData = JSON.parse(item);
+        localData.forEach((trace: OperationItem) => {
+          updateTracesAndStorage(trace);
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
+
   return (
     <ul className={styles.traceTab}>
-      {traceData.map((trace) => (
-        <ExpandableListItem title={trace.name}>
-          {trace.data.map((states) => {
+      {traces.map((trace, idx) => (
+        <ExpandableListItem title={trace.name} key={idx}>
+          {trace.declarations.map((states, decl_idx) => {
             return (
-              <div className={styles.row}>
+              <div className={styles.row} key={decl_idx}>
                 <div className={styles.col}>{states.state}</div>
                 <div className={styles.col}>{states.type}</div>
                 <div className={styles.col}>{states.value}</div>

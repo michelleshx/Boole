@@ -1,37 +1,23 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import styles from "./StateTab.module.css";
 import { StateContext } from "../../../context/StateContext";
-
-// TODO replace with actual data
-import data from "../../../data/test-data.json";
-const stateTestData = data.dataForStateTab;
 
 const StateTab = () => {
   const {
     currentStateSpace,
     types,
     constants,
-    setStateSpace,
-    setTypes,
-    setConstants,
+    stateMap,
+    updateStateAndStorage,
   } = useContext(StateContext);
-
-  // Map keys to their state values and setters
-  const stateMap = {
-    currentStateSpace: { value: currentStateSpace, setter: setStateSpace },
-    types: { value: types, setter: setTypes },
-    constants: { value: constants, setter: setConstants },
-  };
-
-  // Helper to update both state and localStorage for a given key
-  const updateStateAndStorage = (key: keyof typeof stateMap, newValue: any) => {
-    stateMap[key].setter(newValue);
-    localStorage.setItem(key, JSON.stringify(newValue));
-  };
 
   useEffect(() => {
     try {
-      const keys: (keyof typeof stateMap)[] = ["currentStateSpace", "types", "constants"];
+      const keys: (keyof typeof stateMap)[] = [
+        "currentStateSpace",
+        "types",
+        "constants",
+      ];
       const localData = keys.reduce((acc, key) => {
         const item = localStorage.getItem(key);
         if (item) {
@@ -40,11 +26,7 @@ const StateTab = () => {
         return acc;
       }, {} as Partial<typeof stateMap>);
 
-      if (Object.keys(localData).length !== keys.length) {
-        updateStateAndStorage("currentStateSpace", stateTestData.currentStateSpace);
-        updateStateAndStorage("types", stateTestData.types);
-        updateStateAndStorage("constants", stateTestData.constants);
-      } else {
+      if (Object.keys(localData).length === keys.length) {
         // Update all states from localStorage
         keys.forEach((key) => {
           updateStateAndStorage(key, localData[key]);
@@ -81,7 +63,8 @@ const StateTab = () => {
               <input
                 type="text"
                 value={states.value}
-                className={styles.col}
+                className={[styles.col, styles.input].join(" ")}
+                placeholder={states.type}
                 onChange={(event) =>
                   handleInputChange(event, index, "currentStateSpace")
                 }
@@ -99,7 +82,8 @@ const StateTab = () => {
               <input
                 type="text"
                 value={types.value}
-                className={styles.col}
+                className={[styles.col, styles.input].join(" ")}
+                placeholder={types.type}
                 onChange={(event) => handleInputChange(event, index, "types")}
               />
             </div>
@@ -116,7 +100,8 @@ const StateTab = () => {
               <input
                 type="text"
                 value={constants.value}
-                className={styles.col}
+                className={[styles.col, styles.input].join(" ")}
+                placeholder={constants.type}
                 onChange={(event) =>
                   handleInputChange(event, index, "constants")
                 }

@@ -1,6 +1,6 @@
 import SplitPane from "react-split-pane";
 
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 import "./App.css";
 import AppBar from "./AppBar";
@@ -9,10 +9,8 @@ import SidePanel from "./SidePanel";
 import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
-import FileProvider, { FileContext } from "./context/FileContext";
-import StateProvider from "./context/StateContext";
 
-import useVerification from "./hooks/useVerification";
+import useMessageHandler from "./hooks/useMessageHandler";
 import useSubmission from "./hooks/useSubmission";
 import ExpressionEvaluator from "./BottomPanel/ExpressionEvaluator";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -32,7 +30,6 @@ function App() {
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
-  const { value } = useContext(FileContext);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [keybinding, setKeybinding] = useState<string>("default");
   const [submissionFeedback, setSubmissionFeedback] = useState<Feedback>("");
@@ -44,13 +41,16 @@ function App() {
     setSubmissionFeedback(markus ? feedback : "");
   };
 
-  const { verifying, verifiedValue, valid, magicUsed, verify } =
-    useVerification(value, onVerify);
+  const { processing, processedValue, valid, magicUsed, sendMessage } =
+    useMessageHandler({
+      method: "custom/getFeedback",
+      onSuccess: onVerify,
+    });
   const { submitting, submittedValue, submit, assignments } =
     useSubmission(onVerify);
 
   const onCheck = (val: string) => {
-    verify(val);
+    sendMessage(val);
   };
 
   const onSubmit = (val: string, assignmentId: number, fileName: string) => {
@@ -65,8 +65,8 @@ function App() {
       <AppBar
         isDarkMode={isDarkMode}
         setDarkMode={setDarkMode}
-        verifying={verifying}
-        verifiedValue={verifiedValue}
+        verifying={processing}
+        verifiedValue={processedValue}
         valid={valid}
         magicUsed={magicUsed}
         onCheck={onCheck}

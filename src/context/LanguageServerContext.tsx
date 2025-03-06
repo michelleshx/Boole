@@ -15,13 +15,17 @@ type LanguageServerContextType = {
   sendDidOpenMessage: (name: string, value: string) => void;
   sendDidChangeMessage: (model: monaco.editor.ITextModel) => void;
   sendDidCloseMessage: (name: string) => void;
-  sendVerificationMessage: (
+  sendVerificationMessage: (value: string) => void;
+  sendGetZSpecComponentsMessage: (value: string) => void;
+  sendRunOperationsMessage: (
     value: string,
+    interp: string,
+    operation: string
   ) => void;
 };
 
 export const LanguageServerContext = createContext<LanguageServerContextType>(
-  {} as LanguageServerContextType,
+  {} as LanguageServerContextType
 );
 
 const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -30,17 +34,23 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const { openFile } = useContext(FileContext);
-  const url = "ws://se212-ws.student.cs.uwaterloo.ca:80/se212/language-server";
-  // for local testing: const url = "ws://127.0.0.1:8080";
+  // const url = "ws://se212-ws.student.cs.uwaterloo.ca:80/se212/language-server";
+  const url = "ws://127.0.0.1:8080"; // local testing
 
   const addMarkers = (newMarkers: monaco.editor.IMarkerData[]) => {
-	if(monacoRef.current && editorRef.current?.getModel()) {
-	  const existingMarkers = monacoRef.current!.editor.getModelMarkers({owner: "owner"});
-	  monacoRef.current!.editor.setModelMarkers(editorRef.current?.getModel()!, "owner", [...existingMarkers, ...newMarkers]);
-	}
-  }
+    if (monacoRef.current && editorRef.current?.getModel()) {
+      const existingMarkers = monacoRef.current!.editor.getModelMarkers({
+        owner: "owner",
+      });
+      monacoRef.current!.editor.setModelMarkers(
+        editorRef.current?.getModel()!,
+        "owner",
+        [...existingMarkers, ...newMarkers]
+      );
+    }
+  };
 
-  const createLSPMessage = (method: string, params: Object) => {
+  const createMessage = (method: string, params: Object) => {
     return JSON.stringify({
       jsonrpc: "2.0",
       id: Math.floor(Math.random() * 1000), // Unique ID for each request
@@ -50,10 +60,10 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const { sendMessage, lastJsonMessage } = useWebSocket(url, {
-	// TODO: onError, onClose
+    // TODO: onError, onClose
     shouldReconnect: (closeEvent) => true,
     onOpen: () => {
-      const initMessage = createLSPMessage("initialize", {
+      const initMessage = createMessage("initialize", {
         capabilities: {
           textDocument: {
             synchronization: {
@@ -75,7 +85,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
             monacoRef.current!.editor.setModelMarkers(
               editorRef.current?.getModel()!,
               "owner",
-              [],
+              []
             );
           }
           return;
@@ -92,7 +102,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
             monacoRef.current!.editor.setModelMarkers(
               editorRef.current?.getModel()!,
               "owner",
-              markers,
+              markers
             );
           }
         }
@@ -101,7 +111,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const sendDidOpenMessage = (name: string, value: string) => {
-    const didOpenMessage = createLSPMessage("textDocument/didOpen", {
+    const didOpenMessage = createMessage("textDocument/didOpen", {
       textDocument: {
         uri: "file:///" + name,
         languageId: "george",
@@ -113,7 +123,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const sendDidChangeMessage = (model: monaco.editor.ITextModel) => {
-    const changeMessage = createLSPMessage("textDocument/didChange", {
+    const changeMessage = createMessage("textDocument/didChange", {
       textDocument: {
         uri: "file:///" + openFile.name,
         languageId: "george",
@@ -130,7 +140,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const sendDidCloseMessage = (name: string) => {
-    const closeMessage = createLSPMessage("textDocument/didClose", {
+    const closeMessage = createMessage("textDocument/didClose", {
       textDocument: {
         uri: "file:///" + name,
       },
@@ -138,13 +148,36 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     sendMessage(closeMessage);
   };
 
-  const sendVerificationMessage = (
-    value: string,
-  ) => {
-    const verificationMessage = createLSPMessage("getFeedback", {
+  const sendVerificationMessage = (value: string) => {
+    const verificationMessage = createMessage("custom/getFeedback", {
       data: value,
     });
     sendMessage(verificationMessage);
+  };
+
+  const sendGetZSpecComponentsMessage = (value: string) => {
+    const getZSpecComponentsMessage = createMessage(
+      "custom/getZSpecComponents",
+      {
+        data: value,
+      }
+    );
+    sendMessage(getZSpecComponentsMessage);
+  };
+
+  const sendRunOperationsMessage = (
+    value: string,
+    interp: string,
+    operation: string
+  ) => {
+    const runOperationsMessage = createMessage("custom/runOperations", {
+      data: {
+        zSpec: value,
+        interp,
+        operation,
+      },
+    });
+    sendMessage(runOperationsMessage);
   };
 
   return (
@@ -152,12 +185,14 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         editorRef,
         monacoRef,
-		addMarkers,
-		lastJsonMessage,
+        addMarkers,
+        lastJsonMessage,
         sendDidOpenMessage,
         sendDidChangeMessage,
         sendDidCloseMessage,
         sendVerificationMessage,
+        sendGetZSpecComponentsMessage,
+        sendRunOperationsMessage,
       }}
     >
       {children}

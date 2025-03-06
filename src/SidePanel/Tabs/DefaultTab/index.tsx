@@ -1,16 +1,16 @@
 import { useState, useContext } from "react";
 import styles from "./DefaultTab.module.css";
-import Button from "../../../components/Button";
-import Loading from "../../../components/Loading";
+import { Loading, Button } from "../../../components";
 import { Popover } from "react-tiny-popover";
 
-import useDebugger from "../../../hooks/useDebugger";
+import useMessageHandler from "../../../hooks/useMessageHandler";
 import { FileContext } from "../../../context/FileContext";
 import { FileType } from "../../../common/files";
+import { Feedback } from "../../../common/types";
 
 interface DefaultTabProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
-  onVerify: (feedback: string) => void;
+  onVerify: (feedback: Feedback) => void;
 }
 
 const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
@@ -19,19 +19,18 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
 
   const { value, setFileType, getFileType } = useContext(FileContext);
 
-  const { debugging, debug } = useDebugger(onVerify);
+  const { processing, sendMessage } = useMessageHandler({
+    method: "custom/getZSpecComponents",
+    onSuccess: onVerify,
+  });
 
   const onDebug = () => {
     const fileType = getFileType(value);
     setFileType(fileType); // set the file type
 
     // Check if the file is debuggable
-    if (
-      fileType === FileType.PREDTYPE ||
-      fileType === FileType.Z ||
-      fileType === FileType.COUNTEREXAMPLE
-    ) {
-      debug(value);
+    if (fileType === FileType.Z) {
+      sendMessage(value);
       setIsDebugging(true);
     } else {
       setErrorMessage(
@@ -48,7 +47,7 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
         padding={8}
         content={
           <div className={styles.popOverContainer}>
-            Supported files include: #check PREDTYPE, #check Z, #check CE.
+            Supported files include: #check Z.
           </div>
         }
       >
@@ -68,12 +67,12 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
         text="Start Debugging"
         variant="primary"
         size="medium"
-        onClick={() => onDebug()}
-        disabled={debugging}
+        onClick={onDebug}
+        disabled={processing}
         fullWidth
         title="Start Debugging"
       >
-        {debugging && <Loading />}
+        {processing && <Loading />}
       </Button>
       <p className={styles.text}>{errorMessage}</p>
     </div>

@@ -6,7 +6,7 @@ export interface Assignment {
 
 export type FeedBackWithLineRange = [[number, number] | null, string];
 
-export type Feedback = ((string | FeedBackWithLineRange)[]) | string;
+export type Feedback = (string | FeedBackWithLineRange)[] | string;
 
 // 1) For the "currentStateSpace" array
 export interface CurrentStateSpaceItem {
@@ -26,4 +26,10 @@ export interface ConstantItem {
   state: string;
   type: string;
   value: string;
+}
+
+// Operations
+export interface OperationItem {
+  name: string;
+  declarations: CurrentStateSpaceItem[];
 }

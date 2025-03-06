@@ -1,58 +1,78 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { StateContext } from "../../../context/StateContext";
+import { FileContext } from "../../../context/FileContext";
 
-import { ExpandableListItem } from "../../../components";
-import Button from "../../../components/Button";
+import useMessageHandler from "../../../hooks/useMessageHandler";
+import { ExpandableListItem, Loading, Button } from "../../../components";
 import styles from "./OperationsTab.module.css";
-
-// TODO replace with actual data
-import data from "../../../data/test-data.json";
-const operationTestData = data.dataForOperationsTab;
-
-interface OperationsData {
-  name: string;
-  parameters: {
-    name: string;
-    type: string;
-    value: string;
-  }[];
+import { Feedback, OperationItem } from "../../../common/types";
+interface OperationsTabProps {
+  onApplyOperation: (feedback: Feedback) => void;
 }
 
-const OperationsTab = () => {
-  const [operationData, setOperationData] = useState<OperationsData[]>([]);
+const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
+  const {
+    currentStateSpace,
+    operations,
+    updateOperationAndStorage,
+    formatStateAndOperation,
+  } = useContext(StateContext);
+  const { processing, sendMessage } = useMessageHandler({
+    method: "custom/runOperations",
+    onSuccess: onApplyOperation,
+  });
+
+  const { value } = useContext(FileContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = operationTestData; // TODO replace with local storage fetch
-        setOperationData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+    try {
+      const item = localStorage.getItem("operations");
+      if (item) {
+        const localData = JSON.parse(item);
+        localData.forEach((op: OperationItem) => {
+          updateOperationAndStorage(op);
+        });
       }
-    };
-
-    fetchData();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   }, []);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, operationIndex: number, parameterIndex: number) => {
+  const onRunOperation = (opName: string) => {
+    // Format string
+    const interp = formatStateAndOperation(
+      currentStateSpace,
+      operations,
+      opName
+    );
+    sendMessage(value, interp, opName);
+  };
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    operationIndex: number,
+    parameterIndex: number
+  ) => {
     const { value } = event.target;
-    const updatedData = [...operationData];
-    updatedData[operationIndex].parameters[parameterIndex].value = value;
-    setOperationData(updatedData);
+    const updatedData = [...operations];
+    updatedData[operationIndex].declarations[parameterIndex].value = value;
+    updateOperationAndStorage(updatedData[operationIndex]);
   };
 
   return (
     <ul className={styles.operationsTab}>
-      {operationData.map((operation, opIdx) => (
+      {operations.map((operation, opIdx) => (
         <ExpandableListItem title={operation.name} key={opIdx}>
-          {operation.parameters.map((inputs, inputIdx) => {
+          {operation.declarations.map((inputs, inputIdx) => {
             return (
               <div className={styles.row} key={inputIdx}>
-                <div className={styles.col}>{inputs.name}</div>
+                <div className={styles.col}>{inputs.state}</div>
                 <div className={styles.col}>{inputs.type}</div>
                 <input
                   type="text"
                   value={inputs.value}
-                  className={styles.col}
+                  className={[styles.col, styles.input].join(" ")}
+                  placeholder={inputs.type}
                   onChange={(event) =>
                     handleInputChange(event, opIdx, inputIdx)
                   }
@@ -67,7 +87,12 @@ const OperationsTab = () => {
               size="small"
               aria-label="Apply Operation"
               title="Apply Operation"
-            />
+              disabled={processing}
+              onClick={() => onRunOperation(operation.name)}
+              fullWidth
+            >
+              {processing && <Loading />}
+            </Button>
           </div>
         </ExpandableListItem>
       ))}
