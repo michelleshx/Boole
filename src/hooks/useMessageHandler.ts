@@ -12,7 +12,10 @@ import { LanguageServerContext } from "../context/LanguageServerContext";
 import { StateContext } from "../context/StateContext";
 
 interface MessageHandlerConfig {
-  method: "custom/getFeedback" | "custom/getZSpecComponents";
+  method:
+    | "custom/getFeedback"
+    | "custom/getZSpecComponents"
+    | "custom/runOperations";
   onSuccess: (feedback: Feedback) => void;
 }
 
@@ -26,10 +29,16 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     lastJsonMessage,
     sendVerificationMessage,
     sendGetZSpecComponentsMessage,
+    sendRunOperationsMessage,
   } = useContext(LanguageServerContext);
 
-  const { updateStateAndStorage, addOperationAndStorage } =
-    useContext(StateContext);
+  const {
+    currentStateSpace,
+    updateStateAndStorage,
+    updateOperationAndStorage,
+    updateTracesAndStorage,
+    resetTraces,
+  } = useContext(StateContext);
 
   const checkString = (message: string) => {
     return {
@@ -76,16 +85,19 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           if (!feedback) return; // Ensure feedback is defined before proceeding
 
           // Set state values
-          // TODO update initial state once jacqueline changes getZSpec api
           const stateSpaceList: CurrentStateSpaceItem[] =
-            // Assume: [1] contains the declarations, [2] contains the initial state
-            feedback.state_space?.[1]?.declarations?.map(
-              ({ name, type }: { name: string; type: string }) => ({
-                state: name,
-                type,
-                value: "",
-              })
-            ) || [];
+            feedback.schemas
+              .find(
+                (schema: any) =>
+                  schema.type === "DECLARE" && schema.name !== "Constants"
+              )
+              ?.declarations?.map(
+                ({ name, type }: { name: string; type: string }) => ({
+                  state: name,
+                  type,
+                  value: "",
+                })
+              ) || [];
           const typesList: TypeItem[] =
             feedback.types?.map((type: string) => ({
               type,
@@ -104,20 +116,46 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           updateStateAndStorage("constants", constantsList);
 
           // Set operations
-          const operations: OperationItem[] =
-            feedback.operations?.map((op: any) => ({
+          const operations: OperationItem[] = feedback.schemas
+            .filter(
+              (schema: any) => schema.type === "DELTA" || schema.type === "XI"
+            )
+            .map((op: any) => ({
               name: op.name,
               declarations:
-                op.declarations?.map(
-                  ({ name, type }: { name: string; type: string }) => ({
-                    name,
+                op.declarations
+                  ?.filter((decl: any) => decl.name.indexOf("!") === -1)
+                  .map(({ name, type }: { name: string; type: string }) => ({
+                    state: name,
                     type,
                     value: "",
-                  })
-                ) || [],
-            })) || [];
+                  })) || [],
+            }));
 
-          operations.forEach(addOperationAndStorage);
+          operations.forEach(updateOperationAndStorage);
+
+          // Reset traces
+          resetTraces();
+        } else if (lastJsonMessage.method === "custom/runOperations") {
+          // TODO process run operation output
+          const feedback = lastJsonMessage.params.components;
+
+          setValid(true);
+          config.onSuccess("[TEST] applied operation!");
+          // config.onSuccess?.(
+          //   typeof feedback === "object"
+          //     ? "Successfully applied operation" // TODO Add operation name
+          //     : feedback
+          // );
+          // if (!feedback) return;
+
+          // Update traces with previous state
+          updateTracesAndStorage({
+            name: "[OPERATION NAME]",
+            declarations: currentStateSpace,
+          });
+
+          // Update State Space with operation result
         }
       }
     } catch {
@@ -126,7 +164,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     setProcessing(false);
   }, [lastJsonMessage, config]);
 
-  const sendMessage = (value: string) => {
+  const sendMessage = (value: string, interp?: string, opName?: string) => {
     setProcessing(true);
     gtag("event", config.method === "custom/getFeedback" ? "verify" : "debug");
 
@@ -135,6 +173,8 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
       setProcessedValue(value);
     } else if (config.method === "custom/getZSpecComponents") {
       sendGetZSpecComponentsMessage(value);
+    } else if (config.method === "custom/runOperations") {
+      sendRunOperationsMessage(value, interp ?? "", opName ?? "");
     }
   };
 

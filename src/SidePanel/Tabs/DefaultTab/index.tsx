@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import styles from "./DefaultTab.module.css";
-import Button from "../../../components/Button";
-import Loading from "../../../components/Loading";
+import { Loading, Button } from "../../../components";
 import { Popover } from "react-tiny-popover";
 
 import useMessageHandler from "../../../hooks/useMessageHandler";

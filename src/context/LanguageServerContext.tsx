@@ -17,6 +17,11 @@ type LanguageServerContextType = {
   sendDidCloseMessage: (name: string) => void;
   sendVerificationMessage: (value: string) => void;
   sendGetZSpecComponentsMessage: (value: string) => void;
+  sendRunOperationsMessage: (
+    value: string,
+    interp: string,
+    operation: string
+  ) => void;
 };
 
 export const LanguageServerContext = createContext<LanguageServerContextType>(
@@ -160,6 +165,21 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     sendMessage(getZSpecComponentsMessage);
   };
 
+  const sendRunOperationsMessage = (
+    value: string,
+    interp: string,
+    operation: string
+  ) => {
+    const runOperationsMessage = createMessage("custom/runOperations", {
+      data: {
+        zSpec: value,
+        interp,
+        operation,
+      },
+    });
+    sendMessage(runOperationsMessage);
+  };
+
   return (
     <LanguageServerContext.Provider
       value={{
@@ -172,6 +192,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
         sendDidCloseMessage,
         sendVerificationMessage,
         sendGetZSpecComponentsMessage,
+        sendRunOperationsMessage,
       }}
     >
       {children}

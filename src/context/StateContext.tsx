@@ -30,17 +30,22 @@ type StateContextType = {
       setter: Dispatch<SetStateAction<ConstantItem[]>>;
     };
   };
+  formatStateAndOperation: (
+    stateData: CurrentStateSpaceItem[],
+    OperationData: OperationItem[],
+    opName: string
+  ) => string;
   updateStateAndStorage: (
     key: keyof StateContextType["stateMap"],
     newValue: unknown
   ) => void;
   operations: OperationItem[];
   setOperations: Dispatch<SetStateAction<OperationItem[]>>;
-  addOperationAndStorage: (newValue: OperationItem) => void;
   updateOperationAndStorage: (newValue: OperationItem) => void;
   traces: OperationItem[];
   setTraces: Dispatch<SetStateAction<OperationItem[]>>;
   updateTracesAndStorage: (newValue: OperationItem) => void;
+  resetTraces: () => void;
 };
 
 export const StateContext = createContext<StateContextType>(
@@ -69,6 +74,45 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
     constants: { value: constants, setter: setConstants },
   };
 
+  const formatStateAndOperation = (
+    stateData: CurrentStateSpaceItem[],
+    operationsData: OperationItem[],
+    opName: string
+  ) => {
+    const formatted: any = {};
+
+    // Process state data
+    stateData.forEach(({ state, value }) => {
+      // Convert comma-separated values into a set-like array
+      const formattedValues =
+        value.includes("(") && value.includes(")")
+          ? value.split("), (").map((pair: string) =>
+              pair
+                .replace(/[()]/g, "")
+                .split(", ")
+                .map((v) => v.trim())
+            )
+          : Array.from(new Set(value.split(", ").map((v) => v.trim())));
+      formatted[state] = { values: formattedValues };
+    });
+
+    // Process operations inputs
+    const selectedOperation = operationsData.find(
+      ({ name }) => name === opName
+    );
+    if (selectedOperation) {
+      selectedOperation.declarations.forEach(({ state, value }) => {
+        if (state.includes("?") && value) {
+          formatted[state] = {
+            values: value.split(",").map((v) => v.trim()),
+          };
+        }
+      });
+    }
+
+    return JSON.stringify(formatted);
+  };
+
   // Helper to update both state and localStorage for a given key
   const updateStateAndStorage = useCallback(
     (key: keyof typeof stateMap, newValue: any) => {
@@ -78,33 +122,35 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
     []
   );
 
-  const addOperationAndStorage = useCallback((newValue: OperationItem) => {
-    setOperations((prev) => {
-      const updatedOperations = [...prev, newValue];
-      localStorage.setItem("operations", JSON.stringify(updatedOperations));
-      return updatedOperations;
-    });
-  }, []);
-
-  // TODO test
   const updateOperationAndStorage = useCallback((newValue: OperationItem) => {
-    setOperations((prevOperations) => {
-      const updatedOperations = prevOperations.map((op) =>
-        op.name === newValue.name ? newValue : op
-      );
+    setOperations((prev) => {
+      const updatedOperations = prev.some(
+        (operation) => operation.name === newValue.name
+      )
+        ? prev.map((operation) =>
+            operation.name === newValue.name ? newValue : operation
+          ) // Update existing
+        : [...prev, newValue]; // Add new if not found
 
       localStorage.setItem("operations", JSON.stringify(updatedOperations));
       return updatedOperations;
     });
   }, []);
 
-  // TODO test
   const updateTracesAndStorage = useCallback((newValue: OperationItem) => {
     setTraces((prev) => {
-      const updatedTraces = [...prev, newValue];
+      const updatedTraces = prev.some((trace) => trace.name === newValue.name)
+        ? prev.map((trace) => (trace.name === newValue.name ? newValue : trace))
+        : [...prev, newValue];
+
       localStorage.setItem("traces", JSON.stringify(updatedTraces));
       return updatedTraces;
     });
+  }, []);
+
+  const resetTraces = useCallback(() => {
+    setTraces([]); // Clear traces in state
+    localStorage.removeItem("traces"); // Remove traces from local storage
   }, []);
 
   return (
@@ -117,14 +163,15 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
         currentStateSpace,
         setStateSpace,
         stateMap,
+        formatStateAndOperation,
         updateStateAndStorage,
         operations,
         setOperations,
-        addOperationAndStorage,
         updateOperationAndStorage,
         traces,
         setTraces,
         updateTracesAndStorage,
+        resetTraces,
       }}
     >
       {children}

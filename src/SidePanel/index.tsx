@@ -1,12 +1,10 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import styles from "./SidePanel.module.css";
 
 import StateTab from "./Tabs/StateTab";
 import OperationsTab from "./Tabs/OperationsTab";
 import TraceTab from "./Tabs/TraceTab";
 import DefaultTab from "./Tabs/DefaultTab";
-import { FileContext } from "../context/FileContext";
-import { FileType } from "../common/files";
 import { Feedback } from "../common/types";
 
 type Tabs = {
@@ -29,7 +27,6 @@ const SidePanel = ({
   setIsDebugging,
 }: SidePanelProps) => {
   const [activeTab, setActiveTab] = useState(tabs.state);
-  const { fileType } = useContext(FileContext);
 
   return (
     <aside className={styles.sidePanel}>
@@ -58,7 +55,9 @@ const SidePanel = ({
           </div>
           <div className={styles.tabContent}>
             {activeTab === tabs.state && <StateTab />}
-            {activeTab === tabs.operations && <OperationsTab />}
+            {activeTab === tabs.operations && (
+              <OperationsTab onApplyOperation={onVerify} />
+            )}
             {activeTab === tabs.trace && <TraceTab />}
           </div>
         </>

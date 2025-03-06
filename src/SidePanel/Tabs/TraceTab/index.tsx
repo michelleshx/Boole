@@ -12,7 +12,7 @@ const TraceTab = () => {
       const item = localStorage.getItem("traces");
       if (item) {
         const localData = JSON.parse(item);
-        localData.array.forEach((trace: OperationItem) => {
+        localData.forEach((trace: OperationItem) => {
           updateTracesAndStorage(trace);
         });
       }
@@ -23,12 +23,12 @@ const TraceTab = () => {
 
   return (
     <ul className={styles.traceTab}>
-      {traces.map((trace) => (
-        <ExpandableListItem title={trace.name}>
-          {trace.declarations.map((states) => {
+      {traces.map((trace, idx) => (
+        <ExpandableListItem title={trace.name} key={idx}>
+          {trace.declarations.map((states, decl_idx) => {
             return (
-              <div className={styles.row}>
-                <div className={styles.col}>{states.name}</div>
+              <div className={styles.row} key={decl_idx}>
+                <div className={styles.col}>{states.state}</div>
                 <div className={styles.col}>{states.type}</div>
                 <div className={styles.col}>{states.value}</div>
               </div>

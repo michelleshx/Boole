@@ -1,13 +1,28 @@
 import { useEffect, useContext } from "react";
 import { StateContext } from "../../../context/StateContext";
+import { FileContext } from "../../../context/FileContext";
 
-import { ExpandableListItem } from "../../../components";
-import Button from "../../../components/Button";
+import useMessageHandler from "../../../hooks/useMessageHandler";
+import { ExpandableListItem, Loading, Button } from "../../../components";
 import styles from "./OperationsTab.module.css";
-import { OperationItem } from "../../../common/types";
+import { Feedback, OperationItem } from "../../../common/types";
+interface OperationsTabProps {
+  onApplyOperation: (feedback: Feedback) => void;
+}
 
-const OperationsTab = () => {
-  const { operations, updateOperationAndStorage } = useContext(StateContext);
+const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
+  const {
+    currentStateSpace,
+    operations,
+    updateOperationAndStorage,
+    formatStateAndOperation,
+  } = useContext(StateContext);
+  const { processing, sendMessage } = useMessageHandler({
+    method: "custom/runOperations",
+    onSuccess: onApplyOperation,
+  });
+
+  const { value } = useContext(FileContext);
 
   useEffect(() => {
     try {
@@ -22,6 +37,16 @@ const OperationsTab = () => {
       console.error("Error fetching data:", error);
     }
   }, []);
+
+  const onRunOperation = (opName: string) => {
+    // Format string
+    const interp = formatStateAndOperation(
+      currentStateSpace,
+      operations,
+      opName
+    );
+    sendMessage(value, interp, opName);
+  };
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -41,7 +66,7 @@ const OperationsTab = () => {
           {operation.declarations.map((inputs, inputIdx) => {
             return (
               <div className={styles.row} key={inputIdx}>
-                <div className={styles.col}>{inputs.name}</div>
+                <div className={styles.col}>{inputs.state}</div>
                 <div className={styles.col}>{inputs.type}</div>
                 <input
                   type="text"
@@ -62,8 +87,12 @@ const OperationsTab = () => {
               size="small"
               aria-label="Apply Operation"
               title="Apply Operation"
+              disabled={processing}
+              onClick={() => onRunOperation(operation.name)}
               fullWidth
-            />
+            >
+              {processing && <Loading />}
+            </Button>
           </div>
         </ExpandableListItem>
       ))}

@@ -31,9 +31,5 @@ export interface ConstantItem {
 // Operations
 export interface OperationItem {
   name: string;
-  declarations: {
-    name: string;
-    type: string;
-    value: string;
-  }[];
+  declarations: CurrentStateSpaceItem[];
 }
