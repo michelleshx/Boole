@@ -101,7 +101,6 @@ function App() {
             flexGrow: 1,
             display: "flex",
             flexDirection: "column",
-            overflow: "hidden",
           }}
         >
           {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
