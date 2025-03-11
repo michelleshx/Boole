@@ -120,12 +120,42 @@ function App() {
                 setIsDebugging={setIsDebugging}
               />
             )}
-            <CodeEditor
-              isDarkMode={isDarkMode}
-              onCheck={onCheck}
-              autocomplete={autocomplete}
-              // keybinding={keybinding}
-            />
+            <div
+              style={{
+                flexGrow: 1,
+                display: "flex",
+                overflow: "visible",
+              }}
+            >
+              {/* @ts-ignore TS2322 */}
+              <SplitPane
+                split="horizontal"
+                minSize={showBottomPanel ? 350 : window.innerHeight}
+                maxSize={showBottomPanel? window.innerHeight - 100: window.innerHeight}
+                size={showBottomPanel ? 350 : window.innerHeight}
+                allowResize={showBottomPanel}
+                style={{ position: "relative", flexGrow: 1 }}
+              >
+                <CodeEditor
+                  isDarkMode={isDarkMode}
+                  onCheck={onCheck}
+                  autocomplete={autocomplete}
+                />
+                <BottomPanel
+                  feedback={feedback}
+                  feedbackExpanded={feedbackExpanded}
+                  showBottomPanel={showBottomPanel}
+                  setShowBottomPanel={setShowBottomPanel}
+                  settingsExpanded={settingsExpanded}
+                  autocomplete={autocomplete}
+                  setAutocomplete={setAutocomplete}
+                  keybinding={keybinding}
+                  setKeybinding={setKeybinding}
+                />
+              </SplitPane>
+
+            </div>
+
           </SplitPane>
           {/*Expression Evaluator*/}
           {isDebugging && (
@@ -170,17 +200,6 @@ function App() {
               <ExpressionEvaluator />
             </div>
           )}
-          <BottomPanel
-            feedback={feedback}
-            feedbackExpanded={feedbackExpanded}
-            showBottomPanel={showBottomPanel}
-            setShowBottomPanel={setShowBottomPanel}
-            settingsExpanded={settingsExpanded}
-            autocomplete={autocomplete}
-            setAutocomplete={setAutocomplete}
-            keybinding={keybinding}
-            setKeybinding={setKeybinding}
-          />
         </div>
       </div>
     </div>

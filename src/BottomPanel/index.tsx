@@ -31,20 +31,11 @@ const BottomPanel = ({
 }: BottomPanelProps) => {
   return (
     <div className={styles.container}>
-      <button
+      <div
         className={styles.topHeader}
-        onClick={() => {
-          if (settingsExpanded || feedbackExpanded) {
-            setShowBottomPanel(!showBottomPanel);
-          }
-        }}
-        aria-label={
-          showBottomPanel ? "Minimize Panel Size" : "Maximize Panel Size"
-        }
-        title={showBottomPanel ? "Minimize Panel Size" : "Maximize Panel Size"}
+   
       >
-        <FontAwesomeIcon icon={showBottomPanel ? faChevronDown : faChevronUp} />
-      </button>
+      </div>
       {showBottomPanel && (
         <div className={styles.bottomPanel}>
           {feedbackExpanded &&
