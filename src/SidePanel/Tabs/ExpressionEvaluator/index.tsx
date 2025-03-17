@@ -16,6 +16,18 @@ const ExpressionEvaluator = () => {
   const [result, setResult] = useState<Feedback>();
   const { value } = useContext(FileContext);
 
+  // TODO check this
+  const renderFeedback = (feedback: Feedback | undefined): string => {
+    if (!feedback) return "";
+    return Array.isArray(feedback)
+      ? feedback
+          .map((item) =>
+            typeof item === "string" ? item : JSON.stringify(item)
+          )
+          .join(" ")
+      : String(feedback);
+  };
+    
   const onEvaluate = ({
     feedback,
     method,
@@ -78,7 +90,7 @@ const ExpressionEvaluator = () => {
         {processing && <Loading />}
       </Button>
       <p className={`${styles.result} ${error ? styles.error : ""}`}>
-        {result}
+        {renderFeedback(result)}
       </p>
     </div>
   );

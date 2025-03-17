@@ -166,17 +166,6 @@ function App() {
               </SplitPane>
             </div>
           </SplitPane>
-          <BottomPanel
-            feedback={feedback}
-            feedbackExpanded={feedbackExpanded}
-            showBottomPanel={showBottomPanel}
-            setShowBottomPanel={setShowBottomPanel}
-            settingsExpanded={settingsExpanded}
-            autocomplete={autocomplete}
-            setAutocomplete={setAutocomplete}
-            keybinding={keybinding}
-            setKeybinding={setKeybinding}
-          />
         </div>
       </div>
     </div>
