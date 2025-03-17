@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import styles from "./BottomPanel.module.css";
 import EditorSettings from "./EditorSettings";
 import { Feedback } from "../common/types";
-import LinkedFeedback from "../components/LinkedFeedback";
+import FeedbackItem from "../components/FeedbackItem";
 
 interface BottomPanelProps {
   feedback: Feedback;
@@ -29,51 +29,74 @@ const BottomPanel = ({
   keybinding,
   setKeybinding,
 }: BottomPanelProps) => {
+  const [openIndexes, setOpenIndexes] = useState<number[]>([]);
+
+  const toggleDropdown = (index: number) => {
+    setOpenIndexes((prevState) => {
+      if (prevState.includes(index)) {
+        return prevState.filter((i) => i !== index);
+      } else {
+        return [...prevState, index];
+      }
+    });
+  };
+
   return (
     <div className={styles.container}>
-      <div
-        className={styles.topHeader}
-   
-      >
-      </div>
-      {showBottomPanel && (
-        <div className={styles.bottomPanel}>
-          {feedbackExpanded &&
-            (Array.isArray(feedback) ? (
-              <div className={styles.output}>
-                {feedback.map((item, index) =>
-                  typeof item === "string" ? (
-                    <p
-                      key={index}
-                      style={{
-                        whiteSpace: "pre-wrap",
-                        fontFamily: "inherit",
-                        color: "inherit",
-                      }}
-                    >
-                      {item}
-                    </p>
-                  ) : (
-                    <LinkedFeedback feedbackWithLineRange={item} key={index} />
-                  )
-                )}
-              </div>
-            ) : (
-              <textarea
-                className={styles.output}
-                readOnly={true}
-                value={feedback}
-              />
-            ))}
-          {settingsExpanded && (
-            <EditorSettings
-              autocomplete={autocomplete}
-              setAutocomplete={setAutocomplete}
-              keybinding={keybinding}
-              setKeybinding={setKeybinding}
-            />
-          )}
-        </div>
+	  {/*<div className={styles.topHeader}></div>*/}
+
+      {showBottomPanel &&
+        feedbackExpanded &&
+        (Array.isArray(feedback) ? (
+          <div className={styles.output}>
+            {feedback.map((ele, index) =>
+              typeof ele === "string" ? (
+                <p
+                  key={index}
+                  style={{
+                    display: "block",
+                    whiteSpace: "pre-wrap",
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    color: "inherit",
+                  }}
+                >
+                  {ele}
+                </p>
+              ) : Array.isArray(ele) ? (
+                // ele is a list of comments
+                <p key={index} style={{ display: "block" }}>
+                  <span style={{ color: "green", fontWeight: "bold" }}>
+                    Comments
+                  </span>
+                  <span onClick={() => toggleDropdown(index)}>
+                    {openIndexes.includes(index) ? " ▲" : " ▼"}
+                  </span>
+                  {openIndexes.includes(index) &&
+                    ele.map((comment, commentIndex) => (
+                      <FeedbackItem item={comment} key={commentIndex} />
+                    ))}
+                </p>
+              ) : (
+                <FeedbackItem item={ele} key={index} />
+              )
+            )}
+          </div>
+        ) : (
+          <textarea
+            className={styles.output}
+            readOnly={true}
+            value={feedback}
+          />
+        ))}
+
+      {showBottomPanel && settingsExpanded && (
+        <EditorSettings
+          autocomplete={autocomplete}
+          setAutocomplete={setAutocomplete}
+          keybinding={keybinding}
+          setKeybinding={setKeybinding}
+        />
       )}
     </div>
   );

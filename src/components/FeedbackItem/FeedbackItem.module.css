@@ -1,0 +1,32 @@
+.commentPrefix {
+  color: green;
+  font-weight: bold;
+}
+
+.warningPrefix {
+  color: orange;
+  font-weight: bold;
+}
+
+.errorPrefix {
+  color: red;
+  font-weight: bold;
+}
+
+.timeoutsPrefix {
+  color: red;
+  font-weight: bold;
+}
+
+.lineRange {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.message {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+

@@ -34,8 +34,8 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const { openFile } = useContext(FileContext);
-  // const url = "ws://se212-ws.student.cs.uwaterloo.ca:80/se212/language-server";
   const url = "ws://127.0.0.1:8080"; // local testing
+  // const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev01/"
 
   const addMarkers = (newMarkers: monaco.editor.IMarkerData[]) => {
     if (monacoRef.current && editorRef.current?.getModel()) {

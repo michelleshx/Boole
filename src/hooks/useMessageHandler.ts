@@ -1,7 +1,9 @@
 /* global gtag */
 import { useContext, useEffect, useState } from "react";
 import {
-  FeedBackWithLineRange,
+  UncollectedFbItem,
+  CollectedFbItem,
+  Comments,
   Feedback,
   CurrentStateSpaceItem,
   TypeItem,
@@ -40,14 +42,18 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     resetTraces,
   } = useContext(StateContext);
 
-  const checkString = (message: string) => {
+  const checkItem = (item: string | UncollectedFbItem | CollectedFbItem) => {
+	const stringToCheck = typeof item === "string" 
+	? item as string
+	: (item as CollectedFbItem | UncollectedFbItem)?.message;
+
     return {
       isValid:
-        message.indexOf("\n- Failed\n") === -1 &&
-        message.indexOf("BAD STRUCTURE:") === -1,
+        stringToCheck.indexOf("\n- Failed\n") === -1 &&
+        stringToCheck.indexOf("BAD STRUCTURE:") === -1,
       isMagicUsed:
-        message.indexOf("\n-- Warning: magic rule has been used.\n") !== -1 ||
-        message.indexOf("\n-- Warning: branch is open") !== -1,
+        stringToCheck.indexOf("\n-- Warning: magic rule has been used.\n") !== -1 ||
+        stringToCheck.indexOf("\n-- Warning: branch is open") !== -1,
     };
   };
 
@@ -60,14 +66,21 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           let isMagicUsed = false;
 
           if (Array.isArray(feedback)) {
-            for (const item of feedback) {
+            for (const ele of feedback) {
               if (!isValid && isMagicUsed) break;
 
-              const stringToCheck = Array.isArray(item) ? item[1] : item;
-              ({ isValid, isMagicUsed } = checkString(stringToCheck));
+			  if (Array.isArray(ele)) {
+				// ele is a list of comments
+				for (const comment in ele) {
+				  if (!isValid && isMagicUsed) break;
+				  ({ isValid, isMagicUsed } = checkItem(comment));
+				}
+			  } else {
+				({ isValid, isMagicUsed } = checkItem(ele));
+			  }
             }
           } else {
-            ({ isValid, isMagicUsed } = checkString(feedback));
+            ({ isValid, isMagicUsed } = checkItem(feedback));
           }
 
           setValid(isValid);

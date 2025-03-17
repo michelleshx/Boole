@@ -78,7 +78,7 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
           </option>
         ))}
       </select>
-      <p>{submissionFeedback}</p>
+      <p>{submissionFeedback as string}</p>
       <div className={styles.buttonContainer}>
         <Button
           text="Submit"

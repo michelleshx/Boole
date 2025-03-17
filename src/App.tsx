@@ -123,18 +123,34 @@ function App() {
             <div
               style={{
                 flexGrow: 1,
+				height: "100%",
                 display: "flex",
-                overflow: "visible",
+                overflow: "hidden",
               }}
             >
               {/* @ts-ignore TS2322 */}
               <SplitPane
                 split="horizontal"
-                minSize={showBottomPanel ? 350 : window.innerHeight}
-                maxSize={showBottomPanel? window.innerHeight - 100: window.innerHeight}
+                minSize={showBottomPanel ? 350 : "auto"}
+                maxSize={showBottomPanel ? -50 : "auto"}
                 size={showBottomPanel ? 350 : window.innerHeight}
                 allowResize={showBottomPanel}
-                style={{ position: "relative", flexGrow: 1 }}
+                style={{
+                  position: "relative",
+                  flexGrow: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+                pane2Style={{
+                  overflow: "hidden",
+                  background: "var(--background-1)",
+                }}
+                resizerStyle={{
+                  maxHeight: 8,
+                  background: "var(--background-1)",
+				  borderTop: "2px solid var(--text-color-tertiary)",
+                  cursor: "ns-resize",
+                }}
               >
                 <CodeEditor
                   isDarkMode={isDarkMode}
@@ -153,9 +169,7 @@ function App() {
                   setKeybinding={setKeybinding}
                 />
               </SplitPane>
-
             </div>
-
           </SplitPane>
           {/*Expression Evaluator*/}
           {isDebugging && (

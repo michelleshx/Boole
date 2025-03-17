@@ -4,9 +4,39 @@ export interface Assignment {
   description: string;
 }
 
-export type FeedBackWithLineRange = [[number, number] | null, string];
 
-export type Feedback = (string | FeedBackWithLineRange)[] | string;
+export interface UncollectedFbItem {
+  indentation: string,
+  prefix: string,
+  line_part: string
+  message: string
+  line_range: [number, number],
+}
+
+
+export interface CollectedFbItem {
+  indentation: string,
+  prefix: string,
+  line_part: string
+  message: string
+  collected_line_ranges: [number, number][],
+}
+
+
+export const isUncollectedFbItem = (item: UncollectedFbItem | CollectedFbItem): item is UncollectedFbItem => {
+  return "line_range" in item;
+};
+
+
+export const isCollectedFbItem = (item: UncollectedFbItem | CollectedFbItem): item is CollectedFbItem => {
+  return "collected_line_ranges" in item;
+};
+
+
+export type Comments = (UncollectedFbItem | CollectedFbItem)[];
+
+
+export type Feedback = string | (string | UncollectedFbItem | CollectedFbItem | Comments)[];
 
 // 1) For the "currentStateSpace" array
 export interface CurrentStateSpaceItem {
