@@ -38,6 +38,12 @@ export type Comments = (UncollectedFbItem | CollectedFbItem)[];
 
 export type Feedback = string | (string | UncollectedFbItem | CollectedFbItem | Comments)[];
 
+export enum Tab {
+  State = "state",
+  Operations = "operations",
+  Trace = "trace",
+}
+
 // 1) For the "currentStateSpace" array
 export interface CurrentStateSpaceItem {
   state: string;

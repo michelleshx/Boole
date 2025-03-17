@@ -6,7 +6,13 @@ import axios from "axios";
 import { Assignment, Feedback } from "../common/types";
 
 const useSubmission = (
-  onVerify: (feedback: Feedback, markus: boolean) => void
+  onVerify: ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => void
 ) => {
   const [submitting, setSubmitting] = useState(false);
   const [submittedValue, setSubmittedValue] = useState<string | null>(null);
@@ -25,7 +31,10 @@ const useSubmission = (
         setAssignments(assignments);
         if (assignments.length > 0) setDefaultAssignment(assignments[0].id);
       } else {
-        onVerify(`Error fetching assignments from Markus`, true);
+        onVerify({
+          feedback: `Error fetching assignments from Markus`,
+          method: "markus",
+        });
         console.error("Error fetching assignments:", response.data.message);
       }
     } catch (error) {
@@ -65,17 +74,23 @@ const useSubmission = (
       .then((response) => {
         if (response.data.status === 200) {
           setSubmittedValue(valueToValidate);
-          onVerify(`Successfully submitted ${filename} to Markus!`, true);
+          onVerify({
+            feedback: `Successfully submitted ${filename} to Markus!`,
+            method: "markus",
+          });
         } else {
-          onVerify(
-            `Error submitting assignment to Markus: ${response.data.message}`,
-            true
-          );
+          onVerify({
+            feedback: `Error submitting assignment to Markus: ${response.data.message}`,
+            method: "markus",
+          });
         }
       })
       .catch((e) => {
         console.error(e);
-        onVerify("Error submitting assignment to Markus!", true);
+        onVerify({
+          feedback: "Error submitting assignment to Markus!",
+          method: "markus",
+        });
       })
       .finally(() => {
         setSubmitting(false);

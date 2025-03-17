@@ -7,7 +7,13 @@ import { ExpandableListItem, Loading, Button } from "../../../components";
 import styles from "./OperationsTab.module.css";
 import { Feedback, OperationItem } from "../../../common/types";
 interface OperationsTabProps {
-  onApplyOperation: (feedback: Feedback) => void;
+  onApplyOperation: ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => void;
 }
 
 const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
@@ -49,7 +55,7 @@ const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
   };
 
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLTextAreaElement>,
     operationIndex: number,
     parameterIndex: number
   ) => {
@@ -57,6 +63,13 @@ const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
     const updatedData = [...operations];
     updatedData[operationIndex].declarations[parameterIndex].value = value;
     updateOperationAndStorage(updatedData[operationIndex]);
+  };
+
+  // Resize textarea to fit content
+  const handleInput = (e: React.FormEvent<HTMLTextAreaElement>): void => {
+    const textarea = e.currentTarget;
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
   };
 
   return (
@@ -68,8 +81,8 @@ const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
               <div className={styles.row} key={inputIdx}>
                 <div className={styles.col}>{inputs.state}</div>
                 <div className={styles.col}>{inputs.type}</div>
-                <input
-                  type="text"
+                <textarea
+                  onInput={handleInput}
                   value={inputs.value}
                   className={[styles.col, styles.input].join(" ")}
                   placeholder={inputs.type}

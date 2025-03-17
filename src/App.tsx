@@ -2,7 +2,7 @@ import SplitPane from "react-split-pane";
 
 import { useState } from "react";
 
-import "./App.css";
+import styles from "./App.module.css";
 import AppBar from "./AppBar";
 import BottomPanel from "./BottomPanel";
 import SidePanel from "./SidePanel";
@@ -12,11 +12,8 @@ import SideBar from "./SideBar";
 
 import useMessageHandler from "./hooks/useMessageHandler";
 import useSubmission from "./hooks/useSubmission";
-import ExpressionEvaluator from "./BottomPanel/ExpressionEvaluator";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalculator } from "@fortawesome/free-solid-svg-icons";
 
-import { Feedback } from "./common/types";
+import { Feedback, Tab } from "./common/types";
 
 function App() {
   const [isDarkMode, setDarkMode] = useState<boolean>(true);
@@ -26,19 +23,30 @@ function App() {
   const [isDebugging, setIsDebugging] = useState(false);
   const [settingsExpanded, setSettingsExpanded] = useState<boolean>(false);
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
-  const [expressionExpanded, setExpressionExpanded] = useState(false);
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [keybinding, setKeybinding] = useState<string>("default");
   const [submissionFeedback, setSubmissionFeedback] = useState<Feedback>("");
+  const [activeTab, setActiveTab] = useState(Tab.State);
 
-  const onVerify = (feedback: Feedback, markus: boolean = false) => {
-    setFeedback(feedback);
-    setShowBottomPanel(true);
-    setFeedbackExpanded(true);
-    setSubmissionFeedback(markus ? feedback : "");
+  const onVerify = ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => {
+    if (method !== "custom/runEvaluateExpression") {
+      setFeedback(feedback);
+      setShowBottomPanel(true);
+      setFeedbackExpanded(true);
+      setSubmissionFeedback(method === "markus" ? feedback : "");
+    }
+    if (method === "custom/runOperations") {
+      setActiveTab(Tab.State);
+    }
   };
 
   const { processing, processedValue, valid, magicUsed, sendMessage } =
@@ -58,10 +66,7 @@ function App() {
   };
 
   return (
-    <div
-      className="App"
-      style={{ height: "100vh", display: "flex", flexDirection: "column" }}
-    >
+    <div className={styles.app}>
       <AppBar
         isDarkMode={isDarkMode}
         setDarkMode={setDarkMode}
@@ -77,13 +82,7 @@ function App() {
         submissionFeedback={submissionFeedback}
         setSubmissionFeedback={setSubmissionFeedback}
       />
-      <div
-        style={{
-          flexGrow: 1,
-          display: "flex",
-          overflow: "hidden",
-        }}
-      >
+      <div className={styles.body}>
         <SideBar
           isFileTab={isFileTab}
           setIsFileTab={setIsFileTab}
@@ -96,13 +95,7 @@ function App() {
           settingsExpanded={settingsExpanded}
           setSettingsExpanded={setSettingsExpanded}
         />
-        <div
-          style={{
-            flexGrow: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <div className={styles.center}>
           {/* TODO: incompatible https://github.com/tomkp/react-split-pane/issues/826 */}
           {/* @ts-ignore TS2322 */}
           <SplitPane
@@ -115,15 +108,17 @@ function App() {
               <FileExplorer />
             ) : (
               <SidePanel
-                onVerify={(feedback) => onVerify(feedback)}
+                onVerify={onVerify}
                 isDebugging={isDebugging}
                 setIsDebugging={setIsDebugging}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
               />
             )}
             <div
               style={{
                 flexGrow: 1,
-				height: "100%",
+                height: "100%",
                 display: "flex",
                 overflow: "hidden",
               }}
@@ -148,7 +143,7 @@ function App() {
                 resizerStyle={{
                   maxHeight: 8,
                   background: "var(--background-1)",
-				  borderTop: "2px solid var(--text-color-tertiary)",
+                  borderTop: "2px solid var(--text-color-tertiary)",
                   cursor: "ns-resize",
                 }}
               >
@@ -171,49 +166,17 @@ function App() {
               </SplitPane>
             </div>
           </SplitPane>
-          {/*Expression Evaluator*/}
-          {isDebugging && (
-            <div
-              style={{
-                position: "absolute",
-                right: "-20px",
-                width: expressionExpanded ? "600px" : "0px",
-                height: expressionExpanded ? "inherit" : "50px",
-                background: "var(--text-color-tertiary)",
-                padding: "0px 10px",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                borderRadius: "5px 0px 0px 5px",
-                zIndex: 999,
-                transition: "0.2s",
-              }}
-            >
-              <button
-                style={{
-                  backgroundColor: "transparent",
-                  fontSize: "24px",
-                  height: "48px",
-                  background: "var(--text-color-tertiary)",
-                  color: "var(--text-color-highlighted)",
-                  position: "absolute",
-                  left: "-44px",
-                  top: "0",
-                  width: "50px",
-                  borderRadius: "8px 0px 0px 8px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onClick={() => {
-                  setExpressionExpanded(!expressionExpanded);
-                }}
-                aria-label="Expression Evaluator"
-                title="Expression Evaluator"
-              >
-                <FontAwesomeIcon icon={faCalculator} />
-              </button>
-              <ExpressionEvaluator />
-            </div>
-          )}
+          <BottomPanel
+            feedback={feedback}
+            feedbackExpanded={feedbackExpanded}
+            showBottomPanel={showBottomPanel}
+            setShowBottomPanel={setShowBottomPanel}
+            settingsExpanded={settingsExpanded}
+            autocomplete={autocomplete}
+            setAutocomplete={setAutocomplete}
+            keybinding={keybinding}
+            setKeybinding={setKeybinding}
+          />
         </div>
       </div>
     </div>

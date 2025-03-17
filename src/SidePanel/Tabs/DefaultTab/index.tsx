@@ -10,7 +10,13 @@ import { Feedback } from "../../../common/types";
 
 interface DefaultTabProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
-  onVerify: (feedback: Feedback) => void;
+  onVerify: ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => void;
 }
 
 const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
@@ -32,6 +38,11 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
     if (fileType === FileType.Z) {
       sendMessage(value);
       setIsDebugging(true);
+    } else if (
+      fileType == FileType.COUNTEREXAMPLE ||
+      fileType == FileType.SET
+    ) {
+      setIsDebugging(true);
     } else {
       setErrorMessage(
         'Oops! this file does not support debugging, try using "Ask George" instead'
@@ -47,7 +58,7 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
         padding={8}
         content={
           <div className={styles.popOverContainer}>
-            Supported files include: #check Z.
+            Supported files include: #check Z, #check CE, and #check SET.
           </div>
         }
       >

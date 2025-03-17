@@ -89,7 +89,7 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
           ? value.split("), (").map((pair: string) =>
               pair
                 .replace(/[()]/g, "")
-                .split(", ")
+                .split(",")
                 .map((v) => v.trim())
             )
           : Array.from(new Set(value.split(", ").map((v) => v.trim())));

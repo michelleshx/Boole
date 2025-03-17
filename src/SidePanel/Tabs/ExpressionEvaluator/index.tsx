@@ -4,19 +4,32 @@ import styles from "./ExpressionEvaluator.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import useEvaluator from "../../hooks/useEvaluator";
-import { FileContext } from "../../context/FileContext";
-import { Button, Loading } from "../../components";
+import useMessageHandler from "../../../hooks/useMessageHandler";
+import { FileContext } from "../../../context/FileContext";
+import { Button, Loading } from "../../../components";
+
+import { Feedback } from "../../../common/types";
 
 const ExpressionEvaluator = () => {
   const [expression, setExpression] = useState("");
   const [error, setError] = useState(false);
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState<Feedback>();
   const { value } = useContext(FileContext);
 
-  const { evaluate, evaluating } = useEvaluator((feedback: string) => {
+  const onEvaluate = ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => {
     setError(feedback.includes("error"));
     setResult(feedback);
+  };
+
+  const { processing, sendMessage } = useMessageHandler({
+    method: "custom/runEvaluateExpression",
+    onSuccess: onEvaluate,
   });
 
   const handleClear = () => {
@@ -31,7 +44,8 @@ const ExpressionEvaluator = () => {
       setError(true);
       return;
     }
-    evaluate(value?.concat(expression) || expression);
+    // TODO if file is #check SET, change to #check CE
+    sendMessage(value, expression);
   };
 
   return (
@@ -53,16 +67,16 @@ const ExpressionEvaluator = () => {
             <FontAwesomeIcon icon={faTimes} />
           </button>
         )}
-        <Button
-          text="Evaluate"
-          title="Evaluate"
-          variant="primary"
-          disabled={evaluating}
-          onClick={handleEvaluate}
-        >
-          {evaluating && <Loading />}
-        </Button>
       </div>
+      <Button
+        text="Evaluate"
+        title="Evaluate"
+        variant="primary"
+        disabled={processing}
+        onClick={handleEvaluate}
+      >
+        {processing && <Loading />}
+      </Button>
       <p className={`${styles.result} ${error ? styles.error : ""}`}>
         {result}
       </p>

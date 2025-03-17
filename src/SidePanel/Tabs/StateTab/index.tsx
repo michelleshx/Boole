@@ -39,7 +39,7 @@ const StateTab = () => {
 
   // Generic input change handler
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number,
     type: keyof typeof stateMap
   ) => {
@@ -51,6 +51,12 @@ const StateTab = () => {
     updateStateAndStorage(type, updatedData);
   };
 
+  const handleInput = (e: React.FormEvent<HTMLTextAreaElement>): void => {
+    const textarea = e.currentTarget;
+    textarea.style.height = "auto"; // Reset height to shrink when needed
+    textarea.style.height = textarea.scrollHeight + "px"; // Expand to fit content
+  };
+
   return (
     <div className={styles.stateTab}>
       <div className={styles.section}>
@@ -60,8 +66,8 @@ const StateTab = () => {
             <div className={styles.row} key={index}>
               <div className={styles.col}>{states.state}</div>
               <div className={styles.col}>{states.type}</div>
-              <input
-                type="text"
+              <textarea
+                onInput={handleInput}
                 value={states.value}
                 className={[styles.col, styles.input].join(" ")}
                 placeholder={states.type}
@@ -79,8 +85,8 @@ const StateTab = () => {
           return (
             <div className={styles.row} key={index}>
               <div className={styles.col}>{types.type}</div>
-              <input
-                type="text"
+              <textarea
+                onInput={handleInput}
                 value={types.value}
                 className={[styles.col, styles.input].join(" ")}
                 placeholder={types.type}
@@ -97,8 +103,8 @@ const StateTab = () => {
             <div className={styles.row} key={index}>
               <div className={styles.col}>{constants.state}</div>
               <div className={styles.col}>{constants.type}</div>
-              <input
-                type="text"
+              <textarea
+                onInput={handleInput}
                 value={constants.value}
                 className={[styles.col, styles.input].join(" ")}
                 placeholder={constants.type}

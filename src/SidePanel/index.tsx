@@ -1,49 +1,56 @@
-import { useState } from "react";
+import { useContext } from "react";
 import styles from "./SidePanel.module.css";
 
 import StateTab from "./Tabs/StateTab";
 import OperationsTab from "./Tabs/OperationsTab";
 import TraceTab from "./Tabs/TraceTab";
 import DefaultTab from "./Tabs/DefaultTab";
-import { Feedback } from "../common/types";
-
-type Tabs = {
-  state: string;
-  operations: string;
-  trace: string;
-};
-
-const tabs: Tabs = { state: "state", operations: "operations", trace: "trace" };
+import ExpressionEvaluator from "./Tabs/ExpressionEvaluator";
+import { FileContext } from "../context/FileContext";
+import { FileType } from "../common/files";
+import { Feedback, Tab } from "../common/types";
 
 interface SidePanelProps {
-  onVerify: (feedback: Feedback) => void;
+  onVerify: ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => void;
   isDebugging: boolean;
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
+  activeTab: Tab;
+  setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
 }
 
 const SidePanel = ({
   onVerify,
   isDebugging,
   setIsDebugging,
+  activeTab,
+  setActiveTab,
 }: SidePanelProps) => {
-  const [activeTab, setActiveTab] = useState(tabs.state);
+  const { fileType } = useContext(FileContext);
 
   return (
     <aside className={styles.sidePanel}>
       {!isDebugging ? (
         <DefaultTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
+      ) : fileType === FileType.COUNTEREXAMPLE || fileType === FileType.SET ? (
+        <ExpressionEvaluator />
       ) : (
         <>
           <div className={styles.tabHeaders}>
-            {Object.keys(tabs).map((tabKey) => (
+            {Object.values(Tab).map((tabKey) => (
               <div
                 key={tabKey}
-                className={styles.tab}
-                onClick={() => setActiveTab(tabs[tabKey as keyof Tabs])}
+                className={styles.tabKey}
+                onClick={() => setActiveTab(tabKey)}
               >
                 <p
                   className={
-                    activeTab === tabs[tabKey as keyof Tabs]
+                    activeTab === tabKey
                       ? styles["tab--active"]
                       : styles["tabText"]
                   }
@@ -54,11 +61,11 @@ const SidePanel = ({
             ))}
           </div>
           <div className={styles.tabContent}>
-            {activeTab === tabs.state && <StateTab />}
-            {activeTab === tabs.operations && (
+            {activeTab === Tab.State && <StateTab />}
+            {activeTab === Tab.Operations && (
               <OperationsTab onApplyOperation={onVerify} />
             )}
-            {activeTab === tabs.trace && <TraceTab />}
+            {activeTab === Tab.Trace && <TraceTab />}
           </div>
         </>
       )}
