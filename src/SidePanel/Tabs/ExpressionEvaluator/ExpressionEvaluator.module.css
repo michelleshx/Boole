@@ -1,9 +1,8 @@
 .expressionEvaluator {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 16px;
-  padding: 12px 24px;
+  padding: 24px;
   width: 100%;
 }
 
@@ -44,7 +43,7 @@
   padding: 8px;
   font-size: 14px;
   font-family: "Roboto Mono", monospace;
-  color: white;
+  color: var(--text-color);
 }
 
 .error {

@@ -1,5 +1,3 @@
-/* global gtag */
-
 import { createContext } from "react";
 import useWebSocket from "react-use-websocket";
 import React, { useContext, useRef } from "react";
@@ -22,6 +20,7 @@ type LanguageServerContextType = {
     interp: string,
     operation: string
   ) => void;
+  sendRunEvaluateExpressionMessage: (value: string) => void;
 };
 
 export const LanguageServerContext = createContext<LanguageServerContextType>(
@@ -171,13 +170,23 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     operation: string
   ) => {
     const runOperationsMessage = createMessage("custom/runOperations", {
-      data: {
+      data: JSON.stringify({
         zSpec: value,
         interp,
         operation,
-      },
+      }),
     });
     sendMessage(runOperationsMessage);
+  };
+
+  const sendRunEvaluateExpressionMessage = (value: string) => {
+    const runEvaluateExpressionMessage = createMessage(
+      "custom/runEvaluateExpression",
+      {
+        data: value,
+      }
+    );
+    sendMessage(runEvaluateExpressionMessage);
   };
 
   return (
@@ -193,6 +202,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
         sendVerificationMessage,
         sendGetZSpecComponentsMessage,
         sendRunOperationsMessage,
+        sendRunEvaluateExpressionMessage,
       }}
     >
       {children}
