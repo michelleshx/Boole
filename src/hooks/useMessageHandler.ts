@@ -1,4 +1,3 @@
-/* global gtag */
 import { useContext, useEffect, useState } from "react";
 import {
   UncollectedFbItem,
@@ -17,8 +16,15 @@ interface MessageHandlerConfig {
   method:
     | "custom/getFeedback"
     | "custom/getZSpecComponents"
-    | "custom/runOperations";
-  onSuccess: (feedback: Feedback) => void;
+    | "custom/runOperations"
+    | "custom/runEvaluateExpression";
+  onSuccess: ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => void;
 }
 
 const useMessageHandler = (config: MessageHandlerConfig) => {
@@ -32,6 +38,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     sendVerificationMessage,
     sendGetZSpecComponentsMessage,
     sendRunOperationsMessage,
+    sendRunEvaluateExpressionMessage,
   } = useContext(LanguageServerContext);
 
   const {
@@ -85,16 +92,21 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
 
           setValid(isValid);
           setMagicUsed(isMagicUsed);
-          config.onSuccess?.(feedback);
+          config.onSuccess?.({
+            feedback: feedback,
+            method: "custom/getFeedback",
+          });
         } else if (lastJsonMessage.method === "custom/getZSpecComponents") {
           const feedback = lastJsonMessage.params.components;
 
           setValid(true);
-          config.onSuccess?.(
-            typeof feedback === "object"
-              ? "Z Spec successfully interpreted!"
-              : feedback
-          );
+          config.onSuccess?.({
+            feedback:
+              typeof feedback === "object"
+                ? "Z Spec successfully interpreted!"
+                : feedback,
+            method: "custom/getZSpecComponents",
+          });
           if (!feedback) return; // Ensure feedback is defined before proceeding
 
           // Set state values
@@ -150,44 +162,113 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           // Reset traces
           resetTraces();
         } else if (lastJsonMessage.method === "custom/runOperations") {
-          // TODO process run operation output
           const feedback = lastJsonMessage.params.components;
 
-          setValid(true);
-          config.onSuccess("[TEST] applied operation!");
-          // config.onSuccess?.(
-          //   typeof feedback === "object"
-          //     ? "Successfully applied operation" // TODO Add operation name
-          //     : feedback
-          // );
-          // if (!feedback) return;
+          // TODO double check return format
+
+          if (!feedback) return;
+
+          const opName = feedback.operation;
+          config.onSuccess({
+            feedback: `"${opName}" operation applied!`,
+            method: "custom/runOperations",
+          });
 
           // Update traces with previous state
           updateTracesAndStorage({
-            name: "[OPERATION NAME]",
+            name: `Pre-${opName}`,
             declarations: currentStateSpace,
           });
 
           // Update State Space with operation result
+          const stateSpaceList: CurrentStateSpaceItem[] = currentStateSpace.map(
+            (item) => {
+              return {
+                ...item,
+                value: item.value,
+              };
+            }
+          );
+
+          const newItems = Object.entries(feedback.interp)
+            .filter(
+              ([key]) =>
+                !currentStateSpace.some((item) => item.state === key) &&
+                !key.includes("?")
+            )
+            .map(([key, value]) => ({
+              state: key,
+              type: "", // TODO get type back?
+              value: (value as { values: any }).values,
+            }));
+
+          const mergedStateSpaceList = [...stateSpaceList, ...newItems];
+          updateStateAndStorage("currentStateSpace", mergedStateSpaceList);
+        } else if (lastJsonMessage.method === "custom/runEvaluateExpression") {
+          // TODO
+          // const feedback: Feedback = lastJsonMessage.params.output;
+          // let isValid = true;
+          // if (Array.isArray(feedback)) {
+          //   for (const item of feedback) {
+          //     if (!isValid) break;
+          //     const stringToCheck = Array.isArray(item) ? item[1] : item;
+          //     ({ isValid } = checkString(stringToCheck));
+          //   }
+          // } else {
+          //   ({ isValid } = checkString(feedback));
+          // }
+          // setValid(isValid);
+          // config.onSuccess?.({
+          //   feedback: feedback,
+          //   method: "custom/runEvaluateExpression",
+          // });
+          // TODO format from output from Sharon
+          // const feedback: Feedback = lastJsonMessage.params.output;
+          // const filteredFeedback = (feedback: Feedback) => {
+          //   const { isValid } = checkString(feedback as string);
+          //   if (isValid) {
+          //     const match = (feedback as string).match(/CE evaluates to (.*)/);
+          //     if (match) return match[0];
+          //   }
+          //   return "Failed to evaluate expression!";
+          // };
+          // const result = filteredFeedback(feedback);
+          // config.onSuccess?.({
+          //   feedback: result as Feedback,
+          //   method: "custom/runEvaluateExpression",
+          // });
         }
       }
     } catch {
-      config.onSuccess?.("Failed to process message!");
+      config.onSuccess?.({
+        feedback: "Failed to process message!",
+        method: "custom/runEvaluateExpression",
+      });
     }
     setProcessing(false);
-  }, [lastJsonMessage, config]);
+  }, [lastJsonMessage]);
 
-  const sendMessage = (value: string, interp?: string, opName?: string) => {
+  const sendMessage = (value: string, ...args: any[]) => {
     setProcessing(true);
-    gtag("event", config.method === "custom/getFeedback" ? "verify" : "debug");
 
-    if (config.method === "custom/getFeedback") {
-      sendVerificationMessage(value);
-      setProcessedValue(value);
-    } else if (config.method === "custom/getZSpecComponents") {
-      sendGetZSpecComponentsMessage(value);
-    } else if (config.method === "custom/runOperations") {
-      sendRunOperationsMessage(value, interp ?? "", opName ?? "");
+    switch (config.method) {
+      case "custom/getFeedback":
+        sendVerificationMessage(value);
+        setProcessedValue(value);
+        break;
+      case "custom/getZSpecComponents":
+        sendGetZSpecComponentsMessage(value);
+        break;
+      case "custom/runOperations":
+        const [interp = "", opName = ""] = args;
+        sendRunOperationsMessage(value, interp, opName);
+        break;
+      case "custom/runEvaluateExpression":
+        const [expression] = args;
+        sendRunEvaluateExpressionMessage(`${value}\n${expression}`);
+        break;
+      default:
+        throw new Error(`Unsupported method: ${config.method}`);
     }
   };
 
