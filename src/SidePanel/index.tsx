@@ -62,7 +62,7 @@ const SidePanel = ({
           </div>
           <div className={styles.tabContent}>
             {activeTab === Tab.State && (
-              <StateTab setIsDebugging={setIsDebugging} />
+              <StateTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
             )}
             {activeTab === Tab.Operations && (
               <OperationsTab onApplyOperation={onVerify} />
