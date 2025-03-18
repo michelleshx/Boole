@@ -98,14 +98,14 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
       return Array.isArray(value) ? value : [];
     };
 
-    // Process state data
-    stateData.forEach(({ state, value }) => {
-      formatted[state] = { values: parseValues(value) };
-    });
-
     // Add types to interpretation
     types.forEach(({ type, value }) => {
       formatted[type] = { values: [value] };
+    });
+
+    // Process state data
+    stateData.forEach(({ state, value }) => {
+      formatted[state] = { values: parseValues(value) };
     });
 
     // Process operation inputs

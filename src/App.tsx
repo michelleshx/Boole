@@ -138,11 +138,11 @@ function App() {
                 }}
                 pane2Style={{
                   overflow: "hidden",
-                  background: "var(--background-1)",
+                  background: "var(--background-3)",
                 }}
                 resizerStyle={{
                   maxHeight: 8,
-                  background: "var(--background-1)",
+                  background: "var(--background-4)",
                   borderTop: "2px solid var(--text-color-tertiary)",
                   cursor: "ns-resize",
                 }}
