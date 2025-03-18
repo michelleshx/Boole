@@ -115,14 +115,7 @@ function App() {
                 setActiveTab={setActiveTab}
               />
             )}
-            <div
-              style={{
-                flexGrow: 1,
-                height: "100%",
-                display: "flex",
-                overflow: "hidden",
-              }}
-            >
+            <div className={styles.bottom}>
               {/* @ts-ignore TS2322 */}
               <SplitPane
                 split="horizontal"

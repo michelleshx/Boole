@@ -38,7 +38,7 @@ const SidePanel = ({
       {!isDebugging ? (
         <DefaultTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
       ) : fileType === FileType.COUNTEREXAMPLE || fileType === FileType.SET ? (
-        <ExpressionEvaluator />
+        <ExpressionEvaluator setIsDebugging={setIsDebugging} />
       ) : (
         <>
           <div className={styles.tabHeaders}>
@@ -61,7 +61,9 @@ const SidePanel = ({
             ))}
           </div>
           <div className={styles.tabContent}>
-            {activeTab === Tab.State && <StateTab setIsDebugging={setIsDebugging}/>}
+            {activeTab === Tab.State && (
+              <StateTab setIsDebugging={setIsDebugging} />
+            )}
             {activeTab === Tab.Operations && (
               <OperationsTab onApplyOperation={onVerify} />
             )}

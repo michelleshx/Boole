@@ -1,13 +1,13 @@
 import React, { useEffect, useContext } from "react";
 import styles from "./StateTab.module.css";
 import { StateContext } from "../../../context/StateContext";
-import { Loading, Button } from "../../../components";
+import { Button } from "../../../components";
 
 interface DefaultTabProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const StateTab = ({setIsDebugging}:DefaultTabProps) => {
+const StateTab = ({ setIsDebugging }: DefaultTabProps) => {
   const {
     currentStateSpace,
     types,
@@ -128,16 +128,12 @@ const StateTab = ({setIsDebugging}:DefaultTabProps) => {
         })}
       </div>
       <Button
-            text="Reset State"
-            variant="caution"
-            size="medium"
-            onClick={onReset}
-            disabled={false}
-            fullWidth
-            title="Reset State"
-          >
-            {/* {processing && <Loading />} */}
-      </Button>
+        text="Stop debugging"
+        variant="caution"
+        onClick={onReset}
+        fullWidth
+        title="Stop debugging"
+      />
     </div>
   );
 };
