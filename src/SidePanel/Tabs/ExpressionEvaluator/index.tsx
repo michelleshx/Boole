@@ -9,14 +9,18 @@ import { FileContext } from "../../../context/FileContext";
 import { Button, Loading } from "../../../components";
 
 import { Feedback } from "../../../common/types";
+import { FileType } from "../../../common/files";
 
-const ExpressionEvaluator = () => {
+interface ExpressionEvaluatorProps {
+  setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ExpressionEvaluator = ({ setIsDebugging }: ExpressionEvaluatorProps) => {
   const [expression, setExpression] = useState("");
   const [error, setError] = useState(false);
   const [result, setResult] = useState<Feedback>();
-  const { value } = useContext(FileContext);
+  const { value, fileType } = useContext(FileContext);
 
-  // TODO check this
   const renderFeedback = (feedback: Feedback | undefined): string => {
     if (!feedback) return "";
     return Array.isArray(feedback)
@@ -27,7 +31,7 @@ const ExpressionEvaluator = () => {
           .join(" ")
       : String(feedback);
   };
-    
+
   const onEvaluate = ({
     feedback,
     method,
@@ -35,8 +39,10 @@ const ExpressionEvaluator = () => {
     feedback: Feedback;
     method: string;
   }) => {
-    setError(feedback.includes("error"));
-    setResult(feedback);
+    if (method === "custom/runEvaluateExpression") {
+      setError(feedback.includes("Failed"));
+      setResult(feedback);
+    }
   };
 
   const { processing, sendMessage } = useMessageHandler({
@@ -51,47 +57,62 @@ const ExpressionEvaluator = () => {
   };
 
   const handleEvaluate = () => {
+    let file = value;
     if (!expression.trim()) {
       setResult("Oops, please enter an expression!");
       setError(true);
       return;
     }
-    // TODO if file is #check SET, change to #check CE
-    sendMessage(value, expression);
+
+    // change #check CE, change to #check SET
+    if (fileType === FileType.COUNTEREXAMPLE) {
+      file = value.replace("#check CE", "#check SET");
+    }
+    sendMessage(file, expression);
   };
 
   return (
     <div className={styles.expressionEvaluator}>
-      <label className={styles.label}>Expression Evaluator</label>
-      <div className={styles.row}>
-        <input
-          className={styles.input}
-          placeholder="Enter an expression here"
-          onChange={(e) => setExpression(e.target.value)}
-          value={expression}
-        />
-        {expression && (
-          <button
-            className={styles.clearButton}
-            onClick={handleClear}
-            title="Clear Input"
-          >
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-        )}
+      <div className={styles.container}>
+        <label className={styles.label}>Expression Evaluator</label>
+        <div className={styles.row}>
+          <input
+            className={styles.input}
+            placeholder="Enter an expression here"
+            onChange={(e) => setExpression(e.target.value)}
+            value={expression}
+          />
+          {expression && (
+            <button
+              className={styles.clearButton}
+              onClick={handleClear}
+              title="Clear Input"
+            >
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          )}
+        </div>
+        <Button
+          text="Evaluate"
+          title="Evaluate"
+          variant="primary"
+          disabled={processing}
+          onClick={handleEvaluate}
+        >
+          {processing && <Loading />}
+        </Button>
+        <p className={`${styles.result} ${error ? styles.error : ""}`}>
+          {renderFeedback(result)}
+        </p>
       </div>
       <Button
-        text="Evaluate"
-        title="Evaluate"
-        variant="primary"
-        disabled={processing}
-        onClick={handleEvaluate}
-      >
-        {processing && <Loading />}
-      </Button>
-      <p className={`${styles.result} ${error ? styles.error : ""}`}>
-        {renderFeedback(result)}
-      </p>
+        text="Stop debugging"
+        variant="caution"
+        onClick={() => setIsDebugging(false)}
+        disabled={false}
+        fullWidth
+        title="Stop debugging"
+      />
     </div>
   );
 };

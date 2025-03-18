@@ -20,7 +20,7 @@ type LanguageServerContextType = {
     interpretation: string,
     operation: string
   ) => void;
-  sendRunEvaluateExpressionMessage: (value: string) => void;
+  sendRunEvaluateExpressionMessage: (value: string, expression: string) => void;
 };
 
 export const LanguageServerContext = createContext<LanguageServerContextType>(
@@ -179,11 +179,14 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     sendMessage(runOperationsMessage);
   };
 
-  const sendRunEvaluateExpressionMessage = (value: string) => {
+  const sendRunEvaluateExpressionMessage = (
+    value: string,
+    expression: string
+  ) => {
     const runEvaluateExpressionMessage = createMessage(
       "custom/runEvaluateExpression",
       {
-        data: value,
+        data: JSON.stringify({ file: value, expression }),
       }
     );
     sendMessage(runEvaluateExpressionMessage);

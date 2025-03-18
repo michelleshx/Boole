@@ -239,44 +239,32 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             method: "custom/runOperations",
           });
         } else if (lastJsonMessage.method === "custom/runEvaluateExpression") {
-          // TODO
-          // const feedback: Feedback = lastJsonMessage.params.output;
-          // let isValid = true;
-          // if (Array.isArray(feedback)) {
-          //   for (const item of feedback) {
-          //     if (!isValid) break;
-          //     const stringToCheck = Array.isArray(item) ? item[1] : item;
-          //     ({ isValid } = checkString(stringToCheck));
-          //   }
-          // } else {
-          //   ({ isValid } = checkString(feedback));
-          // }
-          // setValid(isValid);
-          // config.onSuccess?.({
-          //   feedback: feedback,
-          //   method: "custom/runEvaluateExpression",
-          // });
-          // TODO format from output from Sharon
-          // const feedback: Feedback = lastJsonMessage.params.output;
-          // const filteredFeedback = (feedback: Feedback) => {
-          //   const { isValid } = checkString(feedback as string);
-          //   if (isValid) {
-          //     const match = (feedback as string).match(/CE evaluates to (.*)/);
-          //     if (match) return match[0];
-          //   }
-          //   return "Failed to evaluate expression!";
-          // };
-          // const result = filteredFeedback(feedback);
-          // config.onSuccess?.({
-          //   feedback: result as Feedback,
-          //   method: "custom/runEvaluateExpression",
-          // });
+          const feedback: Feedback = lastJsonMessage.params.output;
+
+          let isValid = true;
+
+          const filteredFeedback = (feedback: Feedback) => {
+            const { isValid } = checkItem(feedback as string);
+            if (isValid) {
+              const match = (feedback as string).match(
+                /Expression evaluates to (.*)/
+              );
+              if (match) return match[0];
+            }
+            return "Failed to evaluate expression!";
+          };
+          setValid(isValid); // TODO do something with valid
+
+          config.onSuccess?.({
+            feedback: filteredFeedback(feedback),
+            method: "custom/runEvaluateExpression",
+          });
         }
       }
     } catch {
       config.onSuccess?.({
         feedback: "Failed to process message!",
-        method: "custom/runEvaluateExpression",
+        method: "custom/getFeedback",
       });
     }
     setProcessing(false);
@@ -299,7 +287,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         break;
       case "custom/runEvaluateExpression":
         const [expression] = args;
-        sendRunEvaluateExpressionMessage(`${value}\n${expression}`);
+        sendRunEvaluateExpressionMessage(value, expression);
         break;
       default:
         throw new Error(`Unsupported method: ${config.method}`);
