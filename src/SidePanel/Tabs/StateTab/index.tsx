@@ -70,63 +70,69 @@ const StateTab = ({ setIsDebugging }: DefaultTabProps) => {
 
   return (
     <div className={styles.stateTab}>
-      <div className={styles.section}>
-        <h2>Current State Space</h2>
-        {currentStateSpace.map((states, index) => {
-          return (
-            <div className={styles.row} key={index}>
-              <div className={styles.col}>{states.state}</div>
-              <div className={styles.col}>{states.type}</div>
-              <textarea
-                onInput={handleInput}
-                value={states.value}
-                className={[styles.col, styles.input].join(" ")}
-                placeholder={states.type}
-                onChange={(event) =>
-                  handleInputChange(event, index, "currentStateSpace")
-                }
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className={styles.section}>
-        <h2>Types</h2>
-        {types.map((types, index) => {
-          return (
-            <div className={styles.row} key={index}>
-              <div className={styles.col}>{types.type}</div>
-              <textarea
-                onInput={handleInput}
-                value={types.value}
-                className={[styles.col, styles.input].join(" ")}
-                placeholder={types.type}
-                onChange={(event) => handleInputChange(event, index, "types")}
-              />
-            </div>
-          );
-        })}
-      </div>
-      <div className={styles.section}>
-        <h2>Constants</h2>
-        {constants.map((constants, index) => {
-          return (
-            <div className={styles.row} key={index}>
-              <div className={styles.col}>{constants.state}</div>
-              <div className={styles.col}>{constants.type}</div>
-              <textarea
-                onInput={handleInput}
-                value={constants.value}
-                className={[styles.col, styles.input].join(" ")}
-                placeholder={constants.type}
-                onChange={(event) =>
-                  handleInputChange(event, index, "constants")
-                }
-              />
-            </div>
-          );
-        })}
-      </div>
+      {currentStateSpace.length > 0 && (
+        <div className={styles.section}>
+          <h2>Current State Space</h2>
+          {currentStateSpace.map((states, index) => {
+            return (
+              <div className={styles.row} key={index}>
+                <div className={styles.col}>{states.state}</div>
+                <div className={styles.col}>{states.type}</div>
+                <textarea
+                  onInput={handleInput}
+                  value={states.value}
+                  className={[styles.col, styles.input].join(" ")}
+                  placeholder={states.type}
+                  onChange={(event) =>
+                    handleInputChange(event, index, "currentStateSpace")
+                  }
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {types.length > 0 && (
+        <div className={styles.section}>
+          <h2>Types</h2>
+          {types.map((types, index) => {
+            return (
+              <div className={styles.row} key={index}>
+                <div className={styles.col}>{types.type}</div>
+                <textarea
+                  onInput={handleInput}
+                  value={types.value}
+                  className={[styles.col, styles.input].join(" ")}
+                  placeholder={types.type}
+                  onChange={(event) => handleInputChange(event, index, "types")}
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+      {constants.length > 0 && (
+        <div className={styles.section}>
+          <h2>Constants</h2>
+          {constants.map((constants, index) => {
+            return (
+              <div className={styles.row} key={index}>
+                <div className={styles.col}>{constants.state}</div>
+                <div className={styles.col}>{constants.type}</div>
+                <textarea
+                  onInput={handleInput}
+                  value={constants.value}
+                  className={[styles.col, styles.input].join(" ")}
+                  placeholder={constants.type}
+                  onChange={(event) =>
+                    handleInputChange(event, index, "constants")
+                  }
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
       <Button
         text="Stop debugging"
         variant="caution"
