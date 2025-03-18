@@ -46,6 +46,18 @@
   color: #376bb4;
 }
 
+.button--caution {
+  background-color: #cb1c1c;
+}
+
+.button--caution:hover {
+  background-color: #e03333;
+}
+
+.button--caution:focus {
+  background-color: #984848;
+}
+
 .button--exit {
   color: black;
   background-color: #b7b7b7;
