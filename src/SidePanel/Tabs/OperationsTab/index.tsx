@@ -46,12 +46,12 @@ const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
 
   const onRunOperation = (opName: string) => {
     // Format string
-    const interp = formatStateAndOperation(
+    const interpretation = formatStateAndOperation(
       currentStateSpace,
       operations,
       opName
     );
-    sendMessage(value, interp, opName);
+    sendMessage(value, interpretation, opName);
   };
 
   const handleInputChange = (
@@ -81,15 +81,20 @@ const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
               <div className={styles.row} key={inputIdx}>
                 <div className={styles.col}>{inputs.state}</div>
                 <div className={styles.col}>{inputs.type}</div>
-                <textarea
-                  onInput={handleInput}
-                  value={inputs.value}
-                  className={[styles.col, styles.input].join(" ")}
-                  placeholder={inputs.type}
-                  onChange={(event) =>
-                    handleInputChange(event, opIdx, inputIdx)
-                  }
-                />
+                {inputs.state.indexOf("!") === -1 ? (
+                  <textarea
+                    onInput={handleInput}
+                    value={inputs.value}
+                    className={[styles.col, styles.input].join(" ")}
+                    placeholder={inputs.type}
+                    onChange={(event) =>
+                      handleInputChange(event, opIdx, inputIdx)
+                    }
+                  />
+                ) : (
+                  // READONLY for Outputs!
+                  <div className={styles.col} />
+                )}
               </div>
             );
           })}
