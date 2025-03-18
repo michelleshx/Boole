@@ -173,13 +173,22 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
           })}
         </div>
       )}
-      <Button
-        text="Stop debugging"
-        variant="caution"
-        onClick={onReset}
-        fullWidth
-        title="Stop debugging"
-      />
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Button
+          text="Reload"
+          variant="secondary"
+          onClick={onReload}
+          fullWidth
+          title="Reload"
+        />
+        <Button
+          text="Stop debugging"
+          variant="caution"
+          onClick={onReset}
+          fullWidth
+          title="Stop debugging"
+        />
+      </div>
     </div>
   );
 };
