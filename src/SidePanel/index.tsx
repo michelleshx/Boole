@@ -45,7 +45,7 @@ const SidePanel = ({
             {Object.values(Tab).map((tabKey) => (
               <div
                 key={tabKey}
-                className={styles.tabKey}
+                className={styles.tab}
                 onClick={() => setActiveTab(tabKey)}
               >
                 <p

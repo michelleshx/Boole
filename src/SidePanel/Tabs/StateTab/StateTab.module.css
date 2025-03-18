@@ -36,9 +36,9 @@
   text-align: center;
   background-color: var(--background-highlighted);
   border-width: 2px;
-  min-height: 24px;
-  height: 36px;
+  min-height: 36px;
   max-height: 80px;
   overflow-y: auto;
   box-sizing: border-box;
+  padding: 8px; 
 }
