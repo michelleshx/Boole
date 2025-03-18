@@ -90,6 +90,7 @@ const SideBar = ({
             setShowBottomPanel(newFeedbackExpanded || settingsExpanded);
             return newFeedbackExpanded;
           });
+          setSettingsExpanded(false);
         }}
         aria-label="Feedback"
         title="Feedback"
@@ -114,6 +115,7 @@ const SideBar = ({
             setShowBottomPanel(newSettingsExpanded || feedbackExpanded);
             return newSettingsExpanded;
           });
+          setFeedbackExpanded(false);
         }}
         aria-label="Settings"
         title="Settings"
