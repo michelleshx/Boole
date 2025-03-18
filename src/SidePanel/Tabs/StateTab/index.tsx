@@ -1,13 +1,25 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import styles from "./StateTab.module.css";
+import useMessageHandler from "../../../hooks/useMessageHandler";
 import { StateContext } from "../../../context/StateContext";
 import { Button } from "../../../components";
+import { FileContext } from "../../../context/FileContext";
+import { FileType } from "../../../common/files";
+import { Feedback } from "../../../common/types";
 
-interface DefaultTabProps {
+interface StateTabProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
+  onVerify: ({
+    feedback,
+    method,
+  }: {
+    feedback: Feedback;
+    method: string;
+  }) => void;
+  
 }
 
-const StateTab = ({ setIsDebugging }: DefaultTabProps) => {
+const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
   const {
     currentStateSpace,
     types,
@@ -17,10 +29,38 @@ const StateTab = ({ setIsDebugging }: DefaultTabProps) => {
     updateStateAndStorage,
   } = useContext(StateContext);
 
+  const { value, setFileType, getFileType } = useContext(FileContext);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { processing, sendMessage } = useMessageHandler({
+    method: "custom/getZSpecComponents",
+    onSuccess: onVerify,
+  });
+
   const onReset = () => {
     setIsDebugging(false);
     resetState();
   };
+
+  const onReload = () => {
+      const fileType = getFileType(value);
+      setFileType(fileType); // set the file type
+  
+      // Check if the file is debuggable
+      if (fileType === FileType.Z) {
+        sendMessage(value);
+        setIsDebugging(true);
+      } else if (
+        fileType == FileType.COUNTEREXAMPLE ||
+        fileType == FileType.SET
+      ) {
+        setIsDebugging(true);
+      } else {
+        setErrorMessage(
+          'Oops! this file does not support debugging, try using "Ask George" instead'
+        );
+      }
+    };
 
   useEffect(() => {
     try {
@@ -133,13 +173,22 @@ const StateTab = ({ setIsDebugging }: DefaultTabProps) => {
           })}
         </div>
       )}
-      <Button
-        text="Stop debugging"
-        variant="caution"
-        onClick={onReset}
-        fullWidth
-        title="Stop debugging"
-      />
+      <div style={{ display: 'flex', gap: '10px' }}>
+        <Button
+          text="Reload"
+          variant="secondary"
+          onClick={onReload}
+          fullWidth
+          title="Reload"
+        />
+        <Button
+          text="Stop debugging"
+          variant="caution"
+          onClick={onReset}
+          fullWidth
+          title="Stop debugging"
+        />
+      </div>
     </div>
   );
 };
