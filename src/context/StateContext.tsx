@@ -158,12 +158,13 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const resetState = useCallback(() => {
-    setConstants([]);
-    setStateSpace([]);
-    setTypes([]);
-    localStorage.removeItem("currentStateSpace");
-    localStorage.removeItem("types");
-    localStorage.removeItem("constants");
+    updateStateAndStorage("currentStateSpace", []);
+    updateStateAndStorage("types", []);
+    updateStateAndStorage("constants", []);
+    localStorage.removeItem("operations");
+    localStorage.removeItem("traces");
+    localStorage.setItem("operations", "");
+    localStorage.setItem("traces", "");
   }, []);
 
   const resetTraces = useCallback(() => {
