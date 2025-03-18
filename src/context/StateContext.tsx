@@ -47,6 +47,7 @@ type StateContextType = {
   setTraces: Dispatch<SetStateAction<TraceItem[]>>;
   updateTracesAndStorage: (newValue: TraceItem) => void;
   resetTraces: () => void;
+  resetState: () => void;
 };
 
 export const StateContext = createContext<StateContextType>(
@@ -156,6 +157,15 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }, []);
 
+  const resetState = useCallback(() => {
+    setConstants([]);
+    setStateSpace([]);
+    setTypes([]);
+    localStorage.removeItem("currentStateSpace");
+    localStorage.removeItem("types");
+    localStorage.removeItem("constants");
+  }, []);
+
   const resetTraces = useCallback(() => {
     setTraces([]); // Clear traces in state
     localStorage.removeItem("traces"); // Remove traces from local storage
@@ -180,6 +190,7 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
         setTraces,
         updateTracesAndStorage,
         resetTraces,
+        resetState,
       }}
     >
       {children}
