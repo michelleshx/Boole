@@ -69,3 +69,9 @@ export interface OperationItem {
   name: string;
   declarations: CurrentStateSpaceItem[];
 }
+
+export interface TraceItem {
+  name: string;
+  operation: OperationItem; // operation applied
+  state: CurrentStateSpaceItem[]; // renamed from "declarations"
+}

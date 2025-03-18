@@ -10,6 +10,7 @@ import {
   TypeItem,
   ConstantItem,
   OperationItem,
+  TraceItem,
 } from "../common/types";
 
 type StateContextType = {
@@ -42,9 +43,9 @@ type StateContextType = {
   operations: OperationItem[];
   setOperations: Dispatch<SetStateAction<OperationItem[]>>;
   updateOperationAndStorage: (newValue: OperationItem) => void;
-  traces: OperationItem[];
-  setTraces: Dispatch<SetStateAction<OperationItem[]>>;
-  updateTracesAndStorage: (newValue: OperationItem) => void;
+  traces: TraceItem[];
+  setTraces: Dispatch<SetStateAction<TraceItem[]>>;
+  updateTracesAndStorage: (newValue: TraceItem) => void;
   resetTraces: () => void;
 };
 
@@ -66,7 +67,7 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
   const [operations, setOperations] = useState<OperationItem[]>([]);
 
   // Trace (also a list of OperationItems)
-  const [traces, setTraces] = useState<OperationItem[]>([]);
+  const [traces, setTraces] = useState<TraceItem[]>([]);
 
   const stateMap = {
     currentStateSpace: { value: currentStateSpace, setter: setStateSpace },
@@ -74,41 +75,48 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
     constants: { value: constants, setter: setConstants },
   };
 
+  // Helper to format into an interpretation object
   const formatStateAndOperation = (
     stateData: CurrentStateSpaceItem[],
     operationsData: OperationItem[],
     opName: string
   ) => {
-    const formatted: any = {};
+    const formatted: Record<string, { values: string[] | string[][] }> = {};
 
-    // Process state data
-    stateData.forEach(({ state, value }) => {
-      // Convert comma-separated values into a set-like array
-      const formattedValues =
-        value.includes("(") && value.includes(")")
-          ? value.split("), (").map((pair: string) =>
+    // Parse values
+    const parseValues = (value: string | string[]): string[] | string[][] => {
+      if (typeof value === "string") {
+        return value.includes("(") && value.includes(")")
+          ? value.split("), (").map((pair) =>
               pair
                 .replace(/[()]/g, "")
                 .split(",")
                 .map((v) => v.trim())
             )
           : Array.from(new Set(value.split(", ").map((v) => v.trim())));
-      formatted[state] = { values: formattedValues };
+      }
+      return Array.isArray(value) ? value : [];
+    };
+
+    // Process state data
+    stateData.forEach(({ state, value }) => {
+      formatted[state] = { values: parseValues(value) };
     });
 
-    // Process operations inputs
+    // Add types to interpretation
+    types.forEach(({ type, value }) => {
+      formatted[type] = { values: [value] };
+    });
+
+    // Process operation inputs
     const selectedOperation = operationsData.find(
       ({ name }) => name === opName
     );
-    if (selectedOperation) {
-      selectedOperation.declarations.forEach(({ state, value }) => {
-        if (state.includes("?") && value) {
-          formatted[state] = {
-            values: value.split(",").map((v) => v.trim()),
-          };
-        }
-      });
-    }
+    selectedOperation?.declarations.forEach(({ state, value }) => {
+      if (state.includes("?") && value) {
+        formatted[state] = { values: value.split(",").map((v) => v.trim()) };
+      }
+    });
 
     return JSON.stringify(formatted);
   };
@@ -137,7 +145,7 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }, []);
 
-  const updateTracesAndStorage = useCallback((newValue: OperationItem) => {
+  const updateTracesAndStorage = useCallback((newValue: TraceItem) => {
     setTraces((prev) => {
       const updatedTraces = prev.some((trace) => trace.name === newValue.name)
         ? prev.map((trace) => (trace.name === newValue.name ? newValue : trace))

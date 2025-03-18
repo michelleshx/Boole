@@ -43,6 +43,8 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
 
   const {
     currentStateSpace,
+    traces,
+    operations,
     updateStateAndStorage,
     updateOperationAndStorage,
     updateTracesAndStorage,
@@ -50,17 +52,18 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
   } = useContext(StateContext);
 
   const checkItem = (item: string | UncollectedFbItem | CollectedFbItem) => {
-	const stringToCheck = typeof item === "string" 
-	? item as string
-	: (item as CollectedFbItem | UncollectedFbItem)?.message;
+    const stringToCheck =
+      typeof item === "string"
+        ? (item as string)
+        : (item as CollectedFbItem | UncollectedFbItem)?.message;
 
     return {
       isValid:
         stringToCheck.indexOf("\n- Failed\n") === -1 &&
         stringToCheck.indexOf("BAD STRUCTURE:") === -1,
       isMagicUsed:
-        stringToCheck.indexOf("\n-- Warning: magic rule has been used.\n") !== -1 ||
-        stringToCheck.indexOf("\n-- Warning: branch is open") !== -1,
+        stringToCheck.indexOf("\n-- Warning: magic rule has been used.\n") !==
+          -1 || stringToCheck.indexOf("\n-- Warning: branch is open") !== -1,
     };
   };
 
@@ -76,15 +79,15 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             for (const ele of feedback) {
               if (!isValid && isMagicUsed) break;
 
-			  if (Array.isArray(ele)) {
-				// ele is a list of comments
-				for (const comment in ele) {
-				  if (!isValid && isMagicUsed) break;
-				  ({ isValid, isMagicUsed } = checkItem(comment));
-				}
-			  } else {
-				({ isValid, isMagicUsed } = checkItem(ele));
-			  }
+              if (Array.isArray(ele)) {
+                // ele is a list of comments
+                for (const comment in ele) {
+                  if (!isValid && isMagicUsed) break;
+                  ({ isValid, isMagicUsed } = checkItem(comment));
+                }
+              } else {
+                ({ isValid, isMagicUsed } = checkItem(ele));
+              }
             }
           } else {
             ({ isValid, isMagicUsed } = checkItem(feedback));
@@ -107,12 +110,13 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
                 : feedback,
             method: "custom/getZSpecComponents",
           });
+
           if (!feedback) return; // Ensure feedback is defined before proceeding
 
-          // Set state values
+          // Extract state space
           const stateSpaceList: CurrentStateSpaceItem[] =
             feedback.schemas
-              .find(
+              ?.find(
                 (schema: any) =>
                   schema.type === "DECLARE" && schema.name !== "Constants"
               )
@@ -123,11 +127,14 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
                   value: "",
                 })
               ) || [];
+          // Extract types
           const typesList: TypeItem[] =
             feedback.types?.map((type: string) => ({
               type,
               value: "",
             })) || [];
+
+          // Extract constants
           const constantsList: ConstantItem[] = Object.entries(
             feedback.constants || {}
           ).map(([key, value]) => ({
@@ -136,74 +143,101 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             value: "",
           }));
 
+          // Update state and storage
           updateStateAndStorage("currentStateSpace", stateSpaceList);
           updateStateAndStorage("types", typesList);
           updateStateAndStorage("constants", constantsList);
 
-          // Set operations
-          const operations: OperationItem[] = feedback.schemas
-            .filter(
-              (schema: any) => schema.type === "DELTA" || schema.type === "XI"
-            )
-            .map((op: any) => ({
-              name: op.name,
-              declarations:
-                op.declarations
-                  ?.filter((decl: any) => decl.name.indexOf("!") === -1)
-                  .map(({ name, type }: { name: string; type: string }) => ({
-                    state: name,
-                    type,
-                    value: "",
-                  })) || [],
-            }));
+          // Extract operations
+          const operations: OperationItem[] =
+            feedback.schemas
+              ?.filter(
+                (schema: any) => schema.type === "DELTA" || schema.type === "XI"
+              )
+              .map((op: any) => ({
+                name: op.name,
+                declarations:
+                  op.declarations?.map(
+                    ({ name, type }: { name: string; type: string }) => ({
+                      state: name,
+                      type,
+                      value: "",
+                    })
+                  ) || [],
+              })) || [];
 
+          // Update operations
           operations.forEach(updateOperationAndStorage);
 
           // Reset traces
           resetTraces();
         } else if (lastJsonMessage.method === "custom/runOperations") {
-          const feedback = lastJsonMessage.params.components;
-
-          // TODO double check return format
-
+          const feedback = lastJsonMessage.params;
           if (!feedback) return;
 
           const opName = feedback.operation;
+
+          // Add initial state to traces if traces are empty
+          if (!traces.length) {
+            updateTracesAndStorage({
+              name: "Initial State",
+              operation: {} as OperationItem,
+              state: currentStateSpace,
+            });
+          }
+
+          // Update existing state space items and format new values
+          const updatedStateSpaceList = currentStateSpace.map((item) => {
+            const newValue = feedback.interpretation[item.state]?.values;
+            const formattedValue = Array.isArray(newValue)
+              ? newValue
+                  .map((subArray) =>
+                    Array.isArray(subArray)
+                      ? `(${subArray.join(", ")})`
+                      : subArray
+                  )
+                  .join(", ")
+              : newValue;
+
+            return formattedValue !== undefined
+              ? { ...item, value: formattedValue }
+              : item;
+          });
+
+          // Add new items to state space
+          const newItems = Object.entries(feedback.interpretation)
+            .filter(
+              ([key]) =>
+                !currentStateSpace.some((item) => item.state === key) &&
+                !key.includes("?") &&
+                !key.includes("!")
+            )
+            .map(([key, value]) => ({
+              state: key,
+              type:
+                operations
+                  .find((op) => op.name === opName)
+                  ?.declarations.find((decl) => decl.state === key)?.type || "",
+              value: (value as { values: any }).values,
+            }));
+
+          // Merge updated and new items, then update state
+          const mergedStateSpaceList = [...updatedStateSpaceList, ...newItems];
+          updateStateAndStorage("currentStateSpace", mergedStateSpaceList);
+
+          // Add to traces
+          updateTracesAndStorage({
+            name: `[${traces.length}] Run operation: ${opName}`,
+            operation:
+              operations.find((op) => op.name === opName) ||
+              ({} as OperationItem),
+            state: mergedStateSpaceList,
+          });
+
           config.onSuccess({
             feedback: `"${opName}" operation applied!`,
             method: "custom/runOperations",
           });
-
-          // Update traces with previous state
-          updateTracesAndStorage({
-            name: `Pre-${opName}`,
-            declarations: currentStateSpace,
-          });
-
-          // Update State Space with operation result
-          const stateSpaceList: CurrentStateSpaceItem[] = currentStateSpace.map(
-            (item) => {
-              return {
-                ...item,
-                value: item.value,
-              };
-            }
-          );
-
-          const newItems = Object.entries(feedback.interp)
-            .filter(
-              ([key]) =>
-                !currentStateSpace.some((item) => item.state === key) &&
-                !key.includes("?")
-            )
-            .map(([key, value]) => ({
-              state: key,
-              type: "", // TODO get type back?
-              value: (value as { values: any }).values,
-            }));
-
-          const mergedStateSpaceList = [...stateSpaceList, ...newItems];
-          updateStateAndStorage("currentStateSpace", mergedStateSpaceList);
         } else if (lastJsonMessage.method === "custom/runEvaluateExpression") {
           // TODO
           // const feedback: Feedback = lastJsonMessage.params.output;
@@ -260,8 +294,8 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         sendGetZSpecComponentsMessage(value);
         break;
       case "custom/runOperations":
-        const [interp = "", opName = ""] = args;
-        sendRunOperationsMessage(value, interp, opName);
+        const [interpretation = "", opName = ""] = args;
+        sendRunOperationsMessage(value, interpretation, opName);
         break;
       case "custom/runEvaluateExpression":
         const [expression] = args;

@@ -2,7 +2,7 @@ import { useEffect, useContext } from "react";
 import { StateContext } from "../../../context/StateContext";
 import { ExpandableListItem } from "../../../components";
 import styles from "./TraceTab.module.css";
-import { OperationItem } from "../../../common/types";
+import { TraceItem } from "../../../common/types";
 
 const TraceTab = () => {
   const { traces, updateTracesAndStorage } = useContext(StateContext);
@@ -12,7 +12,7 @@ const TraceTab = () => {
       const item = localStorage.getItem("traces");
       if (item) {
         const localData = JSON.parse(item);
-        localData.forEach((trace: OperationItem) => {
+        localData.forEach((trace: TraceItem) => {
           updateTracesAndStorage(trace);
         });
       }
@@ -25,7 +25,24 @@ const TraceTab = () => {
     <ul className={styles.traceTab}>
       {traces.map((trace, idx) => (
         <ExpandableListItem title={trace.name} key={idx}>
-          {trace.declarations.map((states, decl_idx) => {
+          {trace.name !== "Initial State" && (
+            <>
+              <div className={styles.sectionHeading}>
+                {trace.operation.name}
+              </div>
+              {trace.operation.declarations.map((decl, decl_idx) => {
+                return (
+                  <div className={styles.row} key={decl_idx}>
+                    <div className={styles.col}>{decl.state}</div>
+                    <div className={styles.col}>{decl.type}</div>
+                    <div className={styles.col}>{decl.value}</div>
+                  </div>
+                );
+              })}
+            </>
+          )}
+          <div className={styles.sectionHeading}>State</div>
+          {trace.state.map((states, decl_idx) => {
             return (
               <div className={styles.row} key={decl_idx}>
                 <div className={styles.col}>{states.state}</div>

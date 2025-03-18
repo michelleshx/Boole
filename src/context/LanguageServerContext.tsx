@@ -17,7 +17,7 @@ type LanguageServerContextType = {
   sendGetZSpecComponentsMessage: (value: string) => void;
   sendRunOperationsMessage: (
     value: string,
-    interp: string,
+    interpretation: string,
     operation: string
   ) => void;
   sendRunEvaluateExpressionMessage: (value: string) => void;
@@ -166,13 +166,13 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const sendRunOperationsMessage = (
     value: string,
-    interp: string,
+    interpretation: string,
     operation: string
   ) => {
     const runOperationsMessage = createMessage("custom/runOperations", {
       data: JSON.stringify({
         zSpec: value,
-        interp,
+        interpretation,
         operation,
       }),
     });
