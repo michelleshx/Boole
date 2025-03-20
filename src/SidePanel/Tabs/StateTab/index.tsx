@@ -102,12 +102,6 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
     updateStateAndStorage(type, updatedData);
   };
 
-  const handleInput = (e: React.FormEvent<HTMLTextAreaElement>): void => {
-    const textarea = e.currentTarget;
-    textarea.style.height = "auto"; // Reset height to shrink when needed
-    textarea.style.height = textarea.scrollHeight + "px"; // Expand to fit content
-  };
-
   return (
     <div className={styles.stateTab}>
       {currentStateSpace.length > 0 && (
@@ -119,7 +113,6 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
                 <div className={styles.col}>{states.state}</div>
                 <div className={styles.col}>{states.type}</div>
                 <textarea
-                  onInput={handleInput}
                   value={states.value}
                   className={[styles.col, styles.input].join(" ")}
                   placeholder={states.type}
@@ -140,7 +133,6 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
               <div className={styles.row} key={index}>
                 <div className={styles.col}>{types.type}</div>
                 <textarea
-                  onInput={handleInput}
                   value={types.value}
                   className={[styles.col, styles.input].join(" ")}
                   placeholder={types.type}
@@ -160,7 +152,6 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
                 <div className={styles.col}>{constants.state}</div>
                 <div className={styles.col}>{constants.type}</div>
                 <textarea
-                  onInput={handleInput}
                   value={constants.value}
                   className={[styles.col, styles.input].join(" ")}
                   placeholder={constants.type}
