@@ -5,7 +5,7 @@ import { useState } from "react";
 import styles from "./App.module.css";
 import AppBar from "./AppBar";
 import BottomPanel from "./BottomPanel";
-import SidePanel from "./SidePanel";
+// import SidePanel from "./SidePanel";
 import CodeEditor from "./CodeEditor";
 import FileExplorer from "./FileExplorer";
 import SideBar from "./SideBar";
@@ -20,7 +20,7 @@ function App() {
   const [feedback, setFeedback] = useState<Feedback>(
     'Click the "Ask George" button (Ctrl+Enter) to get feedback or Start Debugging a Z-Spec'
   );
-  const [isDebugging, setIsDebugging] = useState(false);
+  // const [isDebugging, setIsDebugging] = useState(false);
   const [settingsExpanded, setSettingsExpanded] = useState<boolean>(false);
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
@@ -38,15 +38,15 @@ function App() {
     feedback: Feedback;
     method: string;
   }) => {
-    if (method !== "custom/runEvaluateExpression") {
+    // if (method !== "custom/runEvaluateExpression") {
       setFeedback(feedback);
       setShowBottomPanel(true);
       setFeedbackExpanded(true);
       setSubmissionFeedback(method === "markus" ? feedback : "");
-    }
-    if (method === "custom/runOperations") {
-      setActiveTab(Tab.State);
-    }
+    // }
+    // if (method === "custom/runOperations") {
+    //   setActiveTab(Tab.State);
+    // }
   };
 
   const { processing, processedValue, valid, magicUsed, sendMessage } =
@@ -104,7 +104,7 @@ function App() {
             maxSize={showRightPanel ? 800 : 0}
             style={{ position: "relative", flexGrow: 1 }}
           >
-            {isFileTab ? (
+            {/*isFileTab ? (
               <FileExplorer />
             ) : (
               <SidePanel
@@ -114,7 +114,8 @@ function App() {
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
               />
-            )}
+            )*/}
+			{isFileTab && <FileExplorer />}
             <div className={styles.bottom}>
               {/* @ts-ignore TS2322 */}
               <SplitPane

@@ -14,13 +14,13 @@ type LanguageServerContextType = {
   sendDidChangeMessage: (model: monaco.editor.ITextModel) => void;
   sendDidCloseMessage: (name: string) => void;
   sendVerificationMessage: (value: string) => void;
-  sendGetZSpecComponentsMessage: (value: string) => void;
-  sendRunOperationsMessage: (
-    value: string,
-    interpretation: string,
-    operation: string
-  ) => void;
-  sendRunEvaluateExpressionMessage: (value: string, expression: string) => void;
+  // sendGetZSpecComponentsMessage: (value: string) => void;
+  // sendRunOperationsMessage: (
+  //   value: string,
+  //   interpretation: string,
+  //   operation: string
+  // ) => void;
+  // sendRunEvaluateExpressionMessage: (value: string, expression: string) => void;
 };
 
 export const LanguageServerContext = createContext<LanguageServerContextType>(
@@ -33,8 +33,8 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const { openFile } = useContext(FileContext);
-  const url = "ws://127.0.0.1:8080"; // local testing
-  // const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev01/"
+  // const url = "ws://127.0.0.1:8080"; // local testing
+  const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev01/"
 
   const addMarkers = (newMarkers: monaco.editor.IMarkerData[]) => {
     if (monacoRef.current && editorRef.current?.getModel()) {
@@ -154,43 +154,43 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     sendMessage(verificationMessage);
   };
 
-  const sendGetZSpecComponentsMessage = (value: string) => {
-    const getZSpecComponentsMessage = createMessage(
-      "custom/getZSpecComponents",
-      {
-        data: value,
-      }
-    );
-    sendMessage(getZSpecComponentsMessage);
-  };
-
-  const sendRunOperationsMessage = (
-    value: string,
-    interpretation: string,
-    operation: string
-  ) => {
-    const runOperationsMessage = createMessage("custom/runOperations", {
-      data: JSON.stringify({
-        zSpec: value,
-        interpretation,
-        operation,
-      }),
-    });
-    sendMessage(runOperationsMessage);
-  };
-
-  const sendRunEvaluateExpressionMessage = (
-    value: string,
-    expression: string
-  ) => {
-    const runEvaluateExpressionMessage = createMessage(
-      "custom/runEvaluateExpression",
-      {
-        data: JSON.stringify({ file: value, expression }),
-      }
-    );
-    sendMessage(runEvaluateExpressionMessage);
-  };
+  // const sendGetZSpecComponentsMessage = (value: string) => {
+  //   const getZSpecComponentsMessage = createMessage(
+  //     "custom/getZSpecComponents",
+  //     {
+  //       data: value,
+  //     }
+  //   );
+  //   sendMessage(getZSpecComponentsMessage);
+  // };
+  //
+  // const sendRunOperationsMessage = (
+  //   value: string,
+  //   interpretation: string,
+  //   operation: string
+  // ) => {
+  //   const runOperationsMessage = createMessage("custom/runOperations", {
+  //     data: JSON.stringify({
+  //       zSpec: value,
+  //       interpretation,
+  //       operation,
+  //     }),
+  //   });
+  //   sendMessage(runOperationsMessage);
+  // };
+  //
+  // const sendRunEvaluateExpressionMessage = (
+  //   value: string,
+  //   expression: string
+  // ) => {
+  //   const runEvaluateExpressionMessage = createMessage(
+  //     "custom/runEvaluateExpression",
+  //     {
+  //       data: JSON.stringify({ file: value, expression }),
+  //     }
+  //   );
+  //   sendMessage(runEvaluateExpressionMessage);
+  // };
 
   return (
     <LanguageServerContext.Provider
@@ -203,9 +203,9 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
         sendDidChangeMessage,
         sendDidCloseMessage,
         sendVerificationMessage,
-        sendGetZSpecComponentsMessage,
-        sendRunOperationsMessage,
-        sendRunEvaluateExpressionMessage,
+        // sendGetZSpecComponentsMessage,
+        // sendRunOperationsMessage,
+        // sendRunEvaluateExpressionMessage,
       }}
     >
       {children}

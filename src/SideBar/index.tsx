@@ -52,6 +52,7 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faFolder} />
       </button>
+	  {/*
       <button
         className={[
           styles.button,
@@ -68,6 +69,7 @@ const SideBar = ({
       >
         <FontAwesomeIcon icon={faBug} />
       </button>
+	  */}
 
       {/* Spacer to push bottom buttons */}
       <div className={styles.spacer}></div>
