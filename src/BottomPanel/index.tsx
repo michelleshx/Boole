@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import styles from "./BottomPanel.module.css";
 import EditorSettings from "./EditorSettings";
 import { Feedback } from "../common/types";
@@ -14,20 +12,15 @@ interface BottomPanelProps {
   settingsExpanded: boolean;
   autocomplete: boolean;
   setAutocomplete: React.Dispatch<React.SetStateAction<boolean>>;
-  keybinding: string;
-  setKeybinding: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const BottomPanel = ({
   feedback,
   feedbackExpanded,
   showBottomPanel,
-  setShowBottomPanel,
   settingsExpanded,
   autocomplete,
   setAutocomplete,
-  keybinding,
-  setKeybinding,
 }: BottomPanelProps) => {
   const [openIndexes, setOpenIndexes] = useState<number[]>([]);
 
@@ -43,7 +36,7 @@ const BottomPanel = ({
 
   return (
     <div className={styles.container}>
-	  {/*<div className={styles.topHeader}></div>*/}
+      {/*<div className={styles.topHeader}></div>*/}
 
       {showBottomPanel &&
         feedbackExpanded &&
@@ -94,8 +87,6 @@ const BottomPanel = ({
         <EditorSettings
           autocomplete={autocomplete}
           setAutocomplete={setAutocomplete}
-          keybinding={keybinding}
-          setKeybinding={setKeybinding}
         />
       )}
     </div>

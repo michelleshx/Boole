@@ -1,4 +1,3 @@
-/* global gtag */
 import { useState, useContext } from "react";
 import styles from "./AppBar.module.css";
 
@@ -46,9 +45,6 @@ const AppBar = ({
   const [isMarkusModalOpen, setIsMarkusModalOpen] = useState(false);
 
   const onDownload = () => {
-    gtag("event", "download", {
-      event_label: openFile,
-    });
     download(openFile.name, value);
   };
 

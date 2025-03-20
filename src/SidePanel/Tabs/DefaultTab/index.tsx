@@ -39,8 +39,8 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
       sendMessage(value);
       setIsDebugging(true);
     } else if (
-      fileType == FileType.COUNTEREXAMPLE ||
-      fileType == FileType.SET
+      fileType === FileType.COUNTEREXAMPLE ||
+      fileType === FileType.SET
     ) {
       setIsDebugging(true);
     } else {

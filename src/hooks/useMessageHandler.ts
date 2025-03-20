@@ -193,7 +193,9 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
               ? newValue
                   .map((subArray) =>
                     Array.isArray(subArray)
-                      ? `(${subArray.join(", ")})`
+                      ? subArray.length === 1
+                        ? subArray[0]
+                        : `(${subArray.join(", ")})`
                       : subArray
                   )
                   .join(", ")

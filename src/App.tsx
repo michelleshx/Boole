@@ -1,6 +1,6 @@
 import SplitPane from "react-split-pane";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 import styles from "./App.module.css";
 import AppBar from "./AppBar";
@@ -27,27 +27,23 @@ function App() {
   const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
   const [isFileTab, setIsFileTab] = useState<boolean>(true);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
-  const [keybinding, setKeybinding] = useState<string>("default");
   const [submissionFeedback, setSubmissionFeedback] = useState<Feedback>("");
   const [activeTab, setActiveTab] = useState(Tab.State);
 
-  const onVerify = ({
-    feedback,
-    method,
-  }: {
-    feedback: Feedback;
-    method: string;
-  }) => {
-    if (method !== "custom/runEvaluateExpression") {
-      setFeedback(feedback);
-      setShowBottomPanel(true);
-      setFeedbackExpanded(true);
-      setSubmissionFeedback(method === "markus" ? feedback : "");
-    }
-    if (method === "custom/runOperations") {
-      setActiveTab(Tab.State);
-    }
-  };
+  const onVerify = useCallback(
+    ({ feedback, method }: { feedback: Feedback; method: string }) => {
+      if (method !== "custom/runEvaluateExpression") {
+        setFeedback(feedback);
+        setShowBottomPanel(true);
+        setFeedbackExpanded(true);
+        setSubmissionFeedback(method === "markus" ? feedback : "");
+      }
+      if (method === "custom/runOperations") {
+        setActiveTab(Tab.State);
+      }
+    },
+    []
+  );
 
   const { processing, processedValue, valid, magicUsed, sendMessage } =
     useMessageHandler({
@@ -57,13 +53,19 @@ function App() {
   const { submitting, submittedValue, submit, assignments } =
     useSubmission(onVerify);
 
-  const onCheck = (val: string) => {
-    sendMessage(val);
-  };
+  const onCheck = useCallback(
+    (val: string) => {
+      sendMessage(val);
+    },
+    [sendMessage]
+  );
 
-  const onSubmit = (val: string, assignmentId: number, fileName: string) => {
-    submit(val, assignmentId, fileName);
-  };
+  const onSubmit = useCallback(
+    (val: string, assignmentId: number, fileName: string) => {
+      submit(val, assignmentId, fileName);
+    },
+    [submit]
+  );
 
   return (
     <div className={styles.app}>
@@ -153,8 +155,6 @@ function App() {
                   settingsExpanded={settingsExpanded}
                   autocomplete={autocomplete}
                   setAutocomplete={setAutocomplete}
-                  keybinding={keybinding}
-                  setKeybinding={setKeybinding}
                 />
               </SplitPane>
             </div>

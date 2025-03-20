@@ -16,7 +16,6 @@ interface StateTabProps {
     feedback: Feedback;
     method: string;
   }) => void;
-  
 }
 
 const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
@@ -43,24 +42,24 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
   };
 
   const onReload = () => {
-      const fileType = getFileType(value);
-      setFileType(fileType); // set the file type
-  
-      // Check if the file is debuggable
-      if (fileType === FileType.Z) {
-        sendMessage(value);
-        setIsDebugging(true);
-      } else if (
-        fileType == FileType.COUNTEREXAMPLE ||
-        fileType == FileType.SET
-      ) {
-        setIsDebugging(true);
-      } else {
-        setErrorMessage(
-          'Oops! this file does not support debugging, try using "Ask George" instead'
-        );
-      }
-    };
+    const fileType = getFileType(value);
+    setFileType(fileType); // set the file type
+
+    // Check if the file is debuggable
+    if (fileType === FileType.Z) {
+      sendMessage(value);
+      setIsDebugging(true);
+    } else if (
+      fileType === FileType.COUNTEREXAMPLE ||
+      fileType === FileType.SET
+    ) {
+      setIsDebugging(true);
+    } else {
+      setErrorMessage(
+        'Oops! this file does not support debugging, try using "Ask George" instead'
+      );
+    }
+  };
 
   useEffect(() => {
     try {
@@ -164,7 +163,7 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
           })}
         </div>
       )}
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: "flex", gap: "10px" }}>
         <Button
           text="Reload"
           variant="secondary"

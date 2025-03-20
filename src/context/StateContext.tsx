@@ -86,22 +86,25 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // Parse values
     const parseValues = (value: string | string[]): string[] | string[][] => {
+      if (value === "") {
+        return [];
+      }
       if (typeof value === "string") {
         return value.includes("(") && value.includes(")")
-          ? value.split("), (").map((pair) =>
+          ? value.split("),(").map((pair) =>
               pair
                 .replace(/[()]/g, "")
                 .split(",")
                 .map((v) => v.trim())
             )
-          : Array.from(new Set(value.split(", ").map((v) => v.trim())));
+          : Array.from(new Set(value.split(",").map((v) => v.trim())));
       }
       return Array.isArray(value) ? value : [];
     };
 
     // Add types to interpretation
     types.forEach(({ type, value }) => {
-      formatted[type] = { values: [value] };
+      formatted[type] = { values: parseValues(value) };
     });
 
     // Process state data

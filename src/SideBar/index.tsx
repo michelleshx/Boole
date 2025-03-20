@@ -1,5 +1,4 @@
 import styles from "./SideBar.module.css";
-import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolder,
