@@ -12,8 +12,9 @@ import { LanguageServerContext } from '../context/LanguageServerContext'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { dir } from "console";
 
-interface FileExplorerProps {}
+interface FileExplorerProps { }
 
 const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [directories, setDirectories] = useState<Directory[]>([]);
@@ -23,16 +24,18 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   const { sendDidOpenMessage, sendDidCloseMessage } = useContext(LanguageServerContext);
 
   const onFileOpen = useCallback(
-    async (file: File) => {
+    async (file: File, directoryIndex: number, fileIndex: number) => {
       try {
         // to do handle null values
         setValue((await file.get()) ?? "");
 
-		if(file.name) {
-		  sendDidOpenMessage(file.name, await file.get() ?? "");
-		}
+        if (file.name) {
+          sendDidOpenMessage(file.name, await file.get() ?? "");
+        }
 
         setOpenFile(file);
+        localStorage.setItem("openDirectoryIndex", directoryIndex.toString());
+        localStorage.setItem("openFileIndex", fileIndex.toString());
       } catch {
         alert("Failed to open file!"); // TODO debug this
       }
@@ -48,12 +51,14 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 
       if (Array.isArray(directories)) {
         setDirectories(directories);
-        if (
-          !defaultFileSet &&
-          directories.length > 0 &&
-          directories[0].files.length > 0
-        ) {
-          onFileOpen(directories[0].files[0]);
+        if (localStorage.getItem("openDirectoryIndex") && localStorage.getItem("openFileIndex")) {
+          var directoryIndex = parseInt(localStorage.getItem("openDirectoryIndex")!);
+          var fileIndex = parseInt(localStorage.getItem("openFileIndex")!);
+          if (directoryIndex < directories.length && fileIndex < directories[directoryIndex].files.length) {
+            onFileOpen(directories[directoryIndex].files[fileIndex], directoryIndex, fileIndex);
+          }
+        } else if (!defaultFileSet && directories.length > 0 && directories[0].files.length > 0) {
+          onFileOpen(directories[0].files[0], 0, 0);
           setDefaultFileSet(true);
         }
       } else {
@@ -74,18 +79,18 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     setDirectories(updatedDirectories);
   };
 
-  const openFileHandler = (targetFile: File) => {
+  const openFileHandler = (targetFile: File, directoryIndex: number, fileIndex: number) => {
     if (targetFile === openFile) return;
 
     gtag("event", "open", {
       event_label: targetFile.name,
     });
 
-	sendDidCloseMessage(openFile.name);
-    onFileOpen(targetFile);
+    sendDidCloseMessage(openFile.name);
+    onFileOpen(targetFile, directoryIndex, fileIndex);
   };
 
-  const reset = async (targetFile: File) => {
+  const reset = async (targetFile: File, directoryIndex: number, fileIndex: number) => {
     if (
       !window.confirm(
         "Are you sure you would like to reset this file?\nWARNING: You will lose all your changes for this file!"
@@ -97,10 +102,10 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
       event_label: targetFile.name,
     });
 
-	sendDidCloseMessage(openFile.name);
+    sendDidCloseMessage(openFile.name);
 
     await targetFile.reset();
-    onFileOpen(targetFile);
+    onFileOpen(targetFile, directoryIndex, fileIndex);
   };
 
   return (
@@ -126,15 +131,14 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
                   className={[
                     styles.directoryFileList,
                     styles[
-                      `fileExplorerLabel--${
-                        file === openFile ? "selected" : ""
-                      }`
+                    `fileExplorerLabel--${file === openFile ? "selected" : ""
+                    }`
                     ],
                   ].join(" ")}
                 >
                   <div
                     className={styles.fileExplorerLabel}
-                    onClick={() => openFileHandler(file)}
+                    onClick={() => openFileHandler(file, directoryIndex, fileIndex)}
                   >
                     <span>{file.name}</span>
                     {file === openFile ? (
@@ -145,7 +149,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
                         aria-label="Reset"
                         onClick={(e) => {
                           e.stopPropagation();
-                          reset(file);
+                          reset(file, directoryIndex, fileIndex);
                         }}
                       >
                         <FontAwesomeIcon icon={faRotate} />
