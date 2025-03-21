@@ -1,8 +1,9 @@
-/* Modal header styling */
-.header {
-  margin-bottom: 16px;
+.modalHeader {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
 }
-
 .dropdown {
   padding: 8px;
   height: 36px;

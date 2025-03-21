@@ -13,7 +13,10 @@ interface FileUploadModalProps {
   onClose: () => void;
 }
 
-const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) => {
+const FileUploadModal: React.FC<FileUploadModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>();
   const { setValue, openFile } = useContext(FileContext);
 
@@ -50,14 +53,17 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) =>
       right: "auto",
       bottom: "auto",
       transform: "translate(-50%, -50%)",
-      zIndex: 1000, // Ensure the modal is on top
-      width: "30%", // Adjust the width of the modal
-      minHeight: "180px",
-      background: "var(--background-1)",
+      zIndex: 1000,
+      width: "400px",
+      minHeight: "220px",
+      borderRadius: "5px",
+      padding: "20px",
+      background: "#fff",
+      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
     },
     overlay: {
-      backgroundColor: "rgba(0, 0, 0, 0.75)",
-      zIndex: 1000, // Ensure the overlay is on top
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      zIndex: 1000,
     },
   };
 
@@ -72,12 +78,16 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({ isOpen, onClose }) =>
       <h2 className={styles.modalDescription}>
         The uploaded file will replace your current working file!
       </h2>
-      <input type="file" accept=".txt,.grg" onChange={handleFileChange} />
+      <label className={styles.fileInput}>
+        <input type="file" accept=".txt,.grg" onChange={handleFileChange} />
+      </label>
+
       <div className={styles.buttonContainer}>
         <Button
           text="Upload"
-          variant="primary"
+          variant="secondary"
           onClick={handleUpload}
+          disabled={!uploadedFile}
           title="Upload"
         />
         <Button text="Close" variant="exit" onClick={onClose} title="Close" />

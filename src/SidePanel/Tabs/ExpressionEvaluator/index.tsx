@@ -35,12 +35,14 @@ const ExpressionEvaluator = ({ setIsDebugging }: ExpressionEvaluatorProps) => {
   const onEvaluate = ({
     feedback,
     method,
+    valid,
   }: {
     feedback: Feedback;
     method: string;
+    valid?: boolean;
   }) => {
     if (method === "custom/runEvaluateExpression") {
-      setError(feedback.includes("Failed"));
+      setError(!valid);
       setResult(feedback);
     }
   };
@@ -101,7 +103,13 @@ const ExpressionEvaluator = ({ setIsDebugging }: ExpressionEvaluatorProps) => {
         >
           {processing && <Loading />}
         </Button>
-        <p className={`${styles.result} ${error ? styles.error : ""}`}>
+        <p
+          className={`${styles.result} ${error ? styles.error : ""}`}
+          style={{
+            display: "block",
+            whiteSpace: "pre-wrap",
+          }}
+        >
           {renderFeedback(result)}
         </p>
       </div>

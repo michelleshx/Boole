@@ -37,7 +37,6 @@ const DefaultTab = ({ setIsDebugging, onVerify }: DefaultTabProps) => {
     // Check if the file is debuggable
     if (fileType === FileType.Z) {
       sendMessage(value);
-      setIsDebugging(true);
     } else if (
       fileType === FileType.COUNTEREXAMPLE ||
       fileType === FileType.SET

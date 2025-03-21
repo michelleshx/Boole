@@ -164,6 +164,8 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
     updateStateAndStorage("currentStateSpace", []);
     updateStateAndStorage("types", []);
     updateStateAndStorage("constants", []);
+    setOperations([]);
+    setTraces([]);
     localStorage.removeItem("operations");
     localStorage.removeItem("traces");
     localStorage.setItem("operations", "");

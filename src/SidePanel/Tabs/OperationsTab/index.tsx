@@ -10,9 +10,11 @@ interface OperationsTabProps {
   onApplyOperation: ({
     feedback,
     method,
+    valid,
   }: {
     feedback: Feedback;
     method: string;
+    valid?: boolean;
   }) => void;
 }
 

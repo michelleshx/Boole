@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Modal from "react-modal";
 
 import { Button, Loading } from "../../../components";
@@ -39,13 +39,17 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
       right: "auto",
       bottom: "auto",
       transform: "translate(-50%, -50%)",
-      zIndex: 1000, // Ensure the modal is on top
-      width: "22%", // Adjust the width of the modal
-      minHeight: "180px",
+      zIndex: 1000,
+      width: "440px",
+      minHeight: "120px",
+      borderRadius: "5px",
+      padding: "20px",
+      background: "#fff",
+      boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
     },
     overlay: {
-      backgroundColor: "rgba(0, 0, 0, 0.5)",
-      zIndex: 1000, // Ensure the overlay is on top
+      backgroundColor: "rgba(0, 0, 0, 0.6)",
+      zIndex: 1000,
     },
   };
 
@@ -65,19 +69,23 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
       contentLabel="Markus Submission Modal"
       style={modalStyles}
     >
-      <h3 className={styles.header}>Select assignment to submit to: </h3>
-      <select
-        name="assignments"
-        id="assignments"
-        className={styles.dropdown}
-        onChange={handleSelectChange}
-      >
-        {assignments.map((assn) => (
-          <option key={assn.id} value={assn.id}>
-            {assn.short_identifier}: {assn.description}
-          </option>
-        ))}
-      </select>
+      <h2 className={styles.modalHeader}>Select assignment to submit to </h2>
+      {assignments.length > 0 ? (
+        <select
+          name="assignments"
+          id="assignments"
+          className={styles.dropdown}
+          onChange={handleSelectChange}
+        >
+          {assignments.map((assn) => (
+            <option key={assn.id} value={assn.id}>
+              {assn.short_identifier}: {assn.description}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <p className={styles.noAssignmentsMessage}>No assignments available</p>
+      )}
       <p>{submissionFeedback as string}</p>
       <div className={styles.buttonContainer}>
         <Button
@@ -85,6 +93,7 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
           variant="primary"
           onClick={() => onSubmit(value, assignmentId, openFile.name)}
           title="Submit"
+          disabled={assignments.length === 0}
         >
           {submitting && <Loading />}
           {submittedValue && submittedValue === value && "✔"}

@@ -17,8 +17,8 @@
 .listItem:hover,
 .listItem:active {
     background-color: rgba(82, 69, 165, 0.35);
-    -webkit-transition: 0.2s;
-    transition: 0.2s;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
 }
 
 .content {

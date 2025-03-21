@@ -21,9 +21,11 @@ interface MessageHandlerConfig {
   onSuccess: ({
     feedback,
     method,
+    valid,
   }: {
     feedback: Feedback;
     method: string;
+    valid?: boolean;
   }) => void;
 }
 
@@ -60,7 +62,8 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     return {
       isValid:
         stringToCheck.indexOf("\n- Failed\n") === -1 &&
-        stringToCheck.indexOf("BAD STRUCTURE:") === -1,
+        stringToCheck.indexOf("BAD STRUCTURE:") === -1 &&
+        stringToCheck.indexOf("Error:") === -1,
       isMagicUsed:
         stringToCheck.indexOf("\n-- Warning: magic rule has been used.\n") !==
           -1 || stringToCheck.indexOf("\n-- Warning: branch is open") !== -1,
@@ -100,166 +103,185 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             method: "custom/getFeedback",
           });
         } else if (lastJsonMessage.method === "custom/getZSpecComponents") {
-          const feedback = lastJsonMessage.params.components;
+          // TODO test when jacqueline moves output to feedback for getZspeccomponetns
+          console.log(lastJsonMessage.params); // TODO remove and test
 
-          setValid(true);
-          config.onSuccess?.({
-            feedback:
-              typeof feedback === "object"
-                ? "Z Spec successfully interpreted!"
-                : feedback,
-            method: "custom/getZSpecComponents",
-          });
+          const feedback = lastJsonMessage.params.feedback;
+          const components = lastJsonMessage.params.components;
 
-          if (!feedback) return; // Ensure feedback is defined before proceeding
-
-          // Extract state space
-          const stateSpaceList: CurrentStateSpaceItem[] =
-            feedback.schemas
-              ?.find(
-                (schema: any) =>
-                  schema.type === "DECLARE" && schema.name !== "Constants"
-              )
-              ?.declarations?.map(
-                ({ name, type }: { name: string; type: string }) => ({
-                  state: name,
-                  type,
-                  value: "",
-                })
-              ) || [];
-          // Extract types
-          const typesList: TypeItem[] =
-            feedback.types?.map((type: string) => ({
-              type,
-              value: "",
-            })) || [];
-
-          // Extract constants
-          const constantsList: ConstantItem[] = Object.entries(
-            feedback.constants || {}
-          ).map(([key, value]) => ({
-            state: key,
-            type: String(value),
-            value: "",
-          }));
-
-          // Update state and storage
-          updateStateAndStorage("currentStateSpace", stateSpaceList);
-          updateStateAndStorage("types", typesList);
-          updateStateAndStorage("constants", constantsList);
-
-          // Extract operations
-          const operations: OperationItem[] =
-            feedback.schemas
-              ?.filter(
-                (schema: any) => schema.type === "DELTA" || schema.type === "XI"
-              )
-              .map((op: any) => ({
-                name: op.name,
-                declarations:
-                  op.declarations?.map(
-                    ({ name, type }: { name: string; type: string }) => ({
-                      state: name,
-                      type,
-                      value: "",
-                    })
-                  ) || [],
+          if (components) {
+            // Extract state space
+            const stateSpaceList: CurrentStateSpaceItem[] =
+              components.schemas
+                ?.find(
+                  (schema: any) =>
+                    schema.type === "DECLARE" && schema.name !== "Constants"
+                )
+                ?.declarations?.map(
+                  ({ name, type }: { name: string; type: string }) => ({
+                    state: name,
+                    type,
+                    value: "",
+                  })
+                ) || [];
+            // Extract types
+            const typesList: TypeItem[] =
+              components.types?.map((type: string) => ({
+                type,
+                value: "",
               })) || [];
 
-          // Update operations
-          operations.forEach(updateOperationAndStorage);
+            // Extract constants
+            const constantsList: ConstantItem[] = Object.entries(
+              components.constants || {}
+            ).map(([key, value]) => ({
+              state: key,
+              type: String(value),
+              value: "",
+            }));
 
-          // Reset traces
-          resetTraces();
+            // Update state and storage
+            updateStateAndStorage("currentStateSpace", stateSpaceList);
+            updateStateAndStorage("types", typesList);
+            updateStateAndStorage("constants", constantsList);
+
+            // Extract operations
+            const operations: OperationItem[] =
+              components.schemas
+                ?.filter(
+                  (schema: any) =>
+                    schema.type === "DELTA" || schema.type === "XI"
+                )
+                .map((op: any) => ({
+                  name: op.name,
+                  declarations:
+                    op.declarations?.map(
+                      ({ name, type }: { name: string; type: string }) => ({
+                        state: name,
+                        type,
+                        value: "",
+                      })
+                    ) || [],
+                })) || [];
+
+            // Update operations
+            operations.forEach(updateOperationAndStorage);
+
+            // Reset traces
+            resetTraces();
+          }
+
+          config.onSuccess?.({
+            feedback: components
+              ? `${feedback}\n++ Comment: Z Spec successfully interpreted`
+              : feedback,
+            method: "custom/getZSpecComponents",
+            valid: components ? true : false,
+          });
         } else if (lastJsonMessage.method === "custom/runOperations") {
-          const feedback = lastJsonMessage.params;
-          if (!feedback) return;
-
+          console.log(lastJsonMessage.params);
+          const feedback = lastJsonMessage.params.feedback;
+          const interpretation = lastJsonMessage.params.interpretation;
           const opName = feedback.operation;
 
-          // Add initial state to traces if traces are empty
-          if (!traces.length) {
+          // TODO error checking
+
+          if (interpretation) {
+            // Add initial state to traces if traces are empty
+            if (!traces.length) {
+              updateTracesAndStorage({
+                name: "Initial State",
+                operation: {} as OperationItem,
+                state: currentStateSpace,
+              });
+            }
+
+            // Update existing state space items and format new values
+            const updatedStateSpaceList = currentStateSpace.map((item) => {
+              const newValue = interpretation[item.state]?.values;
+              const formattedValue = Array.isArray(newValue)
+                ? newValue
+                    .map((subArray) =>
+                      Array.isArray(subArray)
+                        ? subArray.length === 1
+                          ? subArray[0]
+                          : `(${subArray.join(", ")})`
+                        : subArray
+                    )
+                    .join(", ")
+                : newValue;
+
+              return formattedValue !== undefined
+                ? { ...item, value: formattedValue }
+                : item;
+            });
+
+            // Add new items to state space
+            const newItems = Object.entries(interpretation)
+              .filter(
+                ([key]) =>
+                  !currentStateSpace.some((item) => item.state === key) &&
+                  !key.includes("?") &&
+                  !key.includes("!")
+              )
+              .map(([key, value]) => ({
+                state: key,
+                type:
+                  operations
+                    .find((op) => op.name === opName)
+                    ?.declarations.find((decl) => decl.state === key)?.type ||
+                  "",
+                value: (value as { values: any }).values,
+              }));
+
+            // Merge updated and new items, then update state
+            const mergedStateSpaceList = [
+              ...updatedStateSpaceList,
+              ...newItems,
+            ];
+            updateStateAndStorage("currentStateSpace", mergedStateSpaceList);
+
+            // Add to traces
             updateTracesAndStorage({
-              name: "Initial State",
-              operation: {} as OperationItem,
-              state: currentStateSpace,
+              name: `[${traces.length}] Run operation: ${opName}`,
+              operation:
+                operations.find((op) => op.name === opName) ||
+                ({} as OperationItem),
+              state: mergedStateSpaceList,
             });
           }
 
-          // Update existing state space items and format new values
-          const updatedStateSpaceList = currentStateSpace.map((item) => {
-            const newValue = feedback.interpretation[item.state]?.values;
-            const formattedValue = Array.isArray(newValue)
-              ? newValue
-                  .map((subArray) =>
-                    Array.isArray(subArray)
-                      ? subArray.length === 1
-                        ? subArray[0]
-                        : `(${subArray.join(", ")})`
-                      : subArray
-                  )
-                  .join(", ")
-              : newValue;
-
-            return formattedValue !== undefined
-              ? { ...item, value: formattedValue }
-              : item;
-          });
-
-          // Add new items to state space
-          const newItems = Object.entries(feedback.interpretation)
-            .filter(
-              ([key]) =>
-                !currentStateSpace.some((item) => item.state === key) &&
-                !key.includes("?") &&
-                !key.includes("!")
-            )
-            .map(([key, value]) => ({
-              state: key,
-              type:
-                operations
-                  .find((op) => op.name === opName)
-                  ?.declarations.find((decl) => decl.state === key)?.type || "",
-              value: (value as { values: any }).values,
-            }));
-
-          // Merge updated and new items, then update state
-          const mergedStateSpaceList = [...updatedStateSpaceList, ...newItems];
-          updateStateAndStorage("currentStateSpace", mergedStateSpaceList);
-
-          // Add to traces
-          updateTracesAndStorage({
-            name: `[${traces.length}] Run operation: ${opName}`,
-            operation:
-              operations.find((op) => op.name === opName) ||
-              ({} as OperationItem),
-            state: mergedStateSpaceList,
-          });
+          // config.onSuccess({
+          //   feedback: `"${opName}" operation applied!`,
+          //   method: "custom/runOperations",
+          // });
 
           config.onSuccess({
-            feedback: `"${opName}" operation applied!`,
+            feedback: feedback,
             method: "custom/runOperations",
+            valid: interpretation ? true : false,
           });
         } else if (lastJsonMessage.method === "custom/runEvaluateExpression") {
           const feedback: Feedback = lastJsonMessage.params.output;
 
-          let isValid = true;
+          // let isValid = true;
+          const { isValid } = checkItem(feedback as string);
+          setValid(isValid);
 
           const filteredFeedback = (feedback: Feedback) => {
-            const { isValid } = checkItem(feedback as string);
             if (isValid) {
               const match = (feedback as string).match(
                 /Expression evaluates to (.*)/
               );
               if (match) return match[0];
             }
-            return "Failed to evaluate expression!";
+            return feedback;
           };
-          setValid(isValid); // TODO do something with valid
 
           config.onSuccess?.({
             feedback: filteredFeedback(feedback),
             method: "custom/runEvaluateExpression",
+            valid: isValid,
           });
         }
       }

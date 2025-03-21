@@ -1,18 +1,36 @@
 /* Modal header styling */
 .modalHeader {
   font-size: 24px;
-  margin-bottom: 10px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12px;
 }
 
 /* Modal description styling */
 .modalDescription {
-  font-size: 12px;
-  margin-bottom: 10px;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+/* File input styling */
+.fileInput {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.fileInput:hover {
+  border-color: #4f46e5;
 }
 
 /* Button container styling */
 .buttonContainer {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
+  margin-top: 20px;
 }

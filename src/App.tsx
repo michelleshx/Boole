@@ -31,15 +31,31 @@ function App() {
   const [activeTab, setActiveTab] = useState(Tab.State);
 
   const onVerify = useCallback(
-    ({ feedback, method }: { feedback: Feedback; method: string }) => {
+    ({
+      feedback,
+      method,
+      valid,
+    }: {
+      feedback: Feedback;
+      method: string;
+      valid?: boolean;
+    }) => {
       if (method !== "custom/runEvaluateExpression") {
         setFeedback(feedback);
         setShowBottomPanel(true);
         setFeedbackExpanded(true);
         setSubmissionFeedback(method === "markus" ? feedback : "");
       }
-      if (method === "custom/runOperations") {
-        setActiveTab(Tab.State);
+      if (method === "custom/getZSpecComponents" && valid) {
+        setIsDebugging(true);
+      }
+      if (method === "custom/runOperations" && valid) {
+        if (valid) {
+          setActiveTab(Tab.State);
+        }
+        setFeedback(feedback);
+        setShowBottomPanel(true);
+        setFeedbackExpanded(true);
       }
     },
     []
