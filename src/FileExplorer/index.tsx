@@ -1,5 +1,3 @@
-/* global gtag */
-
 import { useState, useEffect, useContext, useCallback } from "react";
 import styles from "./FileExplorer.module.css";
 
@@ -8,20 +6,21 @@ import { File } from "../common/files";
 import ExpandableListItem from "../components/ExpandableListItem";
 
 import { FileContext } from "../context/FileContext";
-import { LanguageServerContext } from '../context/LanguageServerContext'
+import { LanguageServerContext } from "../context/LanguageServerContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
-import { dir } from "console";
 
-interface FileExplorerProps { }
+interface FileExplorerProps {}
 
 const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [directories, setDirectories] = useState<Directory[]>([]);
   const [defaultFileSet, setDefaultFileSet] = useState(false);
 
   const { setValue, openFile, setOpenFile } = useContext(FileContext);
-  const { sendDidOpenMessage, sendDidCloseMessage } = useContext(LanguageServerContext);
+  const { sendDidOpenMessage, sendDidCloseMessage } = useContext(
+    LanguageServerContext
+  );
 
   const onFileOpen = useCallback(
     async (file: File, directoryIndex: number, fileIndex: number) => {
@@ -30,7 +29,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
         setValue((await file.get()) ?? "");
 
         if (file.name) {
-          sendDidOpenMessage(file.name, await file.get() ?? "");
+          sendDidOpenMessage(file.name, (await file.get()) ?? "");
         }
 
         setOpenFile(file);
@@ -51,13 +50,29 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 
       if (Array.isArray(directories)) {
         setDirectories(directories);
-        if (localStorage.getItem("openDirectoryIndex") && localStorage.getItem("openFileIndex")) {
-          var directoryIndex = parseInt(localStorage.getItem("openDirectoryIndex")!);
+        if (
+          localStorage.getItem("openDirectoryIndex") &&
+          localStorage.getItem("openFileIndex")
+        ) {
+          var directoryIndex = parseInt(
+            localStorage.getItem("openDirectoryIndex")!
+          );
           var fileIndex = parseInt(localStorage.getItem("openFileIndex")!);
-          if (directoryIndex < directories.length && fileIndex < directories[directoryIndex].files.length) {
-            onFileOpen(directories[directoryIndex].files[fileIndex], directoryIndex, fileIndex);
+          if (
+            directoryIndex < directories.length &&
+            fileIndex < directories[directoryIndex].files.length
+          ) {
+            onFileOpen(
+              directories[directoryIndex].files[fileIndex],
+              directoryIndex,
+              fileIndex
+            );
           }
-        } else if (!defaultFileSet && directories.length > 0 && directories[0].files.length > 0) {
+        } else if (
+          !defaultFileSet &&
+          directories.length > 0 &&
+          directories[0].files.length > 0
+        ) {
           onFileOpen(directories[0].files[0], 0, 0);
           setDefaultFileSet(true);
         }
@@ -79,28 +94,28 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     setDirectories(updatedDirectories);
   };
 
-  const openFileHandler = (targetFile: File, directoryIndex: number, fileIndex: number) => {
+  const openFileHandler = (
+    targetFile: File,
+    directoryIndex: number,
+    fileIndex: number
+  ) => {
     if (targetFile === openFile) return;
-
-    gtag("event", "open", {
-      event_label: targetFile.name,
-    });
 
     sendDidCloseMessage(openFile.name);
     onFileOpen(targetFile, directoryIndex, fileIndex);
   };
 
-  const reset = async (targetFile: File, directoryIndex: number, fileIndex: number) => {
+  const reset = async (
+    targetFile: File,
+    directoryIndex: number,
+    fileIndex: number
+  ) => {
     if (
       !window.confirm(
         "Are you sure you would like to reset this file?\nWARNING: You will lose all your changes for this file!"
       )
     )
       return;
-
-    gtag("event", "reset", {
-      event_label: targetFile.name,
-    });
 
     sendDidCloseMessage(openFile.name);
 
@@ -131,14 +146,17 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
                   className={[
                     styles.directoryFileList,
                     styles[
-                    `fileExplorerLabel--${file === openFile ? "selected" : ""
-                    }`
+                      `fileExplorerLabel--${
+                        file === openFile ? "selected" : ""
+                      }`
                     ],
                   ].join(" ")}
                 >
                   <div
                     className={styles.fileExplorerLabel}
-                    onClick={() => openFileHandler(file, directoryIndex, fileIndex)}
+                    onClick={() =>
+                      openFileHandler(file, directoryIndex, fileIndex)
+                    }
                   >
                     <span>{file.name}</span>
                     {file === openFile ? (
