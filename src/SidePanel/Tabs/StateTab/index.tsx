@@ -165,11 +165,11 @@ const StateTab = ({ setIsDebugging, onVerify }: StateTabProps) => {
       )}
       <div style={{ display: "flex", gap: "10px" }}>
         <Button
-          text="Reload"
-          variant="secondary"
+          text="Reload Z-Spec"
+          variant="primary"
           onClick={onReload}
           fullWidth
-          title="Reload"
+          title="Reload Z-Spec"
         />
         <Button
           text="Stop debugging"

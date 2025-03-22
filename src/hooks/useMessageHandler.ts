@@ -103,13 +103,12 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             method: "custom/getFeedback",
           });
         } else if (lastJsonMessage.method === "custom/getZSpecComponents") {
-          // TODO test when jacqueline moves output to feedback for getZspeccomponetns
-          console.log(lastJsonMessage.params); // TODO remove and test
-
           const feedback = lastJsonMessage.params.feedback;
           const components = lastJsonMessage.params.components;
 
-          if (components) {
+          const { isValid } = checkItem(feedback as string);
+
+          if (isValid) {
             // Extract state space
             const stateSpaceList: CurrentStateSpaceItem[] =
               components.schemas
@@ -172,21 +171,20 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           }
 
           config.onSuccess?.({
-            feedback: components
+            feedback: isValid
               ? `${feedback}\n++ Comment: Z Spec successfully interpreted`
               : feedback,
             method: "custom/getZSpecComponents",
-            valid: components ? true : false,
+            valid: isValid,
           });
         } else if (lastJsonMessage.method === "custom/runOperations") {
-          console.log(lastJsonMessage.params);
           const feedback = lastJsonMessage.params.feedback;
           const interpretation = lastJsonMessage.params.interpretation;
-          const opName = feedback.operation;
+          const opName = lastJsonMessage.params.operation;
 
-          // TODO error checking
+          const { isValid } = checkItem(feedback as string);
 
-          if (interpretation) {
+          if (isValid) {
             // Add initial state to traces if traces are empty
             if (!traces.length) {
               updateTracesAndStorage({
@@ -251,20 +249,16 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             });
           }
 
-          // config.onSuccess({
-          //   feedback: `"${opName}" operation applied!`,
-          //   method: "custom/runOperations",
-          // });
-
           config.onSuccess({
-            feedback: feedback,
+            feedback: isValid
+              ? `${feedback}\n++ Comment: "${opName}" operation applied`
+              : feedback,
             method: "custom/runOperations",
-            valid: interpretation ? true : false,
+            valid: isValid,
           });
         } else if (lastJsonMessage.method === "custom/runEvaluateExpression") {
           const feedback: Feedback = lastJsonMessage.params.output;
 
-          // let isValid = true;
           const { isValid } = checkItem(feedback as string);
           setValid(isValid);
 
