@@ -4,39 +4,39 @@ export interface Assignment {
   description: string;
 }
 
-
 export interface UncollectedFbItem {
-  indentation: string,
-  prefix: string,
-  line_part: string
-  message: string
-  line_range: [number, number],
+  indentation: string;
+  prefix: string;
+  line_part: string;
+  message: string;
+  line_range: [number, number];
 }
-
 
 export interface CollectedFbItem {
-  indentation: string,
-  prefix: string,
-  line_part: string
-  message: string
-  collected_line_ranges: [number, number][],
+  indentation: string;
+  prefix: string;
+  line_part: string;
+  message: string;
+  collected_line_ranges: [number, number][];
 }
 
-
-export const isUncollectedFbItem = (item: UncollectedFbItem | CollectedFbItem): item is UncollectedFbItem => {
+export const isUncollectedFbItem = (
+  item: UncollectedFbItem | CollectedFbItem
+): item is UncollectedFbItem => {
   return "line_range" in item;
 };
 
-
-export const isCollectedFbItem = (item: UncollectedFbItem | CollectedFbItem): item is CollectedFbItem => {
+export const isCollectedFbItem = (
+  item: UncollectedFbItem | CollectedFbItem
+): item is CollectedFbItem => {
   return "collected_line_ranges" in item;
 };
 
-
 export type Comments = (UncollectedFbItem | CollectedFbItem)[];
 
-
-export type Feedback = string | (string | UncollectedFbItem | CollectedFbItem | Comments)[];
+export type Feedback =
+  | string
+  | (string | UncollectedFbItem | CollectedFbItem | Comments)[];
 
 export enum Tab {
   State = "state",
@@ -75,3 +75,17 @@ export interface TraceItem {
   operation: OperationItem; // operation applied
   state: CurrentStateSpaceItem[]; // renamed from "declarations"
 }
+
+// sendMessage types
+
+export type MessageMethod =
+  | "custom/getFeedback"
+  | "custom/getZSpecComponents"
+  | "custom/runOperations"
+  | "custom/runEvaluateExpression";
+
+export type SendMessageFn = (
+  method: MessageMethod,
+  value: string,
+  ...args: any[]
+) => void;

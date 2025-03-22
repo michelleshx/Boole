@@ -8,16 +8,12 @@ import {
   TypeItem,
   ConstantItem,
   OperationItem,
+  MessageMethod,
 } from "../common/types";
 import { LanguageServerContext } from "../context/LanguageServerContext";
 import { StateContext } from "../context/StateContext";
 
 interface MessageHandlerConfig {
-  method:
-    | "custom/getFeedback"
-    | "custom/getZSpecComponents"
-    | "custom/runOperations"
-    | "custom/runEvaluateExpression";
   onSuccess: ({
     feedback,
     method,
@@ -241,7 +237,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
 
             // Add to traces
             updateTracesAndStorage({
-              name: `[${traces.length}] Run operation: ${opName}`,
+              name: `[${traces.length || 1}] Run operation: ${opName}`,
               operation:
                 operations.find((op) => op.name === opName) ||
                 ({} as OperationItem),
@@ -288,10 +284,14 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     setProcessing(false);
   }, [lastJsonMessage]);
 
-  const sendMessage = (value: string, ...args: any[]) => {
+  const sendMessage = (
+    method: MessageMethod,
+    value: string,
+    ...args: any[]
+  ) => {
     setProcessing(true);
 
-    switch (config.method) {
+    switch (method) {
       case "custom/getFeedback":
         sendVerificationMessage(value);
         setProcessedValue(value);
@@ -308,7 +308,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         sendRunEvaluateExpressionMessage(value, expression);
         break;
       default:
-        throw new Error(`Unsupported method: ${config.method}`);
+        throw new Error(`Unsupported method: ${method}`);
     }
   };
 

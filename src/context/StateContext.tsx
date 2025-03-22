@@ -84,22 +84,35 @@ const StateProvider: React.FC<{ children: React.ReactNode }> = ({
   ) => {
     const formatted: Record<string, { values: string[] | string[][] }> = {};
 
-    // Parse values
     const parseValues = (value: string | string[]): string[] | string[][] => {
       if (value === "") {
         return [];
       }
+
       if (typeof value === "string") {
-        return value.includes("(") && value.includes(")")
-          ? value.split("),(").map((pair) =>
+        // Split pairs
+        if (value.includes("(") && value.includes(")")) {
+          return value
+            .replace(/\s+/g, "")
+            .split("),(")
+            .map((pair) =>
               pair
                 .replace(/[()]/g, "")
                 .split(",")
                 .map((v) => v.trim())
-            )
-          : Array.from(new Set(value.split(",").map((v) => v.trim())));
+            );
+        }
+
+        // Case: the string is just a comma-separated list (without parentheses)
+        return Array.from(new Set(value.split(",").map((v) => v.trim())));
       }
-      return Array.isArray(value) ? value : [];
+
+      // Case: value is an array of strings
+      if (Array.isArray(value)) {
+        return value;
+      }
+
+      return [];
     };
 
     // Add types to interpretation

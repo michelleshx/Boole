@@ -2,33 +2,21 @@ import { useEffect, useContext } from "react";
 import { StateContext } from "../../../context/StateContext";
 import { FileContext } from "../../../context/FileContext";
 
-import useMessageHandler from "../../../hooks/useMessageHandler";
 import { ExpandableListItem, Loading, Button } from "../../../components";
 import styles from "./OperationsTab.module.css";
-import { Feedback, OperationItem } from "../../../common/types";
+import { OperationItem, SendMessageFn } from "../../../common/types";
 interface OperationsTabProps {
-  onApplyOperation: ({
-    feedback,
-    method,
-    valid,
-  }: {
-    feedback: Feedback;
-    method: string;
-    valid?: boolean;
-  }) => void;
+  sendMessage: SendMessageFn;
+  processing: boolean;
 }
 
-const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
+const OperationsTab = ({ sendMessage, processing }: OperationsTabProps) => {
   const {
     currentStateSpace,
     operations,
     updateOperationAndStorage,
     formatStateAndOperation,
   } = useContext(StateContext);
-  const { processing, sendMessage } = useMessageHandler({
-    method: "custom/runOperations",
-    onSuccess: onApplyOperation,
-  });
 
   const { value } = useContext(FileContext);
 
@@ -53,7 +41,7 @@ const OperationsTab = ({ onApplyOperation }: OperationsTabProps) => {
       operations,
       opName
     );
-    sendMessage(value, interpretation, opName);
+    sendMessage("custom/runOperations", value, interpretation, opName);
   };
 
   const handleInputChange = (

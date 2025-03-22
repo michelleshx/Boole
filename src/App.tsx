@@ -20,15 +20,19 @@ function App() {
   const [feedback, setFeedback] = useState<Feedback>(
     'Click the "Ask George" button (Ctrl+Enter) to get feedback or Start Debugging a Z-Spec'
   );
-  const [isDebugging, setIsDebugging] = useState(false);
   const [settingsExpanded, setSettingsExpanded] = useState<boolean>(false);
   const [feedbackExpanded, setFeedbackExpanded] = useState<boolean>(false);
   const [showBottomPanel, setShowBottomPanel] = useState<boolean>(false);
-  const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
-  const [isFileTab, setIsFileTab] = useState<boolean>(true);
   const [autocomplete, setAutocomplete] = useState<boolean>(true);
   const [submissionFeedback, setSubmissionFeedback] = useState<Feedback>("");
+
+  // Side Panel Props
+  const [isDebugging, setIsDebugging] = useState(false);
+  const [showRightPanel, setShowRightPanel] = useState<boolean>(true);
+  const [isFileTab, setIsFileTab] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState(Tab.State);
+  const [sidePanelError, setSidePanelError] = useState(false);
+  const [sidePanelFeedback, setSidePanelFeedback] = useState<Feedback>("");
 
   const onVerify = useCallback(
     ({
@@ -50,12 +54,11 @@ function App() {
         setIsDebugging(true);
       }
       if (method === "custom/runOperations" && valid) {
-        if (valid) {
-          setActiveTab(Tab.State);
-        }
-        setFeedback(feedback);
-        setShowBottomPanel(true);
-        setFeedbackExpanded(true);
+        setActiveTab(Tab.State);
+      }
+      if (method === "custom/runEvaluateExpression") {
+        setSidePanelError(!valid);
+        setSidePanelFeedback(feedback);
       }
     },
     []
@@ -63,7 +66,6 @@ function App() {
 
   const { processing, processedValue, valid, magicUsed, sendMessage } =
     useMessageHandler({
-      method: "custom/getFeedback",
       onSuccess: onVerify,
     });
   const { submitting, submittedValue, submit, assignments } =
@@ -71,7 +73,7 @@ function App() {
 
   const onCheck = useCallback(
     (val: string) => {
-      sendMessage(val);
+      sendMessage("custom/getFeedback", val);
     },
     [sendMessage]
   );
@@ -126,11 +128,16 @@ function App() {
               <FileExplorer />
             ) : (
               <SidePanel
-                onVerify={onVerify}
                 isDebugging={isDebugging}
                 setIsDebugging={setIsDebugging}
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}
+                sendMessage={sendMessage}
+                processing={processing}
+                sidePanelError={sidePanelError}
+                setSidePanelError={setSidePanelError}
+                sidePanelFeedback={sidePanelFeedback}
+                setSidePanelFeedback={setSidePanelFeedback}
               />
             )}
             <div className={styles.bottom}>

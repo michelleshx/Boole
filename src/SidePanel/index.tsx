@@ -1,44 +1,116 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { Popover } from "react-tiny-popover";
+
 import styles from "./SidePanel.module.css";
+
+import { Loading, Button } from "../components";
 
 import StateTab from "./Tabs/StateTab";
 import OperationsTab from "./Tabs/OperationsTab";
 import TraceTab from "./Tabs/TraceTab";
-import DefaultTab from "./Tabs/DefaultTab";
 import ExpressionEvaluator from "./Tabs/ExpressionEvaluator";
+
 import { FileContext } from "../context/FileContext";
 import { FileType } from "../common/files";
-import { Feedback, Tab } from "../common/types";
-
+import { Feedback, Tab, SendMessageFn } from "../common/types";
 interface SidePanelProps {
-  onVerify: ({
-    feedback,
-    method,
-  }: {
-    feedback: Feedback;
-    method: string;
-  }) => void;
   isDebugging: boolean;
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
   activeTab: Tab;
   setActiveTab: React.Dispatch<React.SetStateAction<Tab>>;
+  sendMessage: SendMessageFn;
+  processing: boolean;
+  sidePanelError: boolean;
+  setSidePanelError: React.Dispatch<React.SetStateAction<boolean>>;
+  sidePanelFeedback: Feedback;
+  setSidePanelFeedback: React.Dispatch<React.SetStateAction<Feedback>>;
 }
 
 const SidePanel = ({
-  onVerify,
   isDebugging,
   setIsDebugging,
   activeTab,
   setActiveTab,
+  sendMessage,
+  processing,
+  sidePanelError,
+  setSidePanelError,
+  sidePanelFeedback,
+  setSidePanelFeedback,
 }: SidePanelProps) => {
-  const { fileType } = useContext(FileContext);
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { value, setFileType, getFileType, fileType } = useContext(FileContext);
+
+  const onDebug = () => {
+    const fileType = getFileType(value);
+    setFileType(fileType); // set the file type
+
+    // Check if the file is debuggable
+    if (fileType === FileType.Z) {
+      sendMessage("custom/getZSpecComponents", value);
+    } else if (
+      fileType === FileType.COUNTEREXAMPLE ||
+      fileType === FileType.SET
+    ) {
+      setIsDebugging(true);
+    } else {
+      setErrorMessage(
+        'Oops! this file does not support debugging, try using "Ask George" instead'
+      );
+    }
+  };
 
   return (
     <aside className={styles.sidePanel}>
       {!isDebugging ? (
-        <DefaultTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
+        <div className={styles.defaultTab}>
+          <Popover
+            isOpen={isPopoverOpen}
+            positions={["bottom"]}
+            padding={8}
+            content={
+              <div className={styles.popOverContainer}>
+                Supported files include: #check Z, #check CE, and #check SET.
+              </div>
+            }
+          >
+            <p className={styles.text}>
+              Open a&nbsp;
+              <span
+                className={styles.hoverText}
+                onMouseOver={() => setIsPopoverOpen(true)}
+                onMouseLeave={() => setIsPopoverOpen(false)}
+              >
+                supported*
+              </span>
+              &nbsp;file to start debugging.
+            </p>
+          </Popover>
+          <Button
+            text="Start Debugging"
+            variant="primary"
+            size="medium"
+            onClick={onDebug}
+            disabled={processing}
+            fullWidth
+            title="Start Debugging"
+          >
+            {processing && <Loading />}
+          </Button>
+          <p className={styles.text}>{errorMessage}</p>
+        </div>
       ) : fileType === FileType.COUNTEREXAMPLE || fileType === FileType.SET ? (
-        <ExpressionEvaluator setIsDebugging={setIsDebugging} />
+        <ExpressionEvaluator
+          setIsDebugging={setIsDebugging}
+          sendMessage={sendMessage}
+          processing={processing}
+          error={sidePanelError}
+          setError={setSidePanelError}
+          result={sidePanelFeedback}
+          setResult={setSidePanelFeedback}
+        />
       ) : (
         <>
           <div className={styles.tabHeaders}>
@@ -62,10 +134,17 @@ const SidePanel = ({
           </div>
           <div className={styles.tabContent}>
             {activeTab === Tab.State && (
-              <StateTab setIsDebugging={setIsDebugging} onVerify={onVerify} />
+              <StateTab
+                setIsDebugging={setIsDebugging}
+                onReload={onDebug}
+                processing={processing}
+              />
             )}
             {activeTab === Tab.Operations && (
-              <OperationsTab onApplyOperation={onVerify} />
+              <OperationsTab
+                sendMessage={sendMessage}
+                processing={processing}
+              />
             )}
             {activeTab === Tab.Trace && <TraceTab />}
           </div>

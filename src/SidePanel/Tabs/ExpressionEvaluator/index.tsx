@@ -4,21 +4,32 @@ import styles from "./ExpressionEvaluator.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import useMessageHandler from "../../../hooks/useMessageHandler";
 import { FileContext } from "../../../context/FileContext";
 import { Button, Loading } from "../../../components";
 
-import { Feedback } from "../../../common/types";
+import { Feedback, SendMessageFn } from "../../../common/types";
 import { FileType } from "../../../common/files";
 
 interface ExpressionEvaluatorProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
+  sendMessage: SendMessageFn;
+  processing: boolean;
+  error: boolean;
+  setError: React.Dispatch<React.SetStateAction<boolean>>;
+  result: Feedback;
+  setResult: React.Dispatch<React.SetStateAction<Feedback>>;
 }
 
-const ExpressionEvaluator = ({ setIsDebugging }: ExpressionEvaluatorProps) => {
+const ExpressionEvaluator = ({
+  setIsDebugging,
+  sendMessage,
+  processing,
+  error,
+  setError,
+  result,
+  setResult,
+}: ExpressionEvaluatorProps) => {
   const [expression, setExpression] = useState("");
-  const [error, setError] = useState(false);
-  const [result, setResult] = useState<Feedback>();
   const { value, fileType } = useContext(FileContext);
 
   const renderFeedback = (feedback: Feedback | undefined): string => {
@@ -31,26 +42,6 @@ const ExpressionEvaluator = ({ setIsDebugging }: ExpressionEvaluatorProps) => {
           .join(" ")
       : String(feedback);
   };
-
-  const onEvaluate = ({
-    feedback,
-    method,
-    valid,
-  }: {
-    feedback: Feedback;
-    method: string;
-    valid?: boolean;
-  }) => {
-    if (method === "custom/runEvaluateExpression") {
-      setError(!valid);
-      setResult(feedback);
-    }
-  };
-
-  const { processing, sendMessage } = useMessageHandler({
-    method: "custom/runEvaluateExpression",
-    onSuccess: onEvaluate,
-  });
 
   const handleClear = () => {
     setExpression("");
@@ -70,7 +61,8 @@ const ExpressionEvaluator = ({ setIsDebugging }: ExpressionEvaluatorProps) => {
     if (fileType === FileType.COUNTEREXAMPLE) {
       file = value.replace("#check CE", "#check SET");
     }
-    sendMessage(file, expression);
+
+    sendMessage("custom/runEvaluateExpression", file, expression);
   };
 
   return (
