@@ -235,12 +235,26 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
             ];
             updateStateAndStorage("currentStateSpace", mergedStateSpaceList);
 
+            // Updated operation results
+            const operationResult =
+              operations.find((op) => op.name === opName) ||
+              ({} as OperationItem);
+
+            Object.entries(interpretation)
+              .filter(([key]) => key.includes("!"))
+              .forEach(([key, value]) => {
+                const decl = operationResult.declarations.find(
+                  (decl) => decl.state === key
+                );
+                if (decl) {
+                  decl.value = (value as { values: any }).values;
+                }
+              });
+
             // Add to traces
             updateTracesAndStorage({
               name: `[${traces.length || 1}] Run operation: ${opName}`,
-              operation:
-                operations.find((op) => op.name === opName) ||
-                ({} as OperationItem),
+              operation: operationResult,
               state: mergedStateSpaceList,
             });
           }
