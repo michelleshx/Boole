@@ -16,6 +16,7 @@
 .col {
   width: 33%;
   word-wrap: break-word;
+  font-size: 12px;
 }
 
 .col:last-child {

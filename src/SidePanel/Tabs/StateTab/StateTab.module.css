@@ -30,6 +30,7 @@
   width: 33%;
   word-wrap: break-word;
   height: 24px;
+  font-size: 12px;
 }
 
 .input {
@@ -41,4 +42,5 @@
   overflow-y: auto;
   box-sizing: border-box;
   padding: 8px; 
+  font-size: 12px;
 }
