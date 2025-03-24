@@ -44,7 +44,7 @@ const MarkusModal: React.FC<MarkusModalProps> = ({
       minHeight: "120px",
       borderRadius: "5px",
       padding: "20px",
-      background: "#fff",
+      background: "white",
       boxShadow: "0 10px 25px rgba(0, 0, 0, 0.2)",
     },
     overlay: {

@@ -1,4 +1,4 @@
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor";
 
 import { OnMount } from "@monaco-editor/react";
 import { ruleDefinitions } from "./rules";
@@ -52,7 +52,7 @@ export const registerGeorge: OnMount = (editor, monaco) => {
 
         // Entire lines starting with # should be colored
         [
-          /^.*#(?:check\s+(?:PROP|ND|PC|Z|TP|ST|PREDTYPES|PRED|NONE)|[qua][ \t].*$)/,
+          /^.*#(?:check\s+(?:PROP|ND|PC|Z|TP|ST|PREDTYPES|PRED|CE|SET|NONE)|[qua][ \t].*$)/,
           "constant.other",
         ],
 
@@ -134,9 +134,9 @@ export const registerGeorge: OnMount = (editor, monaco) => {
           range,
         },
         {
-          label: "check PRED",
+          label: "check PREDTYPES",
           kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check PRED",
+          insertText: "check PREDTYPES",
           range,
         },
         {
@@ -161,6 +161,18 @@ export const registerGeorge: OnMount = (editor, monaco) => {
           label: "check NONE",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "check NONE",
+          range,
+        },
+        {
+          label: "check CE",
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: "check CE",
+          range,
+        },
+        {
+          label: "check SET",
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: "check SET",
           range,
         },
 
@@ -686,41 +698,50 @@ export const registerGeorge: OnMount = (editor, monaco) => {
     provideDefinition: (model, position) => {
       const lineContent = model.getLineContent(position.lineNumber);
       const cursorPosition = position.column; // Monaco's column is 1-based
-  
+
       // Match "on" followed by references, stopping at "by" or end of line
       const onMatch = /\bon\s+(.*?)(?=\s*(?:by|$))/i.exec(lineContent);
       if (onMatch) {
         const referencesStr = onMatch[1]; // The references string
-        const referencesStartIndex = onMatch.index + onMatch[0].indexOf(referencesStr);
-  
+        const referencesStartIndex =
+          onMatch.index + onMatch[0].indexOf(referencesStr);
+
         let currentIndex = 0;
         const refs = referencesStr.split(",");
         for (const ref of refs) {
           const refWithWhitespace = ref;
           const trimmedRef = ref.trim();
-          const refIndexInReferencesStr = referencesStr.indexOf(refWithWhitespace, currentIndex);
+          const refIndexInReferencesStr = referencesStr.indexOf(
+            refWithWhitespace,
+            currentIndex
+          );
           currentIndex = refIndexInReferencesStr + refWithWhitespace.length;
-  
+
           const matchStartIndex =
-            referencesStartIndex + refIndexInReferencesStr + refWithWhitespace.indexOf(trimmedRef);
+            referencesStartIndex +
+            refIndexInReferencesStr +
+            refWithWhitespace.indexOf(trimmedRef);
           const matchLength = trimmedRef.length;
-  
+
           const startColumn = matchStartIndex + 1; // Convert to 1-based column number
           const endColumn = startColumn + matchLength - 1;
-  
+
           // Adjusted condition to include position directly after the number
-          if (cursorPosition >= startColumn && cursorPosition <= endColumn + 1) {
+          if (
+            cursorPosition >= startColumn &&
+            cursorPosition <= endColumn + 1
+          ) {
             if (trimmedRef.includes("-")) {
               const [startRef, endRef] = trimmedRef.split("-");
               const dashIndexInRef = trimmedRef.indexOf("-");
               const startRefLength = dashIndexInRef;
               const endRefLength = trimmedRef.length - dashIndexInRef - 1;
-  
+
               const startRefStartColumn = startColumn;
               const startRefEndColumn = startColumn + startRefLength - 1;
               const endRefStartColumn = startRefEndColumn + 2; // Skip the dash
               const endRefEndColumn = endColumn;
-  
+
               // Adjusted conditions for ranges
               if (
                 cursorPosition >= startRefStartColumn &&
@@ -748,13 +769,10 @@ export const registerGeorge: OnMount = (editor, monaco) => {
           }
         }
       }
-  
+
       return null;
     },
   });
-  
-  
-  
 
   /**
    * Finds the definition of a line reference within the current proof section.
