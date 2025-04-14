@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import {
   UncollectedFbItem,
   CollectedFbItem,
-  Comments,
+  FeedbackError,
   Feedback,
   CurrentStateSpaceItem,
   TypeItem,
@@ -37,6 +37,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     sendGetZSpecComponentsMessage,
     sendRunOperationsMessage,
     sendRunEvaluateExpressionMessage,
+	setMarkers,
   } = useContext(LanguageServerContext);
 
   const {
@@ -68,6 +69,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
 
   // Handle getFeedback response
   const handleGetFeedback = (feedback: Feedback) => {
+	setMarkers([], FeedbackError) // clear the existing feedback markers
     let isValid = true;
     let isMagicUsed = false;
 
