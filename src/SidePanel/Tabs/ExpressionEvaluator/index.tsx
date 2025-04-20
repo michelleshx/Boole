@@ -108,7 +108,11 @@ const ExpressionEvaluator = ({
       <Button
         text="Stop debugging"
         variant="caution"
-        onClick={() => setIsDebugging(false)}
+        onClick={() => {
+          setIsDebugging(false);
+          setExpression("");
+          setResult("");
+        }}
         disabled={false}
         fullWidth
         title="Stop debugging"

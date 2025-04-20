@@ -8,13 +8,9 @@ A modern, feature-enhanced front end for George, building upon the foundation of
 
 ### What's New in This Fork
 
-<!---
-TODO include gifs of new features
--->
+- Enhanced debugging features for Z-specs ![](/docs/gifs/z-debugger.gif)
 
-- Enhanced debugging features for Z-specs
-
-- Expression evaluator
+- Expression evaluator ![](/docs/gifs/expression-evaluator.gif)
 
 - Automatic submission to MarkUs
 
