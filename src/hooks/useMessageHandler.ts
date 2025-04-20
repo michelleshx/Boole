@@ -313,8 +313,6 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         method: lastJsonMessage?.method || "unknown",
         valid: false,
       });
-    } finally {
-      setProcessing(false);
     }
   }, [lastJsonMessage]);
 
@@ -344,6 +342,8 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
       default:
         throw new Error(`Unsupported method: ${method}`);
     }
+
+    setProcessing(false);
   };
 
   return {
