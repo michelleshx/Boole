@@ -150,11 +150,6 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
     }
   }, [isDarkMode]);
 
-  useEffect(() => {
-    const storedMode = localStorage.getItem("keybinding");
-    storedMode && setKeybinding(JSON.parse(storedMode));
-  }, [keybinding, setKeybinding]);
-
   return (
     <Editor
       height="100%"
