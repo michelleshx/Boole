@@ -12,23 +12,27 @@ interface ExpandableListItemProps {
   onClick?: () => void;
 }
 
-const ExpandableListItem = ({ title, children, onClick }: ExpandableListItemProps) => {
+const ExpandableListItem = ({
+  title,
+  children,
+  onClick,
+}: ExpandableListItemProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleClick = () => {
-    setIsExpanded((!isExpanded));
+    setIsExpanded(!isExpanded);
     if (onClick) {
       onClick();
     }
-  }
+  };
 
   return (
     <li className={styles.container}>
-      <button
-        onClick={handleClick}
-        className={styles.listItem}
-      >
-        <FontAwesomeIcon icon={isExpanded ? faChevronDown : faChevronRight} />
+      <button onClick={handleClick} className={styles.listItem}>
+        <FontAwesomeIcon
+          icon={isExpanded ? faChevronDown : faChevronRight}
+          style={{ marginTop: "3px" }}
+        />
         {title}
       </button>
       {isExpanded && <div className={styles.content}>{children}</div>}

@@ -36,24 +36,13 @@ const BottomPanel = ({
 
   return (
     <div className={styles.container}>
-      {/*<div className={styles.topHeader}></div>*/}
-
       {showBottomPanel &&
         feedbackExpanded &&
         (Array.isArray(feedback) ? (
           <div className={styles.output}>
             {feedback.map((ele, index) =>
               typeof ele === "string" ? (
-                <p
-                  key={index}
-                  style={{
-                    display: "block",
-                    whiteSpace: "pre-wrap",
-                    fontFamily: "inherit",
-                    fontSize: "inherit",
-                    color: "inherit",
-                  }}
-                >
+                <p key={index} className={styles.feedback}>
                   {ele}
                 </p>
               ) : Array.isArray(ele) ? (

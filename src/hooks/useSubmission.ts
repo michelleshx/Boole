@@ -5,6 +5,8 @@ import axios from "axios";
 
 import { Assignment, Feedback } from "../common/types";
 
+const SUBMISSION_TIMEOUT = 5000;
+
 const useSubmission = (
   onVerify: ({
     feedback,
@@ -22,7 +24,7 @@ const useSubmission = (
   const getAssignments = async () => {
     try {
       const response = await axios.get(
-        "https://student.cs.uwaterloo.ca/~m272xu/george/ask-george/cgi-bin/markus_get.cgi",
+        "/george/ask-george/cgi-bin/markus_get.cgi",
         {}
       );
       // Check if the response was successful
@@ -67,10 +69,9 @@ const useSubmission = (
     };
 
     axios
-      .post(
-        `https://student.cs.uwaterloo.ca/~m272xu/george/ask-george/cgi-bin/markus_submit.cgi`,
-        data
-      )
+      .post(`/george/ask-george/cgi-bin/markus_submit.cgi`, data, {
+        timeout: SUBMISSION_TIMEOUT,
+      })
       .then((response) => {
         if (response.data.status === 200) {
           setSubmittedValue(valueToValidate);
@@ -87,8 +88,15 @@ const useSubmission = (
       })
       .catch((e) => {
         console.error(e);
+        const errorMessage =
+          e.code === "ECONNABORTED"
+            ? `Request timed out after ${
+                SUBMISSION_TIMEOUT / 1000
+              } seconds. Please try again later.`
+            : "Error submitting assignment to Markus!";
+
         onVerify({
-          feedback: "Error submitting assignment to Markus!",
+          feedback: errorMessage,
           method: "markus",
         });
       })

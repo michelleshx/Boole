@@ -12,7 +12,8 @@ module.exports = function (app) {
         "/files",
         "/assignments.json",
         "/assignments/",
-        "/cgi-bin/markus_submit.cgi",
+        "/george/ask-george/cgi-bin/markus_get.cgi",
+        "/george/ask-george/cgi-bin/markus_submit.cgi",
       ],
       pathRewrite: { "^/files/": "/" },
     })

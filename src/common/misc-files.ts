@@ -28,6 +28,26 @@ p => !q, r => q |- p => !r
 }
 6) p => !r by imp_i on 3-5`,
   },
+  {
+    name: "ce_example.grg",
+    contents: `#u name
+#a 00
+#q 00
+
+#check CE
+
+[People] := {Alice, Bob, Charlie}
+[Me: People] := Alice
+[students: People] := {Alice, Bob, Charlie}
+[high_school_students: People] := {Alice, Charlie}
+[OperatingSystem] := {Macbook, Linux, Windows, Ubuntu}
+[used_in_class: OperatingSystem] := {Macbook, Windows}
+[programs: People --> OperatingSystem] := {(Alice, Macbook), (Bob, Ubuntu)}
+[likes: People --> OperatingSystem] := {(Alice, Macbook), (Alice, Linux), (Bob, Windows), (Charlie, Ubuntu)}
+[needs_update: OperatingSystem --> bool] := {(Macbook, T), (Linux, F), (Ubuntu, F), (Windows, F)}
+
+forall os: OperatingSystem . needs_update(os)`,
+  },
 ];
 
 export default example;
