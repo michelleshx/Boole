@@ -79,7 +79,11 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
         The uploaded file will replace your current working file!
       </h2>
       <label className={styles.fileInput}>
-        <input type="file" accept=".txt,.grg" onChange={handleFileChange} />
+        <input
+          type="file"
+          accept=".txt,.grg,.grx"
+          onChange={handleFileChange}
+        />
       </label>
 
       <div className={styles.buttonContainer}>

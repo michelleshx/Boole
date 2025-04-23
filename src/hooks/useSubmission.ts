@@ -58,7 +58,7 @@ const useSubmission = (
     gtag("event", "submit");
 
     const data = {
-      assignment_id: assignmentId != -1 ? assignmentId : defaultAssignment,
+      assignment_id: assignmentId !== -1 ? assignmentId : defaultAssignment,
       files: [
         {
           filename: filename,

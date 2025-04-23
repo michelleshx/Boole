@@ -8,7 +8,6 @@ import { FileContext } from "../../../context/FileContext";
 import { Button, Loading } from "../../../components";
 
 import { Feedback, SendMessageFn } from "../../../common/types";
-import { FileType } from "../../../common/files";
 
 interface ExpressionEvaluatorProps {
   setIsDebugging: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,7 +29,7 @@ const ExpressionEvaluator = ({
   setResult,
 }: ExpressionEvaluatorProps) => {
   const [expression, setExpression] = useState("");
-  const { value, fileType } = useContext(FileContext);
+  const { value } = useContext(FileContext);
 
   const renderFeedback = (feedback: Feedback | undefined): string => {
     if (!feedback) return "";
@@ -55,11 +54,6 @@ const ExpressionEvaluator = ({
       setResult("Oops, please enter an expression!");
       setError(true);
       return;
-    }
-
-    // change #check CE, change to #check SET
-    if (fileType === FileType.COUNTEREXAMPLE) {
-      file = value.replace("#check CE", "#check SET");
     }
 
     sendMessage("custom/runEvaluateExpression", file, expression);

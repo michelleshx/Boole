@@ -52,7 +52,10 @@ const SidePanel = ({
       sendMessage("custom/getZSpecComponents", value);
     } else if (
       fileType === FileType.COUNTEREXAMPLE ||
-      fileType === FileType.SET
+      fileType === FileType.FALSE ||
+      fileType === FileType.CONSISTENT ||
+      fileType === FileType.SAT ||
+      fileType === FileType.EVALUATE
     ) {
       setIsDebugging(true);
     } else {
@@ -72,7 +75,8 @@ const SidePanel = ({
             padding={8}
             content={
               <div className={styles.popOverContainer}>
-                Supported files include: #check Z, #check CE, and #check SET.
+                Supported files include: #check Z, #check CE, #check FALSE,
+                #check CONSISTENT, #check SAT, #check EVALUATE.
               </div>
             }
           >
@@ -101,7 +105,11 @@ const SidePanel = ({
           </Button>
           <p className={styles.text}>{errorMessage}</p>
         </div>
-      ) : fileType === FileType.COUNTEREXAMPLE || fileType === FileType.SET ? (
+      ) : fileType === FileType.COUNTEREXAMPLE ||
+        fileType === FileType.FALSE ||
+        fileType === FileType.CONSISTENT ||
+        fileType === FileType.SAT ||
+        fileType === FileType.EVALUATE ? (
         <ExpressionEvaluator
           setIsDebugging={setIsDebugging}
           sendMessage={sendMessage}

@@ -12,7 +12,10 @@ export enum FileType {
   PROP,
   PC,
   ND,
-  SET,
+  FALSE,
+  CONSISTENT,
+  SAT,
+  EVALUATE,
   NONE,
 }
 

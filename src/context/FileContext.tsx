@@ -32,7 +32,10 @@ const FileProvider: React.FC<{ children: React.ReactNode }> = ({
     "#check PROP": FileType.PROP,
     "#check PC": FileType.PC,
     "#check ND": FileType.ND,
-    "#check SET": FileType.SET,
+    "#check FALSE": FileType.FALSE,
+    "#check CONSISTENT": FileType.CONSISTENT,
+    "#check SAT": FileType.SAT,
+    "#check EVALUATE": FileType.EVALUATE,
   };
 
   const getFileType = (value: string): FileType => {
