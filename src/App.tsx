@@ -48,6 +48,7 @@ function App() {
         setFeedback(feedback);
         setShowBottomPanel(true);
         setFeedbackExpanded(true);
+        setSettingsExpanded(false);
         setSubmissionFeedback(method === "markus" ? feedback : "");
       }
       if (method === "custom/getZSpecComponents" && valid) {

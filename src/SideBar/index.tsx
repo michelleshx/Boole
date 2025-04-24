@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFolder,
   faBug,
-  faExclamationCircle,
   faGear,
+  faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
 
 interface SideBarProps {
@@ -94,7 +94,7 @@ const SideBar = ({
         aria-label="Feedback"
         title="Feedback"
       >
-        <FontAwesomeIcon icon={faExclamationCircle} />
+        <FontAwesomeIcon icon={faCommentDots} />
       </button>
 
       <button

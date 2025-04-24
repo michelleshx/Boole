@@ -33,3 +33,26 @@
   border-radius: 5px;
   background-color: white;
 }
+
+.bugReportActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.copyMessage {
+  font-size: 0.85rem;
+  color: var(--text-2);
+  margin-left: 8px;
+  animation: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
