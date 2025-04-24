@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBug,
   faFolder,
-  faBug,
   faGear,
   faCommentDots,
 } from "@fortawesome/free-solid-svg-icons";
