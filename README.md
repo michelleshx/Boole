@@ -26,6 +26,19 @@ A modern, feature-enhanced front end for George, building upon the foundation of
 
 - Verification by George (with distinct indicators for different types of feedback)
 
+### Deploying on student server
+- After repo is cloned on the SE212 Account, change language server URL in src/context/LanguageServerContext.tsx
+    - This needs to match the port used for the language server
+    - For details, please see README.md in LS Repo
+- Run `npm install` if you haven't
+- Run `npm run build`, which creates a build/ dir
+- Move the build/ dir into public_html/james
+- Set permissions:
+    `chmod 0644 index.html`
+    `chmod 0644 favicon.ico`
+    `chmod 0644 static/js/<main js file>`
+    `chmod 0644 static/css/<main css file>`
+
 ### Set-up
 
 ##### Prerequisites:
