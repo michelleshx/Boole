@@ -38,6 +38,9 @@ export type Feedback =
   | string
   | (string | UncollectedFbItem | CollectedFbItem | Comments)[];
 
+export const SyntaxError = "syntax error"
+export const FeedbackError = "feedback error"
+
 export enum Tab {
   State = "state",
   Operations = "operations",

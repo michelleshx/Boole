@@ -7,6 +7,7 @@ import {
   UncollectedFbItem,
   isUncollectedFbItem,
   isCollectedFbItem,
+  FeedbackError,
 } from "../../common/types";
 
 interface FeedbackItemProps {
@@ -74,12 +75,12 @@ const FeedbackItem: React.FC<FeedbackItemProps> = ({ item }) => {
           endLineNumber: line_range[1],
           endColumn:
             editorRef.current?.getModel()?.getLineMaxColumn(line_range[1]) ?? 1, // Ending column (end of the line)
-          message: message,
+          message: isCollectedFbItem(item) ? message + lines_str(line_range) : message,
           severity: monaco.MarkerSeverity.Error, // Set severity as Error
         },
       ];
 
-      addMarkers(feedbackMarker);
+      addMarkers(feedbackMarker, FeedbackError);
     }
   };
 

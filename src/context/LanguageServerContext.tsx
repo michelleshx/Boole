@@ -4,11 +4,13 @@ import React, { useContext, useRef } from "react";
 import { Monaco } from "@monaco-editor/react";
 import * as monaco from "monaco-editor";
 import { FileContext } from "../context/FileContext";
+import { SyntaxError, FeedbackError } from "../common/types";
 
 type LanguageServerContextType = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   monacoRef: React.MutableRefObject<Monaco | null>;
-  addMarkers: (newMarkers: monaco.editor.IMarkerData[]) => void;
+  setMarkers: (newMarkers: monaco.editor.IMarkerData[], owner: typeof SyntaxError | typeof FeedbackError) => void;
+  addMarkers: (newMarkers: monaco.editor.IMarkerData[], owner: typeof SyntaxError | typeof FeedbackError) => void;
   lastJsonMessage: any;
   sendDidOpenMessage: (name: string, value: string) => void;
   sendDidChangeMessage: (model: monaco.editor.ITextModel) => void;
@@ -36,15 +38,35 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   const url = "ws://127.0.0.1:8080"; // local testing
   // const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev01/"
 
-  const addMarkers = (newMarkers: monaco.editor.IMarkerData[]) => {
+  const setMarkers = (newMarkers: monaco.editor.IMarkerData[], owner: typeof SyntaxError | typeof FeedbackError) => {
     if (monacoRef.current && editorRef.current?.getModel()) {
-      const existingMarkers = monacoRef.current!.editor.getModelMarkers({
-        owner: "owner",
-      });
       monacoRef.current!.editor.setModelMarkers(
         editorRef.current?.getModel()!,
-        "owner",
-        [...existingMarkers, ...newMarkers]
+        owner,
+        newMarkers
+      );
+    }
+  };
+
+  const addMarkers = (newMarkers: monaco.editor.IMarkerData[], owner: typeof SyntaxError | typeof FeedbackError) => {
+    if (monacoRef.current && editorRef.current?.getModel()) {
+      const existingMarkers = monacoRef.current!.editor.getModelMarkers({
+        owner: owner,
+      });
+	  const uniqueNewMarkers = newMarkers.filter(newMarker => {
+		return !existingMarkers.some(existingMarker =>
+		  existingMarker.startLineNumber === newMarker.startLineNumber &&
+		  existingMarker.startColumn === newMarker.startColumn &&
+		  existingMarker.endLineNumber === newMarker.endLineNumber &&
+		  existingMarker.endColumn === newMarker.endColumn &&
+		  existingMarker.message === newMarker.message && 
+		  existingMarker.severity === newMarker.severity
+		);
+	  });
+      monacoRef.current!.editor.setModelMarkers(
+        editorRef.current?.getModel()!,
+        owner,
+		[...existingMarkers, ...uniqueNewMarkers]
       );
     }
   };
@@ -80,13 +102,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (data.method === "textDocument/publishDiagnostics") {
         if (data.params.diagnostics.length === 0) {
-          if (monacoRef.current && editorRef.current?.getModel()) {
-            monacoRef.current!.editor.setModelMarkers(
-              editorRef.current?.getModel()!,
-              "owner",
-              []
-            );
-          }
+		  setMarkers([], SyntaxError)
           return;
         } else {
           const markers = data.params.diagnostics.map((diag: any) => ({
@@ -97,13 +113,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
             message: diag.message,
             severity: monaco.MarkerSeverity.Error, // Set severity as Error
           }));
-          if (monacoRef.current && editorRef.current?.getModel()) {
-            monacoRef.current!.editor.setModelMarkers(
-              editorRef.current?.getModel()!,
-              "owner",
-              markers
-            );
-          }
+		  setMarkers(markers, SyntaxError)
         }
       }
     },
@@ -197,6 +207,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         editorRef,
         monacoRef,
+		setMarkers,
         addMarkers,
         lastJsonMessage,
         sendDidOpenMessage,
