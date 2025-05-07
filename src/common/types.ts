@@ -32,11 +32,16 @@ export const isCollectedFbItem = (
   return "collected_line_ranges" in item;
 };
 
-export type Comments = (UncollectedFbItem | CollectedFbItem)[];
+export type FbList = (UncollectedFbItem | CollectedFbItem)[];
 
-export type Feedback =
+export interface FeedbackOutput {
+  "comments": FbList
+  "other_items": FbList
+}
+
+export type Feedback = 
   | string
-  | (string | UncollectedFbItem | CollectedFbItem | Comments)[];
+  | (string | FeedbackOutput)[]
 
 export const SyntaxError = "syntax error"
 export const FeedbackError = "feedback error"

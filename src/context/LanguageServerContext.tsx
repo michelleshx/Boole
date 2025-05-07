@@ -75,8 +75,8 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const createMessage = (method: string, params: Object) => {
     return JSON.stringify({
-      jsonrpc: "2.0",
-      id: Math.floor(Math.random() * 1000), // Unique ID for each request
+      // jsonrpc: "2.0",
+      // id: Math.floor(Math.random() * 1000), // Unique ID for each request
       method,
       params,
     });
@@ -87,33 +87,32 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     shouldReconnect: (closeEvent) => true,
     onOpen: () => {
       const initMessage = createMessage("initialize", {
-        capabilities: {
-          textDocument: {
-            synchronization: {
-              willSave: true,
-              didSave: true,
-              didChange: true,
-            },
-          },
-        },
+        // params: {
+          // textDocument: {
+          //   synchronization: {
+          //     willSave: true,
+          //     didSave: true,
+          //     didChange: true,
+          //   },
+          // },
+        // },
       });
       sendMessage(initMessage);
     },
     onMessage: (message) => {
       const data = JSON.parse(message.data);
-
-      if (data.method === "textDocument/publishDiagnostics") {
-        if (data.params.diagnostics.length === 0) {
+      if (data.method === "didChange" || data.method === "didOpen") {
+        if (data.res.diagnostics.length === 0) {
 		  setMarkers([], SyntaxError)
           return;
         } else {
-          const markers = data.params.diagnostics.map((diag: any) => ({
-            startLineNumber: diag.range.start.line,
-            startColumn: diag.range.start.character,
-            endLineNumber: diag.range.end.line,
-            endColumn: diag.range.end.character,
+          const markers = data.res.diagnostics.map((diag: any) => ({
+            startLineNumber: diag.startLineNumber,
+            startColumn: diag.startColumn,
+            endLineNumber: diag.endLineNumber,
+            endColumn: diag.endColumn,
             message: diag.message,
-            severity: monaco.MarkerSeverity.Error, // Set severity as Error
+            severity: diag.severity, 
           }));
 		  setMarkers(markers, SyntaxError)
         }
@@ -122,46 +121,46 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const sendDidOpenMessage = (name: string, value: string) => {
-    const didOpenMessage = createMessage("textDocument/didOpen", {
-      textDocument: {
-        uri: "file:///" + name,
-        languageId: "george",
-        version: 1,
-        text: value,
-      },
+    const didOpenMessage = createMessage("didOpen", {
+      // params: {
+        // uri: "file:///" + name,
+        // languageId: "george",
+        // version: 1,
+        grg_code: value,
+      // },
     });
     sendMessage(didOpenMessage);
   };
 
   const sendDidChangeMessage = (model: monaco.editor.ITextModel) => {
-    const changeMessage = createMessage("textDocument/didChange", {
-      textDocument: {
-        uri: "file:///" + openFile.name,
-        languageId: "george",
-        version: 1,
-        text: model.getValue(),
-      },
-      contentChanges: [
-        {
-          text: model.getValue(),
-        },
-      ],
+    const changeMessage = createMessage("didChange", {
+      // params: {
+        // uri: "file:///" + openFile.name,
+        // languageId: "george",
+        // version: 1,
+        grg_code: model.getValue(),
+      // },
+      // contentChanges: [
+      //   {
+      //     text: model.getValue(),
+      //   },
+      // ],
     });
     sendMessage(changeMessage);
   };
 
   const sendDidCloseMessage = (name: string) => {
-    const closeMessage = createMessage("textDocument/didClose", {
-      textDocument: {
-        uri: "file:///" + name,
-      },
+    const closeMessage = createMessage("didClose", {
+      // params: {
+      //   uri: "file:///" + name,
+      // },
     });
     sendMessage(closeMessage);
   };
 
   const sendVerificationMessage = (value: string) => {
     const verificationMessage = createMessage("custom/getFeedback", {
-      data: value,
+      grg_code: value,
     });
     sendMessage(verificationMessage);
   };
@@ -198,7 +197,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     const runEvaluateExpressionMessage = createMessage(
       "custom/runEvaluateExpression",
       {
-        data: JSON.stringify({ file: value, expression }),
+        grg_code: JSON.stringify({ file: value, expression }),
       }
     );
     sendMessage(runEvaluateExpressionMessage);

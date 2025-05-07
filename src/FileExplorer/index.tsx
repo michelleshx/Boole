@@ -10,6 +10,7 @@ import { LanguageServerContext } from "../context/LanguageServerContext";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRotate } from "@fortawesome/free-solid-svg-icons";
+import { FeedbackError, SyntaxError } from "../common/types";
 
 interface FileExplorerProps {}
 
@@ -18,7 +19,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [defaultFileSet, setDefaultFileSet] = useState(false);
 
   const { setValue, openFile, setOpenFile } = useContext(FileContext);
-  const { sendDidOpenMessage, sendDidCloseMessage } = useContext(
+  const { editorRef, setMarkers, sendDidOpenMessage, sendDidCloseMessage } = useContext(
     LanguageServerContext
   );
 
@@ -28,6 +29,8 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
         // to do handle null values
         setValue((await file.get()) ?? "");
 
+		setMarkers([], SyntaxError)
+		setMarkers([], FeedbackError)
         if (file.name) {
           sendDidOpenMessage(file.name, (await file.get()) ?? "");
         }
@@ -35,6 +38,10 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
         setOpenFile(file);
         localStorage.setItem("openDirectoryIndex", directoryIndex.toString());
         localStorage.setItem("openFileIndex", fileIndex.toString());
+
+		editorRef.current?.revealPositionInCenter({ lineNumber: 1, column: 1 }); // jump to beginning of file
+		editorRef.current?.focus() // put cursor at end of file
+		editorRef.current?.trigger('', 'closeMarkersNavigation', {});  // close marker navigation widget
       } catch {
         alert("Failed to open file!"); // TODO debug this
       }
