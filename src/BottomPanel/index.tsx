@@ -45,22 +45,29 @@ const BottomPanel = ({
                 <p key={index} className={styles.feedback}>
                   {ele}
                 </p>
-              ) : Array.isArray(ele) ? (
-                // ele is a list of comments
-                <p key={index} style={{ display: "block" }}>
-                  <span style={{ color: "green", fontWeight: "bold" }}>
-                    Comments
-                  </span>
-                  <span onClick={() => toggleDropdown(index)}>
-                    {openIndexes.includes(index) ? " ▲" : " ▼"}
-                  </span>
-                  {openIndexes.includes(index) &&
-                    ele.map((comment, commentIndex) => (
-                      <FeedbackItem item={comment} key={commentIndex} />
-                    ))}
-                </p>
               ) : (
-                <FeedbackItem item={ele} key={index} />
+                <div key={index}>
+				  {ele.comments && (
+					<div>
+					  <p style={{ display: "block" }}>
+						<span style={{ color: "green", fontWeight: "bold" }}>
+						  Comments
+						</span>
+						<span onClick={() => toggleDropdown(index)}>
+						  {openIndexes.includes(index) ? " ▲" : " ▼"}
+						</span>
+					  </p>
+					  {openIndexes.includes(index) &&
+						ele.comments.map((comment, commentIndex) => (
+						  <FeedbackItem item={comment} key={`comment-${commentIndex}`} />
+						))}
+					</div>
+				  )}
+				  {ele.other_items &&
+					ele.other_items.map((item, itemIndex) => (
+					  <FeedbackItem item={item} key={`other-${itemIndex}`} />
+					))}
+                </div>
               )
             )}
           </div>

@@ -37,7 +37,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     sendGetZSpecComponentsMessage,
     sendRunOperationsMessage,
     sendRunEvaluateExpressionMessage,
-	setMarkers,
+    setMarkers,
   } = useContext(LanguageServerContext);
 
   const {
@@ -69,7 +69,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
 
   // Handle getFeedback response
   const handleGetFeedback = (feedback: Feedback) => {
-	setMarkers([], FeedbackError) // clear the existing feedback markers
+    setMarkers([], FeedbackError); // clear the existing feedback markers
     let isValid = true;
     let isMagicUsed = false;
 
@@ -77,14 +77,19 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
       for (const ele of feedback) {
         if (!isValid && isMagicUsed) break;
 
-        if (Array.isArray(ele)) {
-          // ele is a list of comments
-          for (const comment in ele) {
-            if (!isValid && isMagicUsed) break;
-            ({ isValid, isMagicUsed } = checkItem(comment));
-          }
-        } else {
+        if (typeof ele === "string") {
           ({ isValid, isMagicUsed } = checkItem(ele));
+        } else {
+          if (ele["comments"]) {
+            for (const item in ele) {
+              checkItem(item);
+            }
+          }
+          if (ele["other_items"]) {
+            for (const item in ele) {
+              checkItem(item);
+            }
+          }
         }
       }
     } else {
@@ -286,11 +291,16 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
 
   useEffect(() => {
     try {
-      if (!lastJsonMessage || lastJsonMessage.type === "ERROR") return;
-
+      if (!lastJsonMessage || lastJsonMessage.type === "ERROR") {
+        config.onSuccess?.({
+          feedback: lastJsonMessage.res.message,
+          method: lastJsonMessage.method,
+        });
+		return
+      }
       switch (lastJsonMessage.method) {
         case "custom/getFeedback":
-          handleGetFeedback(lastJsonMessage.params.output);
+          handleGetFeedback(lastJsonMessage.res.output);
           break;
         case "custom/getZSpecComponents":
           handleGetZSpecComponents(
