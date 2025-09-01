@@ -16,12 +16,12 @@ type LanguageServerContextType = {
   sendDidChangeMessage: (model: monaco.editor.ITextModel) => void;
   sendDidCloseMessage: (name: string) => void;
   sendVerificationMessage: (value: string) => void;
-  sendGetZSpecComponentsMessage: (value: string) => void;
-  sendRunOperationsMessage: (
-    value: string,
-    interpretation: string,
-    operation: string
-  ) => void;
+  // sendGetZSpecComponentsMessage: (value: string) => void;
+  // sendRunOperationsMessage: (
+  //   value: string,
+  //   interpretation: string,
+  //   operation: string
+  // ) => void;
   sendRunEvaluateExpressionMessage: (value: string, expression: string) => void;
 };
 
@@ -165,30 +165,30 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     sendMessage(verificationMessage);
   };
 
-  const sendGetZSpecComponentsMessage = (value: string) => {
-    const getZSpecComponentsMessage = createMessage(
-      "custom/getZSpecComponents",
-      {
-        data: value,
-      }
-    );
-    sendMessage(getZSpecComponentsMessage);
-  };
-
-  const sendRunOperationsMessage = (
-    value: string,
-    interpretation: string,
-    operation: string
-  ) => {
-    const runOperationsMessage = createMessage("custom/runOperations", {
-      data: JSON.stringify({
-        zSpec: value,
-        interpretation,
-        operation,
-      }),
-    });
-    sendMessage(runOperationsMessage);
-  };
+  // const sendGetZSpecComponentsMessage = (value: string) => {
+  //   const getZSpecComponentsMessage = createMessage(
+  //     "custom/getZSpecComponents",
+  //     {
+  //       data: value,
+  //     }
+  //   );
+  //   sendMessage(getZSpecComponentsMessage);
+  // };
+  //
+  // const sendRunOperationsMessage = (
+  //   value: string,
+  //   interpretation: string,
+  //   operation: string
+  // ) => {
+  //   const runOperationsMessage = createMessage("custom/runOperations", {
+  //     data: JSON.stringify({
+  //       zSpec: value,
+  //       interpretation,
+  //       operation,
+  //     }),
+  //   });
+  //   sendMessage(runOperationsMessage);
+  // };
 
   const sendRunEvaluateExpressionMessage = (
     value: string,
@@ -215,8 +215,8 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
         sendDidChangeMessage,
         sendDidCloseMessage,
         sendVerificationMessage,
-        sendGetZSpecComponentsMessage,
-        sendRunOperationsMessage,
+        // sendGetZSpecComponentsMessage,
+        // sendRunOperationsMessage,
         sendRunEvaluateExpressionMessage,
       }}
     >

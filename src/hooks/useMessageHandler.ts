@@ -34,8 +34,8 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
   const {
     lastJsonMessage,
     sendVerificationMessage,
-    sendGetZSpecComponentsMessage,
-    sendRunOperationsMessage,
+    // sendGetZSpecComponentsMessage,
+    // sendRunOperationsMessage,
     sendRunEvaluateExpressionMessage,
     setMarkers,
   } = useContext(LanguageServerContext);
@@ -302,19 +302,19 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         case "custom/getFeedback":
           handleGetFeedback(lastJsonMessage.res.output);
           break;
-        case "custom/getZSpecComponents":
-          handleGetZSpecComponents(
-            lastJsonMessage.params.feedback,
-            lastJsonMessage.params.components
-          );
-          break;
-        case "custom/runOperations":
-          handleRunOperations(
-            lastJsonMessage.params.feedback,
-            lastJsonMessage.params.interpretation,
-            lastJsonMessage.params.operation
-          );
-          break;
+        // case "custom/getZSpecComponents":
+        //   handleGetZSpecComponents(
+        //     lastJsonMessage.params.feedback,
+        //     lastJsonMessage.params.components
+        //   );
+        //   break;
+        // case "custom/runOperations":
+        //   handleRunOperations(
+        //     lastJsonMessage.params.feedback,
+        //     lastJsonMessage.params.interpretation,
+        //     lastJsonMessage.params.operation
+        //   );
+        //   break;
         case "custom/runEvaluateExpression":
           handleEvaluateExpression(lastJsonMessage.res.output);
           break;
@@ -340,13 +340,13 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         sendVerificationMessage(value);
         setProcessedValue(value);
         break;
-      case "custom/getZSpecComponents":
-        sendGetZSpecComponentsMessage(value);
-        break;
-      case "custom/runOperations":
-        const [interpretation = "", opName = ""] = args;
-        sendRunOperationsMessage(value, interpretation, opName);
-        break;
+      // case "custom/getZSpecComponents":
+      //   sendGetZSpecComponentsMessage(value);
+      //   break;
+      // case "custom/runOperations":
+      //   const [interpretation = "", opName = ""] = args;
+      //   sendRunOperationsMessage(value, interpretation, opName);
+      //   break;
       case "custom/runEvaluateExpression":
         const [expression] = args;
         sendRunEvaluateExpressionMessage(value, expression);
