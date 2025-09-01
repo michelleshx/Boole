@@ -316,7 +316,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
           );
           break;
         case "custom/runEvaluateExpression":
-          handleEvaluateExpression(lastJsonMessage.params.output);
+          handleEvaluateExpression(lastJsonMessage.res.output);
           break;
       }
     } catch {
