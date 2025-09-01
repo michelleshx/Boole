@@ -30,7 +30,7 @@ const EditorSettings: React.FC<EditorSettingsProps> = ({
         navigator.userAgent
     );
 
-    const ccEmails = "michelleshx462@gmail.com,m272xu@uwaterloo.ca";
+    const ccEmails = "michelleshx462@gmail.com,m272xu@uwaterloo.ca,q34chen@uwaterloo.ca";
     window.location.href = `mailto:${supportEmail}?subject=${subject}&body=${body}&cc=${encodeURIComponent(
       ccEmails
     )}`;
