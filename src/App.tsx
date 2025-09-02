@@ -128,18 +128,19 @@ function App() {
             {isFileTab ? (
               <FileExplorer />
             ) : (
-              <SidePanel
-                isDebugging={isDebugging}
-                setIsDebugging={setIsDebugging}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                sendMessage={sendMessage}
-                processing={processing}
-                sidePanelError={sidePanelError}
-                setSidePanelError={setSidePanelError}
-                sidePanelFeedback={sidePanelFeedback}
-                setSidePanelFeedback={setSidePanelFeedback}
-              />
+								null
+              // <SidePanel
+              //   isDebugging={isDebugging}
+              //   setIsDebugging={setIsDebugging}
+              //   activeTab={activeTab}
+              //   setActiveTab={setActiveTab}
+              //   sendMessage={sendMessage}
+              //   processing={processing}
+              //   sidePanelError={sidePanelError}
+              //   setSidePanelError={setSidePanelError}
+              //   sidePanelFeedback={sidePanelFeedback}
+              //   setSidePanelFeedback={setSidePanelFeedback}
+              // />
             )}
             <div className={styles.bottom}>
               {/* @ts-ignore TS2322 */}
