@@ -34,15 +34,15 @@ const OperationsTab = ({ sendMessage, processing }: OperationsTabProps) => {
     }
   }, []);
 
-  const onRunOperation = (opName: string) => {
-    // Format string
-    const interpretation = formatStateAndOperation(
-      currentStateSpace,
-      operations,
-      opName
-    );
-    sendMessage("custom/runOperations", value, interpretation, opName);
-  };
+  // const onRunOperation = (opName: string) => {
+  //   // Format string
+  //   const interpretation = formatStateAndOperation(
+  //     currentStateSpace,
+  //     operations,
+  //     opName
+  //   );
+  //   sendMessage("custom/runOperations", value, interpretation, opName);
+  // };
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>,
@@ -96,7 +96,7 @@ const OperationsTab = ({ sendMessage, processing }: OperationsTabProps) => {
               aria-label="Apply Operation"
               title="Apply Operation"
               disabled={processing}
-              onClick={() => onRunOperation(operation.name)}
+              // onClick={() => onRunOperation(operation.name)}
               fullWidth
             >
               {processing && <Loading />}

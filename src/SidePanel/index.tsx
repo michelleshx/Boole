@@ -48,9 +48,7 @@ const SidePanel = ({
     setFileType(fileType); // set the file type
 
     // Check if the file is debuggable
-    if (fileType === FileType.Z) {
-      sendMessage("custom/getZSpecComponents", value);
-    } else if (
+    if (
       fileType === FileType.COUNTEREXAMPLE ||
       fileType === FileType.FALSE ||
       fileType === FileType.CONSISTENT ||
@@ -58,7 +56,9 @@ const SidePanel = ({
       fileType === FileType.EVALUATE
     ) {
       setIsDebugging(true);
-    } else {
+    // } else if (fileType === FileType.Z) {
+	  // sendMessage("custom/getZSpecComponents", value);
+	} else {
       setErrorMessage(
         'Oops! this file does not support debugging, try using "Ask George" instead'
       );
@@ -120,43 +120,44 @@ const SidePanel = ({
           setResult={setSidePanelFeedback}
         />
       ) : (
-        <>
-          <div className={styles.tabHeaders}>
-            {Object.values(Tab).map((tabKey) => (
-              <div
-                key={tabKey}
-                className={styles.tab}
-                onClick={() => setActiveTab(tabKey)}
-              >
-                <p
-                  className={
-                    activeTab === tabKey
-                      ? styles["tab--active"]
-                      : styles["tabText"]
-                  }
-                >
-                  {tabKey}
-                </p>
-              </div>
-            ))}
-          </div>
-          <div className={styles.tabContent}>
-            {activeTab === Tab.State && (
-              <StateTab
-                setIsDebugging={setIsDebugging}
-                onReload={onDebug}
-                processing={processing}
-              />
-            )}
-            {activeTab === Tab.Operations && (
-              <OperationsTab
-                sendMessage={sendMessage}
-                processing={processing}
-              />
-            )}
-            {activeTab === Tab.Trace && <TraceTab />}
-          </div>
-        </>
+			null
+        // <>
+        //   <div className={styles.tabHeaders}>
+        //     {Object.values(Tab).map((tabKey) => (
+        //       <div
+        //         key={tabKey}
+        //         className={styles.tab}
+        //         onClick={() => setActiveTab(tabKey)}
+        //       >
+        //         <p
+        //           className={
+        //             activeTab === tabKey
+        //               ? styles["tab--active"]
+        //               : styles["tabText"]
+        //           }
+        //         >
+        //           {tabKey}
+        //         </p>
+        //       </div>
+        //     ))}
+        //   </div>
+        //   <div className={styles.tabContent}>
+        //     {activeTab === Tab.State && (
+        //       <StateTab
+        //         setIsDebugging={setIsDebugging}
+        //         onReload={onDebug}
+        //         processing={processing}
+        //       />
+        //     )}
+        //     {activeTab === Tab.Operations && (
+        //       <OperationsTab
+        //         sendMessage={sendMessage}
+        //         processing={processing}
+        //       />
+        //     )}
+        //     {activeTab === Tab.Trace && <TraceTab />}
+        //   </div>
+        // </>
       )}
     </aside>
   );

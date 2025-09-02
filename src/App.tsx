@@ -51,12 +51,12 @@ function App() {
         setSettingsExpanded(false);
         setSubmissionFeedback(method === "markus" ? feedback : "");
       }
-      if (method === "custom/getZSpecComponents" && valid) {
-        setIsDebugging(true);
-      }
-      if (method === "custom/runOperations" && valid) {
-        setActiveTab(Tab.State);
-      }
+      // if (method === "custom/getZSpecComponents" && valid) {
+      //   setIsDebugging(true);
+      // }
+      // if (method === "custom/runOperations" && valid) {
+      //   setActiveTab(Tab.State);
+      // }
       if (method === "custom/runEvaluateExpression") {
         setSidePanelError(!valid);
         setSidePanelFeedback(feedback);

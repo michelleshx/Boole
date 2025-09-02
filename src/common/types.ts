@@ -88,8 +88,8 @@ export interface TraceItem {
 
 export type MessageMethod =
   | "custom/getFeedback"
-  | "custom/getZSpecComponents"
-  | "custom/runOperations"
+  // | "custom/getZSpecComponents"
+  // | "custom/runOperations"
   | "custom/runEvaluateExpression";
 
 export type SendMessageFn = (
