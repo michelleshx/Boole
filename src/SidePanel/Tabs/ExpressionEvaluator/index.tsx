@@ -51,7 +51,7 @@ const ExpressionEvaluator = ({
   const handleEvaluate = () => {
     let file = value;
     if (!expression.trim()) {
-      setResult("Oops, please enter an expression!");
+      setResult("Oops, please enter a formula!");
       setError(true);
       return;
     }
