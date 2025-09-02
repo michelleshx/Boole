@@ -75,7 +75,7 @@ const SidePanel = ({
             padding={8}
             content={
               <div className={styles.popOverContainer}>
-                Supported files include: #check Z, #check CE, #check FALSE,
+                Supported files include: #check CE, #check FALSE,
                 #check CONSISTENT, #check SAT, #check EVALUATE.
               </div>
             }
