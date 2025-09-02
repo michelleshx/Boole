@@ -62,11 +62,11 @@ const ExpressionEvaluator = ({
   return (
     <div className={styles.expressionEvaluator}>
       <div className={styles.container}>
-        <label className={styles.label}>Expression Evaluator</label>
+        <label className={styles.label}>Formula Evaluator</label>
         <div className={styles.row}>
           <input
             className={styles.input}
-            placeholder="Enter an expression here"
+            placeholder="Enter a formula here"
             onChange={(e) => setExpression(e.target.value)}
             value={expression}
           />
