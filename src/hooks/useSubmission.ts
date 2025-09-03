@@ -24,7 +24,7 @@ const useSubmission = (
   const getAssignments = async () => {
     try {
       const response = await axios.get(
-        "/~se212/george/ask-george/cgi-bin/markus_get.cgi",
+		"/~se212/public_html/george/ask-george/cgi-bin/markus_get.cgi",
         {}
       );
       // Check if the response was successful
@@ -69,7 +69,7 @@ const useSubmission = (
     };
 
     axios
-      .post(`/~se212/george/ask-george/cgi-bin/markus_submit.cgi`, data, {
+      .post(`/~se212/public_html/george/ask-george/cgi-bin`, data, {
         timeout: SUBMISSION_TIMEOUT,
       })
       .then((response) => {
