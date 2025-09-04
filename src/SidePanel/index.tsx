@@ -49,11 +49,12 @@ const SidePanel = ({
 
     // Check if the file is debuggable
     if (
-      fileType === FileType.COUNTEREXAMPLE ||
-      fileType === FileType.FALSE ||
-      fileType === FileType.CONSISTENT ||
-      fileType === FileType.SAT ||
-      fileType === FileType.EVALUATE
+      fileType === FileType.SEM_CE ||
+      fileType === FileType.SEM_F ||
+      fileType === FileType.SEM_T ||
+      fileType === FileType.SEM_CONSISTENT ||
+      fileType === FileType.SEM_SAT ||
+      fileType === FileType.SEM
     ) {
       setIsDebugging(true);
     // } else if (fileType === FileType.Z) {
@@ -75,8 +76,8 @@ const SidePanel = ({
             padding={8}
             content={
               <div className={styles.popOverContainer}>
-                Supported files include: #check CE, #check FALSE,
-                #check CONSISTENT, #check SAT, #check EVALUATE.
+                Supported files include: #check SEM_CE, #check SEM_F, #check SEM_T,
+                #check SEM_CONSISTENT, #check SEM_SAT, #check SEM.
               </div>
             }
           >
@@ -105,11 +106,12 @@ const SidePanel = ({
           </Button>
           <p className={styles.text}>{errorMessage}</p>
         </div>
-      ) : fileType === FileType.COUNTEREXAMPLE ||
-        fileType === FileType.FALSE ||
-        fileType === FileType.CONSISTENT ||
-        fileType === FileType.SAT ||
-        fileType === FileType.EVALUATE ? (
+      ) : fileType === FileType.SEM_CE ||
+        fileType === FileType.SEM_F ||
+        fileType === FileType.SEM_T ||
+        fileType === FileType.SEM_CONSISTENT ||
+        fileType === FileType.SEM_SAT ||
+        fileType === FileType.SEM ? (
         <ExpressionEvaluator
           setIsDebugging={setIsDebugging}
           sendMessage={sendMessage}

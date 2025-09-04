@@ -321,7 +321,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
       }
     } catch {
       config.onSuccess?.({
-        feedback: "Try the Ask George Button",
+        feedback: "Try the Ask George button",
         method: lastJsonMessage?.method || "unknown",
         valid: false,
       });

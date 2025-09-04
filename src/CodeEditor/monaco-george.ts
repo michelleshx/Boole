@@ -52,7 +52,7 @@ export const registerGeorge: OnMount = (editor, monaco) => {
 
         // Entire lines starting with # should be colored
         [
-          /^.*#(?:check\s+(?:PROP|ND|PC|Z|TP|ST|PREDTYPES|PRED|CE|FALSE|CONSISTENT|SAT|EVALUATE|NONE)|[qua][ \t].*$)/,
+          /^.*#(?:check\s+(?:PROP|ND|PC|Z|TP|ST|PREDTYPES|PRED|SEM_CE|SEM_F|SEM_T|SEM_CONSISTENT|SEM_SAT|SEM|NONE)|[qua][ \t].*$)/,
           "constant.other",
         ],
 
@@ -164,33 +164,39 @@ export const registerGeorge: OnMount = (editor, monaco) => {
           range,
         },
         {
-          label: "check CE",
+          label: "check SEM_CE",
           kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check CE",
+          insertText: "check SEM_CE",
           range,
         },
         {
-          label: "check FALSE",
+          label: "check SEM_F",
           kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check FALSE",
+          insertText: "check SEM_F",
           range,
         },
         {
-          label: "check CONSISTENT",
+          label: "check SEM_T",
           kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check CONSISTENT",
+          insertText: "check SEM_T",
           range,
         },
         {
-          label: "check SAT",
+          label: "check SEM_CONSISTENT",
           kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check SAT",
+          insertText: "check SEM_CONSISTENT",
           range,
         },
         {
-          label: "check EVALUATE",
+          label: "check SEM_SAT",
           kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check EVALUATE",
+          insertText: "check SEM_SAT",
+          range,
+        },
+        {
+          label: "check SEM",
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: "check SEM",
           range,
         },
 

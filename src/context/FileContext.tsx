@@ -23,7 +23,6 @@ const FileProvider: React.FC<{ children: React.ReactNode }> = ({
   const [fileType, setFileType] = useState<FileType>(FileType.PREDTYPE);
 
   const checkToFileType: { [key: string]: FileType } = {
-    "#check CE": FileType.COUNTEREXAMPLE,
     "#check Z": FileType.Z,
     "#check PREDTYPE": FileType.PREDTYPE,
     "#check PRED": FileType.PRED,
@@ -32,10 +31,13 @@ const FileProvider: React.FC<{ children: React.ReactNode }> = ({
     "#check PROP": FileType.PROP,
     "#check PC": FileType.PC,
     "#check ND": FileType.ND,
-    "#check FALSE": FileType.FALSE,
-    "#check CONSISTENT": FileType.CONSISTENT,
-    "#check SAT": FileType.SAT,
-    "#check EVALUATE": FileType.EVALUATE,
+
+    "#check SEM_F": FileType.SEM_F,
+    "#check SEM_CONSISTENT": FileType.SEM_CONSISTENT,
+    "#check SEM_SAT": FileType.SEM_SAT,
+    "#check SEM": FileType.SEM,
+    "#check SEM_CE": FileType.SEM_CE,
+	"#check SEM_T": FileType.SEM_T
   };
 
   const getFileType = (value: string): FileType => {
