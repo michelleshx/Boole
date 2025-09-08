@@ -14,8 +14,6 @@ export enum FileType {
   SEM_T,
   SEM_CE,
   SEM_F,
-  SEM_CONSISTENT,
-  SEM_SAT,
   SEM,
   NONE,
 }

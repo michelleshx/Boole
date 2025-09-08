@@ -33,8 +33,6 @@ const FileProvider: React.FC<{ children: React.ReactNode }> = ({
     "#check ND": FileType.ND,
 
     "#check SEM_F": FileType.SEM_F,
-    "#check SEM_CONSISTENT": FileType.SEM_CONSISTENT,
-    "#check SEM_SAT": FileType.SEM_SAT,
     "#check SEM": FileType.SEM,
     "#check SEM_CE": FileType.SEM_CE,
 	"#check SEM_T": FileType.SEM_T

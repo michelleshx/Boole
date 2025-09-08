@@ -52,8 +52,6 @@ const SidePanel = ({
       fileType === FileType.SEM_CE ||
       fileType === FileType.SEM_F ||
       fileType === FileType.SEM_T ||
-      fileType === FileType.SEM_CONSISTENT ||
-      fileType === FileType.SEM_SAT ||
       fileType === FileType.SEM
     ) {
       setIsDebugging(true);
@@ -76,8 +74,7 @@ const SidePanel = ({
             padding={8}
             content={
               <div className={styles.popOverContainer}>
-                Supported files include: #check SEM_CE, #check SEM_F, #check SEM_T,
-                #check SEM_CONSISTENT, #check SEM_SAT, #check SEM.
+                Supported files include: #check SEM_CE, #check SEM_F, #check SEM_T, #check SEM.
               </div>
             }
           >
@@ -109,8 +106,6 @@ const SidePanel = ({
       ) : fileType === FileType.SEM_CE ||
         fileType === FileType.SEM_F ||
         fileType === FileType.SEM_T ||
-        fileType === FileType.SEM_CONSISTENT ||
-        fileType === FileType.SEM_SAT ||
         fileType === FileType.SEM ? (
         <ExpressionEvaluator
           setIsDebugging={setIsDebugging}

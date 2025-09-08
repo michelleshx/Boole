@@ -28,19 +28,6 @@ p => !q, r => q |- p => !r
 }
 6) p => !r by imp_i on 3-5`,
   },
-  {
-    name: "sat_example.grg",
-    contents: `#u name
-#a 00
-#q 00
-
-#check SAT
-
-[OperatingSystem] := {Macbook, Linux, Windows, Ubuntu}
-[needs_update: OperatingSystem --> bool] := {(Macbook, T), (Linux, F), (Ubuntu, F), (Windows, F)}
-
-forall os: OperatingSystem . needs_update(os)`,
-  },
 ];
 
 export default example;

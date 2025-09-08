@@ -52,7 +52,7 @@ export const registerGeorge: OnMount = (editor, monaco) => {
 
         // Entire lines starting with # should be colored
         [
-          /^.*#(?:check\s+(?:PROP|ND|PC|Z|TP|ST|PREDTYPES|PRED|SEM_CE|SEM_F|SEM_T|SEM_CONSISTENT|SEM_SAT|SEM|NONE)|[qua][ \t].*$)/,
+          /^.*#(?:check\s+(?:PROP|ND|PC|Z|TP|ST|PREDTYPES|PRED|SEM_CE|SEM_F|SEM_T|SEM|NONE)|[qua][ \t].*$)/,
           "constant.other",
         ],
 
@@ -179,18 +179,6 @@ export const registerGeorge: OnMount = (editor, monaco) => {
           label: "check SEM_T",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "check SEM_T",
-          range,
-        },
-        {
-          label: "check SEM_CONSISTENT",
-          kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check SEM_CONSISTENT",
-          range,
-        },
-        {
-          label: "check SEM_SAT",
-          kind: monaco.languages.CompletionItemKind.Keyword,
-          insertText: "check SEM_SAT",
           range,
         },
         {
