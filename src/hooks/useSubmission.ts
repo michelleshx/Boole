@@ -92,7 +92,7 @@ const useSubmission = (
           e.code === "ECONNABORTED"
             ? `Request timed out after ${
                 SUBMISSION_TIMEOUT / 1000
-              } seconds. Please try again later.`
+              } seconds. Please try to refresh the page and login again, because your session might be expired.`
             : "Error submitting assignment to Markus!";
 
         onVerify({
