@@ -17,6 +17,8 @@ if [ "$PWD" != "/u8/se212/public_html/george/james-repo" ]; then
         exit 1
 fi
 
+git pull origin se212website-james
+
 npm install
 npm run build
 
