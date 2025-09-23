@@ -38,6 +38,10 @@ export class File {
     this.key = `file:${name}`;
   }
 
+  getKey = (): string => {
+    return this.key;
+  }
+
   async get(): Promise<string | null> {
     return await LocalStorage.get(this.key);
   }

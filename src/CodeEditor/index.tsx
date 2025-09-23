@@ -48,6 +48,7 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
     if (value !== undefined) {
       setValue(value);
       if (openFile !== null) openFile.set(value);
+	  // optionally not updating the model again, b/c it's already updated
     }
 
     if (editorRef.current?.getModel()) {
@@ -138,7 +139,6 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
     // Apply the custom theme
     monaco.editor.setTheme("george-custom-theme");
     registerGeorge(editor, monaco);
-    monaco.editor.setModelLanguage(editor.getModel()!, "george");
   };
 
   useEffect(() => {
@@ -155,7 +155,7 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
       height="100%"
       width="100%"
       defaultLanguage="george"
-      value={value}
+      // value={value}
       theme="vs"
       onMount={handleEditorMount}
       beforeMount={handleEditorWillMount}
