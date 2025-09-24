@@ -8,6 +8,8 @@ type FileContextType = {
   setOpenFile: Dispatch<SetStateAction<File>>;
   fileType: FileType;
   setFileType: Dispatch<SetStateAction<FileType>>;
+  isLoadingDefFile: Boolean;
+  setIsLoadingDefFile: Dispatch<SetStateAction<Boolean>>;
   getFileType: (val: string) => FileType;
 };
 
@@ -21,6 +23,7 @@ const FileProvider: React.FC<{ children: React.ReactNode }> = ({
   const [value, setValue] = useState<string>(""); // current value in text editor
   const [openFile, setOpenFile] = useState<File>({} as File); // which file is open in editor
   const [fileType, setFileType] = useState<FileType>(FileType.PREDTYPE);
+  const [isLoadingDefFile, setIsLoadingDefFile] = useState<Boolean>(true);
 
   const checkToFileType: { [key: string]: FileType } = {
     "#check Z": FileType.Z,
@@ -56,6 +59,8 @@ const FileProvider: React.FC<{ children: React.ReactNode }> = ({
         setOpenFile,
         fileType,
         setFileType,
+		isLoadingDefFile,
+		setIsLoadingDefFile,
         getFileType,
       }}
     >

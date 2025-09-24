@@ -9,6 +9,8 @@ import { SyntaxError, FeedbackError } from "../common/types";
 type LanguageServerContextType = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   monacoRef: React.MutableRefObject<Monaco | null>;
+  haveMonaco: Boolean;
+  setHaveMonaco: React.Dispatch<React.SetStateAction<Boolean>>
   models:  Record<string, monaco.editor.ITextModel>; 
   setModels: React.Dispatch<React.SetStateAction<Record<string, monaco.editor.ITextModel>>>;
   setMarkers: (newMarkers: monaco.editor.IMarkerData[], owner: typeof SyntaxError | typeof FeedbackError) => void;
@@ -36,7 +38,8 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const monacoRef = useRef<Monaco | null>(null);
-  const { value, openFile } = useContext(FileContext);
+  const { value, openFile, isLoadingDefFile } = useContext(FileContext);
+  const [haveMonaco, setHaveMonaco] = useState<Boolean>(false);
   const [models, setModels] = useState<Record<string, monaco.editor.ITextModel>>({});
   // const url = "ws://127.0.0.1:8080"; // local testing
   // const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev01/"
@@ -44,17 +47,17 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212/"
 
   useEffect(() => {
-	if(!openFile || !monacoRef.current) return;
+	if(isLoadingDefFile || !openFile || !haveMonaco || !monacoRef.current) return;
 	let model = models[openFile.getKey()];
     if (!model) {
-      model = monacoRef.current.editor.createModel(value, "george");
-      setModels((prev) => ({ ...prev, [openFile.getKey()]: model }));
+      model = monacoRef.current.editor.createModel(value, "george", monaco.Uri.parse("file://" + openFile.getKey()));
+	  setModels((prev) => ({ ...prev, [openFile.getKey()]: model }));
     } else {
 		if (model.getValue() !== value) model.setValue(value);
 	}
 	editorRef.current?.setModel(model);
     monacoRef.current.editor.setModelLanguage(model, "george");
-  }, [openFile])
+  }, [openFile, isLoadingDefFile, haveMonaco])
 
   const setMarkers = (newMarkers: monaco.editor.IMarkerData[], owner: typeof SyntaxError | typeof FeedbackError) => {
     if (monacoRef.current && editorRef.current?.getModel()) {
@@ -224,6 +227,8 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         editorRef,
         monacoRef,
+		haveMonaco,
+		setHaveMonaco,
 		models,
 		setModels,
 		setMarkers,

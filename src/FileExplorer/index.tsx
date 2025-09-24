@@ -16,9 +16,8 @@ interface FileExplorerProps {}
 
 const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [directories, setDirectories] = useState<Directory[]>([]);
-  const [defaultFileSet, setDefaultFileSet] = useState(false);
 
-  const { setValue, openFile, setOpenFile } = useContext(FileContext);
+  const { setValue, openFile, setOpenFile, isLoadingDefFile, setIsLoadingDefFile } = useContext(FileContext);
   const { editorRef, setMarkers, sendDidOpenMessage, sendDidCloseMessage } = useContext(
     LanguageServerContext
   );
@@ -42,6 +41,8 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 		editorRef.current?.revealPositionInCenter({ lineNumber: 1, column: 1 }); // jump to beginning of file
 		editorRef.current?.focus() // put cursor at end of file
 		editorRef.current?.trigger('', 'closeMarkersNavigation', {});  // close marker navigation widget
+
+		setIsLoadingDefFile(false);
       } catch {
         alert("Failed to open file!"); // TODO debug this
       }
@@ -76,12 +77,11 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
             );
           }
         } else if (
-          !defaultFileSet &&
+          isLoadingDefFile &&
           directories.length > 0 &&
           directories[0].files.length > 0
         ) {
           onFileOpen(directories[0].files[0], 0, 0);
-          setDefaultFileSet(true);
         }
       } else {
         console.warn("Directories is not an array.");
@@ -89,7 +89,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
     };
 
     fetchDirectories();
-  }, [defaultFileSet, onFileOpen]);
+  }, [isLoadingDefFile, onFileOpen]);
 
   const toggleDirectoryExpanded = (directoryIndex: number) => {
     const updatedDirectories = [...directories];

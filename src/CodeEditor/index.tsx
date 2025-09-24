@@ -1,3 +1,4 @@
+import { Loading } from "../components/"
 import { FileContext } from "../context/FileContext";
 import { LanguageServerContext } from "../context/LanguageServerContext";
 import React, { useEffect, useContext } from "react";
@@ -13,12 +14,14 @@ interface EditorProps {
 }
 
 const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
-  const { value, setValue, openFile } = useContext(FileContext);
-  const { editorRef, monacoRef, sendDidChangeMessage } = useContext(
+  const { value, setValue, openFile, isLoadingDefFile } = useContext(FileContext);
+  const { editorRef, monacoRef, setHaveMonaco, sendDidChangeMessage } = useContext(
     LanguageServerContext
   );
 
   const handleEditorWillMount: BeforeMount = (monaco) => {
+	monacoRef.current = monaco;
+	setHaveMonaco(true);
     // Remove all keybindings we want to handle globally
     monaco.editor.addKeybindingRules([
       {
@@ -127,7 +130,7 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
     monaco: Monaco
   ) => {
     editorRef.current = editor;
-    monacoRef.current = monaco;
+    // monacoRef.current = monaco;
 
     setEditorTheme();
 
@@ -150,23 +153,27 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
     }
   }, [isDarkMode]);
 
-  return (
-    <Editor
-      height="100%"
-      width="100%"
-      defaultLanguage="george"
-      // value={value}
-      theme="vs"
-      onMount={handleEditorMount}
-      beforeMount={handleEditorWillMount}
-      onChange={handleEditorChange}
-      options={{
-        fontSize: 14,
-        minimap: { enabled: false },
-        quickSuggestions: autocomplete,
-      }}
-    />
-  );
+  if(isLoadingDefFile || !openFile) {
+	return <p>Reading File Content</p>
+  } else {
+  	return (
+      <Editor
+      	height="100%"
+      	width="100%"
+      	defaultLanguage="george"
+	  	path={openFile.getKey()}
+      	theme="vs"
+      	onMount={handleEditorMount}
+      	beforeMount={handleEditorWillMount}
+      	onChange={handleEditorChange}
+      	options={{
+		  fontSize: 14,
+		  minimap: { enabled: false },
+		  quickSuggestions: autocomplete,
+      	}}
+      />
+  	);
+  }
 };
 
 export default CodeEditor;
