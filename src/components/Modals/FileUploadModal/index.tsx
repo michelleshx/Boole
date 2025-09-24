@@ -4,9 +4,7 @@ import Modal from "react-modal";
 import { Button } from "../../../components";
 import styles from "./FileUploadModal.module.css";
 
-import { FileContext } from "../../../context/FileContext";
 import { LanguageServerContext } from "../../../context/LanguageServerContext";
-import { editor } from "monaco-editor";
 
 Modal.setAppElement("#root"); // Bind modal to the root element to avoid screen reader issues
 
@@ -20,8 +18,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
   onClose,
 }) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(); // not the File object in common/
-  const { setValue, openFile } = useContext(FileContext);
-  const { editorRef } = useContext(LanguageServerContext);
+  const { updateCurrModel } = useContext(LanguageServerContext);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -36,16 +33,7 @@ const FileUploadModal: React.FC<FileUploadModalProps> = ({
       reader.onload = (e) => {
         const fileContent = e?.target?.result;
         if (typeof fileContent === "string") {
-		  let model = editorRef.current?.getModel();
-		  if(!model) return;
-		  const range = model.getFullModelRange();
-		  editorRef.current?.executeEdits("file-upload", [
-		  	{
-			  range,
-			  text: fileContent,
-			  forceMoveMarkers: true,
-		  	},
-		  ]);
+		  updateCurrModel(fileContent);
 		  // Mocaco will call the callback handleEditorChange in CodeEditor/index.tsx
 		  // which will update value and openFile in FileContext
         } else {

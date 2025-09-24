@@ -18,7 +18,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   const [directories, setDirectories] = useState<Directory[]>([]);
 
   const { setValue, openFile, setOpenFile, isLoadingDefFile, setIsLoadingDefFile } = useContext(FileContext);
-  const { editorRef, setMarkers, sendDidOpenMessage, sendDidCloseMessage } = useContext(
+  const { editorRef, updateCurrModel, setMarkers, sendDidOpenMessage, sendDidCloseMessage } = useContext(
     LanguageServerContext
   );
 
@@ -119,7 +119,7 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
   ) => {
     if (
       !window.confirm(
-        "Are you sure you would like to reset this file?\nWARNING: You will lose all your changes for this file!"
+        "Are you sure you would like to reset this file?\nYou can find the previous content in your browser cache. "
       )
     )
       return;
@@ -128,6 +128,8 @@ const FileExplorer: React.FC<FileExplorerProps> = () => {
 
     await targetFile.reset();
     onFileOpen(targetFile, directoryIndex, fileIndex);
+	const value: string = (await targetFile.get()) ?? "";
+	updateCurrModel(value);
   };
 
   return (

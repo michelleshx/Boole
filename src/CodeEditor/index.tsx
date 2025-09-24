@@ -47,11 +47,14 @@ const CodeEditor = ({ isDarkMode, onCheck, autocomplete }: EditorProps) => {
     ]);
   };
 
+  /*
+   * Callback function for Monaco Editor's onChange event
+   * This should update value and openFile of FileContext
+   * */
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
       setValue(value);
       if (openFile !== null) openFile.set(value);
-	  // optionally not updating the model again, b/c it's already updated
     }
 
     if (editorRef.current?.getModel()) {

@@ -9,6 +9,7 @@ import { SyntaxError, FeedbackError } from "../common/types";
 type LanguageServerContextType = {
   editorRef: React.MutableRefObject<monaco.editor.IStandaloneCodeEditor | null>;
   monacoRef: React.MutableRefObject<Monaco | null>;
+  updateCurrModel: (value: string) => void;
   haveMonaco: Boolean;
   setHaveMonaco: React.Dispatch<React.SetStateAction<Boolean>>
   models:  Record<string, monaco.editor.ITextModel>; 
@@ -45,6 +46,19 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
   // const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev01/"
   // const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212-dev02/"
   const url = "wss://se212-ws.student.cs.uwaterloo.ca/se212/"
+
+  const updateCurrModel = (value: string) => {
+  	let model = editorRef.current?.getModel();
+  	if(!model) return;
+  	const range = model.getFullModelRange();
+  	editorRef.current?.executeEdits("file-upload", [
+	  {
+	  	range,
+	  	text: value,
+	  	forceMoveMarkers: true,
+	  },
+  	]);
+  }
 
   useEffect(() => {
 	if(isLoadingDefFile || !openFile || !haveMonaco || !monacoRef.current) return;
@@ -227,6 +241,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         editorRef,
         monacoRef,
+		updateCurrModel,
 		haveMonaco,
 		setHaveMonaco,
 		models,
