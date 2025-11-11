@@ -21,6 +21,7 @@ type LanguageServerContextType = {
   sendDidChangeMessage: (model: monaco.editor.ITextModel) => void;
   sendDidCloseMessage: (name: string) => void;
   sendVerificationMessage: (value: string) => void;
+  sendEmailMessage: (value: string) => void;
   // sendGetZSpecComponentsMessage: (value: string) => void;
   // sendRunOperationsMessage: (
   //   value: string,
@@ -198,6 +199,13 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
     sendMessage(verificationMessage);
   };
 
+  const sendEmailMessage = (value: string) => {
+	const emailMessage = createMessage("custom/sendEmail", {
+		grg_code: value,
+	});
+	sendMessage(emailMessage);
+  }
+
   // const sendGetZSpecComponentsMessage = (value: string) => {
   //   const getZSpecComponentsMessage = createMessage(
   //     "custom/getZSpecComponents",
@@ -253,6 +261,7 @@ const LanguageServerProvider: React.FC<{ children: React.ReactNode }> = ({
         sendDidChangeMessage,
         sendDidCloseMessage,
         sendVerificationMessage,
+		sendEmailMessage,
         // sendGetZSpecComponentsMessage,
         // sendRunOperationsMessage,
         sendRunEvaluateExpressionMessage,

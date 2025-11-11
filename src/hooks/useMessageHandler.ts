@@ -34,6 +34,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
   const {
     lastJsonMessage,
     sendVerificationMessage,
+	sendEmailMessage,
     // sendGetZSpecComponentsMessage,
     // sendRunOperationsMessage,
     sendRunEvaluateExpressionMessage,
@@ -289,6 +290,12 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     });
   };
 
+
+  const handleRequestPermission = (message: string, grg_code: string) => {
+	if(!window.confirm(message + "\n\n" + grg_code)) return;
+	sendEmailMessage(grg_code);
+  }
+
   useEffect(() => {
     try {
       if (!lastJsonMessage || lastJsonMessage.type === "ERROR") {
@@ -302,6 +309,9 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         case "custom/getFeedback":
           handleGetFeedback(lastJsonMessage.res.output);
           break;
+	    case "custom/requestStudentPermission":
+		  handleRequestPermission(lastJsonMessage.res.message, lastJsonMessage.res.grg_code);
+		  break;
         // case "custom/getZSpecComponents":
         //   handleGetZSpecComponents(
         //     lastJsonMessage.params.feedback,
@@ -315,9 +325,9 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         //     lastJsonMessage.params.operation
         //   );
         //   break;
-        case "custom/runEvaluateExpression":
-          handleEvaluateExpression(lastJsonMessage.res.output);
-          break;
+        // case "custom/runEvaluateExpression":
+        //   handleEvaluateExpression(lastJsonMessage.res.output);
+        //   break;
       }
     } catch {
       config.onSuccess?.({
