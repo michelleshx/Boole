@@ -134,6 +134,12 @@ export const registerGeorge: OnMount = (editor, monaco) => {
           range,
         },
         {
+          label: "check PRED",
+          kind: monaco.languages.CompletionItemKind.Keyword,
+          insertText: "check PRED",
+          range,
+        },
+        {
           label: "check PREDTYPES",
           kind: monaco.languages.CompletionItemKind.Keyword,
           insertText: "check PREDTYPES",
