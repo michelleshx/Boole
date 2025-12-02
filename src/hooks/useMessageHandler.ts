@@ -307,6 +307,7 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
       }
       switch (lastJsonMessage.method) {
         case "custom/getFeedback":
+		  setProcessing(false);
           handleGetFeedback(lastJsonMessage.res.output);
           break;
 	    case "custom/requestStudentPermission":
@@ -343,10 +344,10 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
     value: string,
     ...args: any[]
   ) => {
-    setProcessing(true);
 
     switch (method) {
       case "custom/getFeedback":
+		setProcessing(true);
         sendVerificationMessage(value);
         setProcessedValue(value);
         break;
@@ -365,7 +366,6 @@ const useMessageHandler = (config: MessageHandlerConfig) => {
         throw new Error(`Unsupported method: ${method}`);
     }
 
-    setProcessing(false);
   };
 
   return {

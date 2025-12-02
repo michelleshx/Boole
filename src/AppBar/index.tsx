@@ -71,7 +71,7 @@ const AppBar = ({
             title="Ask George (Ctrl/Cmd+Enter)"
           >
             {verifying && <Loading />}
-            {verifiedValue === value &&
+            {!verifying && verifiedValue === value &&
               (valid ? (magicUsed ? "🎩" : " ✔") : "✖")}
           </Button>
           {/* Markus */}
