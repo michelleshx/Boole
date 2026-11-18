@@ -15,17 +15,21 @@ export const registerGeorge: OnMount = (editor, monaco) => {
     surroundingPairs: [
       { open: "{", close: "}" },
       { open: "(", close: ")" },
+	  { open: "[", close: "]" },
     ],
     autoClosingPairs: [
       { open: "{", close: "}" },
       { open: "(", close: ")" },
+	  { open: "[", close: "]" },
     ],
     indentationRules: {
       increaseIndentPattern: /{$/,
       decreaseIndentPattern: /^}/,
     },
     brackets: [
-      ["{", "}"], // Only define curly braces as brackets
+      ["{", "}"], 
+	  ["[", "]"],
+      ["(", ")"],
     ],
     onEnterRules: [
       {
